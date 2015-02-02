@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>view\ControllerView.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: view\ControllerView.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*
+ * BGPlay.js #9660
+ * A web-based service for the visualization of the Internet routing
+ *
+ * Copyright (c) 2012 Roma Tre University and RIPE NCC
+ *
+ * See the file LICENSE.txt for copying permission.
+ *&#x2F;
+
+&#x2F;**
+ * This is a module specific for BGP.
+ * It provides the query form.
+ * Template: controller.html
+ * @class ControllerView
+ * @module modules
+ *&#x2F;
+var ControllerView=Backbone.View.extend({
+    events:function(){
+        return {
+            &quot;click .bgplayControlAnimationStartPause&quot;:&quot;toggle&quot;,
+            &quot;click .bgplayControlAnimationStop&quot;:&quot;stopButton&quot;,
+            &quot;click .bgplayControlAnimationPrev&quot;:&quot;previousEvent&quot;,
+            &quot;click .bgplayControlAnimationNext&quot;:&quot;nextEvent&quot;,
+            &quot;mouseover .bgplayControlPanelDivFlagIco&quot;:&quot;mouseOverFlag&quot;,
+            &quot;mouseout .bgplayControlPanelDivFlagIco&quot;:&quot;mouseOutFlag&quot;,
+            &quot;click .bgplayControlPanelDivFlagIco&quot;:&quot;clickOnFlag&quot;,
+            &quot;change input[name=bgplayControlPrefixValues]&quot;:&quot;validateIp&quot;,
+            &quot;click .bgplayControlDiscardButton&quot;:&quot;discardConfig&quot;,
+            &quot;click .bgplayControlApplyButton&quot;:&quot;updateConfig&quot;,
+            &quot;click .bgplayControlPrefixMore&quot;:&quot;morePrefixTextbox&quot;,
+            &quot;click .bgplayControlPrefixDelete&quot;:&quot;lessPrefixTextbox&quot;
+        }
+    },
+
+    &#x2F;**
+     * The initialization method of this object.
+     * @method initialize
+     * @param {Map} A map of parameters
+     *&#x2F;
+    initialize:function(){
+        this.environment=this.options.environment;
+        this.bgplay=this.environment.bgplay;
+        this.fileRoot=this.environment.fileRoot;
+        this.eventAggregator=this.environment.eventAggregator;
+
+        this.eventAggregator.trigger(&quot;moduleLoading&quot;, true);
+        this.animation=false;
+        this.allEvents=this.bgplay.get(&quot;allEvents&quot;);
+        this.prefixes=stringToArray(this.environment.params.targets);
+        this.selectedRrcs=stringToArray(this.environment.params.selectedRrcs);
+        this.selectableRrcs=this.environment.config.selectableRrcs;
+        this.possibleRrcs=this.environment.config.possibleRrcs.removeSubArray(this.selectedRrcs);
+        this.slideOpened=false;
+        this.ignoreReannouncements= this.environment.params.ignoreReannouncements || this.environment.config.ignoreReannouncementsByDefault;
+        this.releasedPlayButton=true;
+        this.environment.dynamicParams.push(&#x27;instant&#x27;);
+        this.startAnimationInstant=new Instant({id:0,timestamp:this.bgplay.get(&quot;starttimestamp&quot;)});
+        this.stopAnimationInstant=new Instant({id:0,timestamp:this.bgplay.get(&quot;endtimestamp&quot;)});
+
+        this.eventAggregator.on(&quot;destroyAll&quot;, function(){
+            this.destroyMe();
+        },this);
+
+        this.bgplay.on(&quot;change:cur_instant&quot;,function(){
+            if (this.environment.config.controller.keepTrackCurrentInstant==true){
+                var instant=this.bgplay.get(&quot;cur_instant&quot;);
+                this.environment.params.instant = instant.toString();
+                try{
+                    if (this.environment.paramsInUrl==true &amp;&amp; this.environment.instances==1){
+                        setUrlParam(&#x27;instant&#x27;,instant.toString(),false);
+                        window.history.replaceState({&quot;html&quot;:this.bgplay.html,&quot;pageTitle&quot;:&#x27;BGPlayjs&#x27;},&quot;&quot;, currentUrl);
+                    }
+                }catch(e){
+                    log(&quot;This browser does not support the replaceState function.&quot;);
+                }
+            }
+        },this);
+
+        this.eventAggregator.trigger(&quot;autoStartFunction&quot;,
+            {func:
+                          function(){
+                              var initialInstant = this.environment.params.instant || getUrlParam(&quot;instant&quot;);
+                              if (initialInstant != null &amp;&amp; initialInstant!=&quot;&quot; &amp;&amp; this.environment.instances==1){
+                                  initialInstant = initialInstant.split(&#x27;,&#x27;);
+                                  this.environment.bgplay.set({&quot;cur_instant&quot;:new Instant({id:initialInstant[0],timestamp:initialInstant[1]})});
+                              }
+                          }
+                , context:this});
+
+        this.eventAggregator.on(&quot;animationEnd&quot;, function(){
+            this.stop();
+        },this);
+
+        this.eventAggregator.on(&quot;animationReload&quot;, function(){
+            this.reload();
+        },this);
+
+        this.eventAggregator.on(&quot;newSelectionStart&quot;, function(value){
+            this.startAnimationInstant=value;
+        },this);
+
+        this.eventAggregator.on(&quot;releasePlayButton&quot;, function(release){
+            this.releasedPlayButton=release;
+            if (this.releasedPlayButton==true){
+                this.controlAnimationStartPause.css(&#x27;cursor&#x27;,&#x27;auto&#x27;);
+            }else{
+                this.controlAnimationStartPause.css(&#x27;cursor&#x27;,&#x27;wait&#x27;);
+            }
+        },this);
+
+        this.eventAggregator.on(&quot;newSelectionEnd&quot;, function(value){
+            this.stopAnimationInstant=value;
+        },this);
+
+        this.render();
+        log(&quot;Controller view loaded.&quot;);
+        this.eventAggregator.trigger(&quot;moduleLoading&quot;, false);
+    },
+
+    &#x2F;*
+     * This method creates the pointers to the DOM elements.
+     *&#x2F;
+    getDomElements:function(){
+        this.dom = this.$el;
+        this.controlAnimationStartPause = this.dom.find(&#x27;.bgplayControlAnimationStartPause&#x27;);
+        this.controlAnimationStop = this.dom.find(&#x27;.bgplayControlAnimationStop&#x27;);
+        this.controlAnimationNext = this.dom.find(&#x27;.bgplayControlAnimationNext&#x27;);
+        this.controlAnimationPrevImage = this.dom.find(&#x27;.bgplayControlAnimationPrev img&#x27;);
+        this.controlPrefixDiv = this.dom.find(&#x27;.bgplayControlPrefixDiv&#x27;);
+        this.starttimestampPicker = this.dom.find(&#x27;.bgplayStarttimestampPicker&#x27;);
+        this.endtimestampPicker = this.dom.find(&#x27;.bgplayEndtimestampPicker&#x27;);
+        this.controlPanelDivFlagIco = this.dom.find(&#x27;.bgplayControlPanelDivFlagIco&#x27;);
+        this.controlPanelDivComplete = this.dom.find(&#x27;.bgplayControlPanelDivComplete&#x27;);
+        this.suppressReannounce = this.dom.find(&#x27;.bgplaySuppressReannounce&#x27;);
+    },
+
+    &#x2F;**
+     * This method draws this module (eg. inject the DOM and elements).
+     * @method render
+     *&#x2F;
+    render:function(){
+        parseTemplate(&#x27;controller.html&#x27;,this,this.el);
+        this.getDomElements();
+        this.update();
+        this.controlPrefixDiv.tinyscrollbar({axis:&#x27;y&#x27;});
+
+        this.starttimestampPicker.datetimepicker({
+            changeMonth: true,
+            changeYear: true,
+            hideIfNoPrevNext:true,
+            timeFormat:&#x27;HH:mm:ss&#x27;,
+            separator:&#x27; &#x27;,
+            dateFormat:&#x27;yy&#x2F;mm&#x2F;dd&#x27;,
+            showSecond: true,
+            maxDate: &quot;+0&quot;
+        });
+
+        this.starttimestampPicker.datetimepicker(&quot;setDate&quot;,new Date(this.bgplay.get(&quot;starttimestamp&quot;)*1000));
+
+        this.endtimestampPicker.datetimepicker({
+            changeMonth: true,
+            changeYear: true,
+            defaultDate:new Date(this.bgplay.get(&quot;endtimestamp&quot;)*1000),
+            hideIfNoPrevNext:true,
+            timeFormat:&#x27;HH:mm:ss&#x27;,
+            separator:&#x27; &#x27;,
+            dateFormat:&#x27;yy&#x2F;mm&#x2F;dd&#x27;,
+            showSecond: true,
+            maxDate: &quot;+0&quot;
+        });
+
+        this.endtimestampPicker.datetimepicker(&quot;setDate&quot;,new Date(this.bgplay.get(&quot;endtimestamp&quot;)*1000));
+
+        return this;
+    },
+
+    &#x2F;**
+     * This method updates the DOM of the Control Panel without render it again.
+     * @method update
+     *&#x2F;
+    update:function(){
+        var startStopImages;
+        startStopImages = this.controlAnimationStartPause.find(&#x27;img&#x27;);
+        if (this.animation==true){
+            this.controlAnimationPrevImage.hide();
+            this.controlAnimationNext.hide();
+            startStopImages.eq(1).hide();
+
+            startStopImages.eq(0).show();
+            this.controlAnimationStop.show();
+
+        }else{
+            this.controlAnimationStop.hide();
+            startStopImages.eq(0).hide();
+
+            startStopImages.eq(1).show();
+            this.controlAnimationPrevImage.show();
+            this.controlAnimationNext.show();
+        }
+
+
+    },
+
+    &#x2F;**
+     * If this method is invoked during an animation then the animation pauses otherwise the animation starts.
+     * @method toggle
+     *&#x2F;
+    toggle:function(){
+        if (!this.releasedPlayButton){
+            return;
+        }
+
+        this.closeFlag();
+        if (this.bgplay.get(&quot;cur_instant&quot;).get(&quot;timestamp&quot;) &lt; this.stopAnimationInstant.get(&quot;timestamp&quot;)){
+            this.animation=!this.animation;
+            this.update();
+            this.eventAggregator.trigger(&quot;animate&quot;, this.animation);
+        }
+    },
+
+    &#x2F;**
+     * This method reloads the animation.
+     * @method reload
+     *&#x2F;
+    reload:function(){
+        this.bgplay.setCurInstant(this.startAnimationInstant);
+        this.eventAggregator.trigger(&quot;checkPathPosition&quot;);
+    },
+
+    &#x2F;**
+     * This method stops and reloads the animation.
+     * @method stopButton
+     *&#x2F;
+    stopButton:function(){
+        this.stop();
+        this.reload();
+    },
+
+    &#x2F;**
+     * This method stops the animation.
+     * @method stop
+     *&#x2F;
+    stop:function(){
+        this.animation=false;
+        this.eventAggregator.trigger(&quot;animate&quot;, false);
+        this.update();
+    },
+
+    &#x2F;**
+     * This method applies the previous event.
+     * @method previousEvent
+     *&#x2F;
+    previousEvent:function(){
+        var prevInstant, prevEvent, instant;
+        instant = this.bgplay.get(&quot;cur_instant&quot;);
+        prevEvent = this.allEvents.nearest(instant,false,false);
+        if (prevEvent!=null){
+            prevInstant = prevEvent.get(&quot;instant&quot;);
+            if (!this.environment.config.controller.disableNotSelectedInstants || this.allEvents.compare(prevInstant,this.startAnimationInstant)&gt;=0){
+                this.bgplay.setCurInstant(prevInstant);
+            }
+        }
+    },
+
+    &#x2F;**
+     * This method applies the next event.
+     * @method nextEvent
+     *&#x2F;
+    nextEvent:function(){
+        var nextInstant, nextEvent, instant;
+        instant = this.bgplay.get(&quot;cur_instant&quot;);
+        nextEvent = this.allEvents.nearest(instant,true,false);
+        if (nextEvent!=null){
+            nextInstant = nextEvent.get(&quot;instant&quot;);
+            if (!this.environment.config.controller.disableNotSelectedInstants || this.allEvents.compare(nextInstant,this.stopAnimationInstant)&lt;=0){
+                this.bgplay.setCurInstant(nextInstant);
+            }
+        }
+    },
+
+    &#x2F;**
+     * This method validates an IP&#x2F;prefix inserted in the query form.
+     * @method validateIp
+     * @return {Boolean} True if the given IP is valid
+     *&#x2F;
+    validateIp:function(){
+        var out, val, $this;
+        out=true;
+        $this=this;
+        this.dom.find(&quot;input[name=bgplayControlPrefixValues]&quot;).each(function(){
+            val=$(this).val();
+            if (! (validateIpv4and6Prefix(val) || validateIpv4and6Address(val))){
+                $this.environment.cssAlert.alert(&#x27;Malformed prefix&#x2F;ip.&lt;br&#x2F;&gt;A valid ip for ipv4 or ipv6 possibly with netmask is required.&#x27;,&#x27;validation&#x27;);
+                out=false;
+            }
+        });
+        return out;
+    },
+
+    &#x2F;**
+     * This method validates the query form.
+     * @method validateAll
+     * @return {Boolean} True if the data inserted in the query form is valid
+     *&#x2F;
+    validateAll:function(){
+        &#x2F;&#x2F;A trick to solve a bug of the timepicker add-on (I&#x27;m triggering a keyUp to force the update of the date)
+        this.starttimestampPicker.keyup();
+        this.endtimestampPicker.keyup();
+
+        return this.validateIp() &amp;&amp; this.validateInterval() &amp;&amp; this.validateRrcs();
+    },
+
+    &#x2F;**
+     * This method validates the time interval.
+     * @method validateInterval
+     * @return {Boolean} True if the time interval is valid
+     *&#x2F;
+    validateInterval:function(){
+        if (this.starttimestampPicker.datepicker(&quot;getDate&quot;).getTime()&gt;this.endtimestampPicker.datepicker(&quot;getDate&quot;).getTime()){
+            this.environment.cssAlert.alert(&quot;The end date is before the start date.&lt;br&#x2F;&gt;Wait a minute, Doc. Ah... Are you telling me that you built a time machine... out of a DeLorean?&quot;,&quot;validation&quot;);
+            return false;
+        }
+        return true;
+    },
+
+    &#x2F;**
+     * This method validates a set of route collectors
+     * @method validateRrcs
+     * @return {Boolean} True if the set of RRCs is valid
+     *&#x2F;
+    validateRrcs:function(){
+        if (this.selectableRrcs){
+            var rrcSelected=[];
+            this.dom.find(&#x27;input[name=bgplayRrcSelect]:checked&#x27;).each(function(){
+                rrcSelected.push($(this).val());
+            });
+            if (rrcSelected.length==0){
+                this.environment.cssAlert.alert(&quot;You must select at least one rrc.&quot;,&quot;validation&quot;);
+                return false;
+            }
+        }
+        return true;
+
+    },
+    mouseOverFlag:function(){
+        if (this.slideOpened==false)
+            this.controlPanelDivFlagIco.attr(&#x27;src&#x27;,this.fileRoot+&#x27;view&#x2F;html&#x2F;img&#x2F;openSlide.png&#x27;);
+    },
+    mouseOutFlag:function(){
+        if (this.slideOpened==false)
+            this.controlPanelDivFlagIco.attr(&#x27;src&#x27;,this.fileRoot+&#x27;view&#x2F;html&#x2F;img&#x2F;config.png&#x27;);
+    },
+    clickOnFlag:function(){
+        if (this.slideOpened==false){
+            this.openFlag();
+        }else{
+            this.discardConfig();
+        }
+    },
+    openFlag:function(){
+        if (this.slideOpened==false){
+            var $this=this;
+            this.dom.animate({height:&#x27;+=380&#x27;}, 600, function() {
+                $this.dom.animate({width:&#x27;+=210&#x27;},300,function(){
+                    $this.controlPanelDivComplete.show();
+                    $this.controlPanelDivFlagIco.attr(&#x27;src&#x27;,$this.fileRoot+&#x27;view&#x2F;html&#x2F;img&#x2F;closeSlide.png&#x27;);
+                    $this.controlPrefixDiv.tinyscrollbar_update();
+                });
+            });
+            this.slideOpened=true;
+        }
+    },
+    closeFlag:function(){
+        if (this.slideOpened==true){
+            var $this=this;
+            this.controlPanelDivComplete.hide();
+            this.dom.animate({height:&#x27;-=380&#x27;}, 600, function() {
+                $this.dom.animate({width:&#x27;-=210&#x27;},300,function(){
+                    $this.controlPanelDivFlagIco.attr(&#x27;src&#x27;,$this.fileRoot+&#x27;view&#x2F;html&#x2F;img&#x2F;config.png&#x27;);
+                });
+            });
+            this.slideOpened=false;
+        }
+    },
+    morePrefixTextbox:function(){
+        var element=this.dom.find(&quot;.bgplayControlPrefixValue&gt;div&gt;div&quot;).first();
+        var parent=element.parent();
+        element.clone().appendTo(parent).find(&#x27;input&#x27;).val(&quot;&quot;);
+        this.controlPrefixDiv.tinyscrollbar_update(&#x27;bottom&#x27;);
+    },
+    lessPrefixTextbox:function(event){
+        var element=$(event.target);
+        if (this.dom.find(&quot;.bgplayControlPrefixValue&gt;div&gt;div&quot;).length&gt;1){
+            element.parent().remove();
+            this.controlPrefixDiv.tinyscrollbar_update();
+        }else{
+            element.parent().find(&#x27;input&#x27;).val(&quot;&quot;);
+        }
+    },
+
+    &#x2F;**
+     * This method discards the new query parameters
+     * @method discardConfig
+     *&#x2F;
+    discardConfig:function(){
+        this.closeFlag();
+        this.render();
+    },
+
+    &#x2F;**
+     * This method applies the new query parameters
+     * @method updateConfig
+     *&#x2F;
+    updateConfig:function(){
+        if (!this.environment.params.preventNewQueries==false){
+            this.discardConfig();
+            return;
+        }
+        var internalParams, rrcSelected, $this, externalParams;
+        if (this.validateAll()==true){
+            $this = this;
+            this.prefixes = new Array();
+            this.dom.find(&quot;.bgplayControlPrefixValue input[type=text]&quot;).each(function(){
+                $this.prefixes.push($(this).val());
+            });
+
+            rrcSelected=[];
+            this.dom.find(&#x27;input[name=bgplayRrcSelect]:checked&#x27;).each(function(){
+                rrcSelected.push($(this).val());
+            });
+
+            this.ignoreReannouncements = this.suppressReannounce.is(&#x27;:checked&#x27;);
+
+            if (this.environment.thisWidget!=null){
+                internalParams={
+                    starttimestamp:this.starttimestampPicker.datetimepicker(&quot;getDate&quot;).getTime()&#x2F;1000,
+                    endtimestamp:this.endtimestampPicker.datetimepicker(&quot;getDate&quot;).getTime()&#x2F;1000,
+                    targets:arrayToString(this.prefixes),
+                    ignoreReannouncements:this.ignoreReannouncements,
+                    selectedRrcs:arrayToString(rrcSelected)
+                };
+
+
+                externalParams = this.environment.jsonWrap.setParams(internalParams);
+                try{
+                    setUrlParam(&#x27;instant&#x27;,&quot;&quot;,false);
+
+                    if (this.environment.paramsInUrl == true &amp;&amp; this.environment.instances==1){
+                        setUrlParam(&quot;starttime&quot;,externalParams.starttime,false);
+                        setUrlParam(&quot;endtime&quot;,externalParams.endtime,false);
+                        setUrlParam(&quot;resource&quot;,externalParams.resource,false);
+                        setUrlParam(&quot;ignoreReannouncements&quot;,externalParams.ignoreReannouncements,false);
+                        setUrlParam(&quot;selectedRrcs&quot;,externalParams.selectedRrcs,false);
+                    }
+                    window.history.replaceState({&quot;html&quot;:this.bgplay.html,&quot;pageTitle&quot;:&#x27;BGPlayjs&#x27;},&quot;&quot;, currentUrl);
+                }catch(e){
+                    log(&#x27;This browser does not support the replaceState function.&#x27;);
+                }
+
+                if (!areMapsEquals(internalParams, this.environment.params)){
+                    this.environment.oldParams=this.environment.params;
+                    this.environment.thisWidget.update(externalParams);
+                    this.closeFlag(); &#x2F;&#x2F;If the widget was not updated then the query parameters are the same, close the flag
+                    this.eventAggregator.trigger(&quot;destroyAll&quot;);
+                }else{
+                    this.discardConfig();
+                }
+            }else{
+                setUrlParam(&quot;starttimestamp&quot;,this.starttimestampPicker.datetimepicker(&quot;getDate&quot;).getTime()&#x2F;1000,false);
+                setUrlParam(&quot;endtimestamp&quot;,this.endtimestampPicker.datetimepicker(&quot;getDate&quot;).getTime()&#x2F;1000,false);
+                setUrlParam(&quot;targets&quot;,arrayToString(this.prefixes),false); &#x2F;&#x2F;If the last parameter is true, the new url will be loaded
+                setUrlParam(&quot;ignoreReannouncements&quot;,this.ignoreReannouncements,false);
+                setUrlParam(&quot;selectedRrcs&quot;,stringToArray(rrcSelected),true);
+            }
+        }
+    }
+
+});
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

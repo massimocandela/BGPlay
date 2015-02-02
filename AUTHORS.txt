@@ -1,0 +1,17 @@
+AUTHORS
+
+Massimo Candela <candela@dia.uniroma3.it>
+Roma Tre University
+http://www.dia.uniroma3.it/~candela
+
+Giuseppe Di Battista <gdb@dia.uniroma3.it>
+Roma Tre University
+http://www.dia.uniroma3.it/~gdb
+
+Claudio Squarcella <squarcel@dia.uniroma3.it>
+Roma Tre University
+http://www.dia.uniroma3.it/~squarcel
+
+
+  
+  

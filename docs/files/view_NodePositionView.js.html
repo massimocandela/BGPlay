@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>view\NodePositionView.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: view\NodePositionView.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*
+ * BGPlay.js #9660
+ * A web-based service for the visualization of the Internet routing
+ *
+ * Copyright (c) 2012 Roma Tre University and RIPE NCC
+ *
+ * See the file LICENSE.txt for copying permission.
+ *&#x2F;
+
+&#x2F;**
+ * NodePositionView provides three functionalities:
+ * - allows the user to obtain the json of the graph;
+ * - allows the user to edit and apply a json to the graph;
+ * - applies, if present, a json from widget&#x27;s parameters.
+ * @class NodePositionView
+ * @module modules
+ *&#x2F;
+var NodePositionView=Backbone.View.extend({
+
+    &#x2F;**
+     * The initialization method of this object.
+     * @method initialize
+     * @param {Map} A map of parameters
+     *&#x2F;
+    initialize:function(){
+        this.environment=this.options.environment;
+        this.bgplay=this.environment.bgplay;
+        this.fileRoot=this.environment.fileRoot;
+        this.eventAggregator=this.environment.eventAggregator;
+
+        this.eventAggregator.trigger(&quot;moduleLoading&quot;, true);
+
+        this.environment.optionalParams.push(&#x27;nodesPosition&#x27;);
+        this.positions=&quot;&quot;;
+        this.eventAggregator.on(&quot;destroyAll&quot;, function(){
+            this.destroyMe();
+        },this);
+
+        this.render();
+        this.eventManager();
+
+        this.eventAggregator.on(&quot;nodeMoved&quot;, function(){
+            if (this.popup.is(&#x27;:visible&#x27;)){
+                this.getNodesPositions();
+            }
+        },this);
+
+        if (this.environment.params.nodesPosition!=null){
+            this.environment.config.graph.computeNodesPosition = false;
+            this.environment.params.preventNewQueries = true;
+            this.textArea.val(this.environment.params.nodesPosition);
+            this.apply();
+        }
+        this.eventAggregator.trigger(&quot;moduleLoading&quot;, false);
+    },
+
+    &#x2F;**
+     * This method draws this module (eg. inject the DOM and elements).
+     * @method render
+     *&#x2F;
+    render:function(){
+        this.footerDiv = this.environment.thisWidget.dom.closest(&#x27;.stat-widget&#x27;).find(&#x27;.box-buttons&#x27;);
+        this.button = $(&#x27;&lt;li&gt;&lt;a class=&quot;button&quot; href=&quot;javascript:void(0);&quot;&gt;json nodes&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;&#x27;);
+        this.popup = $(&#x27;&lt;div class=&quot;json_nodes popup&quot;&gt;&lt;h3&gt;Json of the positions of the nodes&lt;&#x2F;h3&gt;&lt;&#x2F;div&gt;&#x27;);
+        this.popup.hide();
+        parseTemplate(&#x27;nodePosition.html&#x27;,this,this.popup,&quot;append&quot;);
+        this.textArea = this.popup.find(&#x27;textarea&#x27;);
+        this.applyButton = this.popup.find(&#x27;input[value=Apply]&#x27;);
+
+        this.footerDiv.find(&#x27;.left&#x27;).append(this.button);
+        this.footerDiv.append(this.popup);
+
+        return this;
+    },
+
+    &#x2F;**
+     * This method manages the events of the built DOM.
+     * @method eventManager
+     *&#x2F;
+    eventManager:function(){
+        var $this=this;
+        this.button.click(function(){
+            if ($this.popup.is(&#x27;:visible&#x27;)){
+                $this.popup.hide();
+            }else{
+                $this.footerDiv.find(&#x27;.popup&#x27;).hide();
+                $this.getNodesPositions();
+                $this.popup.show();
+            }
+        });
+
+        this.applyButton.click(function(){
+            $this.apply();
+        });
+    },
+
+    &#x2F;**
+     * This methods builds a string describing the graph.
+     * @method getNodesPositions
+     *&#x2F;
+    getNodesPositions:function(){
+        var positions={};
+        this.bgplay.get(&quot;nodes&quot;).forEach(function(node){
+            positions[node.id]={x:node.view.x, y:node.view.y};
+        });
+
+        this.positions=JSON.stringify(positions);
+        this.textArea.val(this.positions);
+    },
+
+    &#x2F;**
+     * This methods applies to each node the coordinates obtained with the getNodesPositions method.
+     * @method apply
+     *&#x2F;
+    apply:function(){
+        var newPositions, position, $this;
+        $this=this;
+        newPositions = JSON.parse(this.textArea.val());
+        this.bgplay.get(&quot;nodes&quot;).forEach(function(node){
+            position = newPositions[node.id];
+            if (position!=null){
+                var x = (position.x - node.view.x);
+                var y = (position.y - node.view.y);
+                node.view.view.translate(x, y);
+                node.oldX=node.view.x;
+                node.oldY=node.view.y;
+                node.view.x += x;
+                node.view.y += y;
+                $this.eventAggregator.trigger(&quot;nodeMoved&quot;,node);
+            }
+        });
+    }
+});
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

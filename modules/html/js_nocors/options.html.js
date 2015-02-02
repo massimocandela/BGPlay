@@ -1,0 +1,1 @@
+addTemplateContent('options.html', '<div class="bgplayOptionsPopup"></div>');

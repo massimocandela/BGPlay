@@ -1,0 +1,4 @@
+modules/bgplay_ripestat
+widget/bgplay-ripestat
+.hgignore
+widget/bgplay/bgplay-config_old.js

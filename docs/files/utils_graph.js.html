@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>utils\graph.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: utils\graph.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*
+ * BGPlay.js #9660
+ * A web-based service for the visualization of the Internet routing
+ *
+ * Copyright (c) 2012 Roma Tre University and RIPE NCC
+ *
+ * See the file LICENSE.txt for copying permission.
+ *&#x2F;
+
+var net = net || {};
+net.webrobotics = net.webrobotics || {};
+
+net.webrobotics.GraphUtils = function () {
+    &#x2F;**
+     * Returns the distance between two points.
+     *
+     * @method pointDistance
+     * @param {Number,Number} x and y of the first point
+     * @param {Number,Number} x and y of the second point
+     * @return {Number} the distance between the two points
+     *&#x2F;
+    this.pointDistance = function (p1, p2) {
+        var diffX, diffY;
+        diffX = p2.x - p1.x;
+        diffY = p2.y - p1.y;
+        return Math.sqrt((diffX*diffX)+(diffY*diffY));
+    };
+
+    this.vectorModule = function (vector) {
+        return Math.abs(this.pointDistance({x:0, y:0}, vector));
+    };
+
+    this.isNumeric = function (n) {
+        return !isNaN(parseFloat(n)) &amp;&amp; isFinite(n)
+    };
+
+    this.unitVector = function (p1, p2) {
+        var distance = this.pointDistance(p1, p2);
+        return (distance == 0) ? {x:(p2.x - p1.x), y:(p2.y - p1.y)} : {x:(p2.x - p1.x) &#x2F; distance, y:(p2.y - p1.y) &#x2F; distance};
+    };
+
+    this.cathetus = function (hypotenuse, otherLeg) {
+        return Math.sqrt(Math.pow(hypotenuse, 2) - Math.pow(otherLeg, 2));
+    };
+
+    this.inverseVector = function (vector) {
+        return {x:-vector.x, y:-vector.y};
+    };
+
+    this.leftUnitVector = function (unitVector) {
+        return {x:-unitVector.y, y:unitVector.x};
+    };
+
+    this.radiusOfTheInscribedCircle = function (width, height) {
+        return Math.min(width, height) &#x2F; 2;
+    };
+
+    this.angle = function (vector) {
+        var module = this.vectorModule(vector);
+        var x = Math.abs(vector.x);
+        var y = Math.abs(vector.y);
+        return Math.acos((y*y) - (x*x) - (module*module)) &#x2F; (-2 * module * x);
+    };
+
+    this.vectorProjection = function (vector, axis) {
+        return (axis == &quot;x&quot;) ? {x:vector.x, y:0} : {x:0, y:vector.y};
+    };
+
+    this.sumBetweenVectors = function (v1, v2) {
+        return {x:v1.x + v2.x, y:v1.y + v2.y};
+    };
+
+    this.mulVectorForValue = function (vector, value) {
+        return {x:vector.x * value, y:vector.y * value};
+    };
+
+    this.pointAtDistance = function (distance, unitVector, point) {
+        return this.sumBetweenVectors(this.mulVectorForValue(unitVector, distance), point);
+    };
+
+    this.translatePoint = function (point, vector) {
+        var newPoint = this.sumBetweenVectors(vector, point);
+        point.x = newPoint.x;
+        point.y = newPoint.y;
+        return point;
+    };
+
+    this.transformPointToPoint = function (from, to) {
+        from.x = to.x;
+        from.y = to.y;
+    };
+
+    this.hook = function (node1, node2, optimalDistance, limit) {
+        var newPoint1, newPoint2, difference, unitVector, halfDifference, distance,force, kSpringFactor;
+
+        kSpringFactor=0.2; &#x2F;&#x2F;0.3
+        distance = this.pointDistance(node1, node2);
+        difference = distance - (optimalDistance * Math.abs(node1.orbit - node2.orbit));
+        &#x2F;&#x2F;difference = distance - (optimalDistance);
+        if (difference != 0) {
+            unitVector = this.unitVector(node1, node2);
+            difference = (limit != null &amp;&amp; difference &gt; limit) ? limit : difference;
+            force=kSpringFactor*difference;
+            &#x2F;&#x2F;halfDifference = difference &#x2F; 2;
+            &#x2F;&#x2F;newPoint1 = this.mulVectorForValue(unitVector, halfDifference);
+            &#x2F;&#x2F;newPoint2 = this.mulVectorForValue(this.inverseVector(unitVector), halfDifference);
+            newPoint1 = this.mulVectorForValue(unitVector, force);
+            newPoint2 = this.mulVectorForValue(this.inverseVector(unitVector), force);
+
+            node1.vectors.push(newPoint1);
+            node2.vectors.push(newPoint2);
+        }
+
+
+    };
+
+    this.coulomb = function (node1, node2, factor1, factor2, limit, maxDistance) {
+        var newPoint1, newPoint2, unitVector, distance, repulsionFactor, force1, force2, factorSum, factorPercentage;
+        repulsionFactor = 80;&#x2F;&#x2F;350
+        distance = this.pointDistance(node1, node2);
+        &#x2F;&#x2F;distance=(distance==0)?0.1:distance;
+        if (distance &gt; maxDistance) return;
+
+        factorSum = factor1 + factor2;
+        factorPercentage = (100&#x2F;factorSum);
+        factor1 = factorPercentage*factor1;
+        factor2 = factorPercentage*factor2;
+
+        force1 = (repulsionFactor * (1&#x2F;distance))&#x2F;100 * factor2;
+        force2 = (repulsionFactor * (1&#x2F;distance))&#x2F;100 * factor1;
+
+        &#x2F;&#x2F;force=repulsionFactor*Math.sqrt(distance);
+        force1 = (force1 &gt; limit) ? limit : force1;
+        force2 = (force2 &gt; limit) ? limit : force2;
+
+        unitVector = this.unitVector(node1, node2);
+        newPoint1 = this.mulVectorForValue(this.inverseVector(unitVector), force1);
+        newPoint2 = this.mulVectorForValue(unitVector, force2);
+        node1.vectors.push(newPoint1);
+        node2.vectors.push(newPoint2);
+    };
+
+    this.straighten = function (node1, node2, node3) {
+        var unitVector1 = this.unitVector(node1, node2);
+        var unitVector2 = this.unitVector(node2, node3);
+        var distance = this.pointDistance(node2, node3);
+        var resultVector1 = this.unitVector(unitVector2, unitVector1);
+        var resultVector2 = this.unitVector(unitVector1, unitVector2);
+        node2.vectors.push(this.mulVectorForValue(resultVector1, 2));
+        node3.vectors.push(this.mulVectorForValue(resultVector2, 2));
+    };
+
+
+    this.computeFinalPosition = function (node) {
+        var element;
+        for (var n = 0; n &lt; node.vectors.length; n++) {
+            element = node.vectors[n];
+            node.x += element.x;
+            node.y += element.y;
+        }
+
+        node.vectors = new Array();
+    };
+
+    this.absOrientation = function (node1, node2) {
+        return (parseInt(node1.view.graphId) &lt;= parseInt(node2.view.graphId)) ? [node1, node2] : [node2, node1];
+    };
+
+    this.edgeNodeRepulsion = function(edge, node, limit, maxDistance,n){
+        var angolarCoefficient, perpendicolarCoefficient, q1, q2, px, py, tmpPoint, newPoint1, unitVector, distance, repulsionFactor, force;
+        if (edge[1].id != node.id &amp;&amp; edge[0].id != node.id){
+            &#x2F;&#x2F;&amp;&amp; Math.min(this.pointDistance(edge[0],node),this.pointDistance(edge[1],node))&lt;maxDistance){
+
+            angolarCoefficient =  (edge[1].y - edge[0].y)&#x2F;(edge[1].x - edge[0].x);
+            q1 = edge[1].y - (angolarCoefficient*edge[1].x);
+            perpendicolarCoefficient = -angolarCoefficient;
+            q2 = node.y&#x2F;(node.x*perpendicolarCoefficient);
+            px = (q2-q1)&#x2F;(angolarCoefficient-perpendicolarCoefficient);
+            py = (angolarCoefficient*edge[0].x) + q1;
+            tmpPoint = {x:px,y:py, vectors:[]};
+            if (Math.max(edge[0].x, edge[1].x)&gt;= px &amp;&amp; Math.min(edge[0].x, edge[1].x)&lt;= px  &amp;&amp;
+                Math.max(edge[0].y, edge[1].y)&gt;= py &amp;&amp; Math.min(edge[0].y, edge[1].y)&lt;= py &amp;&amp;
+                this.pointDistance(tmpPoint,node) &lt; maxDistance){
+                &#x2F;&#x2F;this.coulomb({x:px,y:py, vectors:[]}, node, 1000, 1, limit, maxDistance);
+
+                repulsionFactor = 20;&#x2F;&#x2F;350
+                distance = this.pointDistance(tmpPoint, node);
+                if (distance &gt; maxDistance) return;
+
+                &#x2F;&#x2F;force = Math.pow(repulsionFactor,(1&#x2F;n));
+                force = repulsionFactor&#x2F;n;
+                &#x2F;&#x2F;force=repulsionFactor*Math.sqrt(distance);
+                force = (force &gt; limit) ? limit : force;
+
+                unitVector = this.unitVector(tmpPoint, node);
+                newPoint1 = this.mulVectorForValue(unitVector, force);
+                node.vectors.push(newPoint1);
+
+            }
+        }
+    }
+
+    this.roundedPath = function (curveCoefficient, p1, p2, p3) {
+        var points = [];
+        var vector1 = this.unitVector(p2, p1);
+        var vector2 = this.unitVector(p2, p3);
+
+        var borderPoint1 = this.pointAtDistance(curveCoefficient, vector1, p2);
+        var borderPoint2 = this.pointAtDistance(curveCoefficient, vector2, p2);
+
+        var middlePoint1 = this.pointAtDistance(curveCoefficient &#x2F; 2, vector1, p2);
+        var middlePoint2 = this.pointAtDistance(curveCoefficient &#x2F; 2, vector2, p2);
+
+        var vector3 = this.unitVector(middlePoint2, middlePoint1);
+        var centralPoint = this.pointAtDistance(this.pointDistance(middlePoint2, middlePoint1) &#x2F; 2, vector2, middlePoint2);
+
+        points.push(borderPoint1);
+        points.push(middlePoint1);
+        points.push(centralPoint);
+        points.push(middlePoint2);
+        points.push(borderPoint2);
+        return points;
+    }
+};
+
+
+
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

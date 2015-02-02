@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>widget\widget_api_class.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: widget\widget_api_class.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+(function($) {
+    
+    require.config({
+        urlArgs: &quot;v=&quot; + STAT_WIDGETS_VERSION,
+        waitSeconds: STAT_REQUIRE_TIMEOUT,
+        jQuery: $
+    });
+
+    var _WIDGETS = [];
+    
+    $(window).bind(&#x27;hashchange&#x27;, function(event) {
+		var hash_state = getHashState();
+        for (var i=0; i &lt; _WIDGETS.length; i++) {
+            var widget_id = _WIDGETS[i];
+            var widget = $(&quot;#&quot; + widget_id).statWidget();
+            widget.update(getHashNamespace(widget_id, hash_state));
+        }
+    });
+
+    function hash_length(hash) {
+        var cnt = 0;
+        for(var key in hash)
+            cnt++;
+        return cnt;
+    }
+
+    var SPEC_DEFAULTS = {
+        title: &#x27;No Title&#x27;,
+        apifunc: undefined, &#x2F;&#x2F; same as slug
+        mparam: [],
+        oparam: [],
+        jsfile: null,
+        defaults: {},
+    };
+
+    &#x2F;&#x2F; Takes an object and formats query string
+    function uriEncode(base, data) {
+        var qs = &quot;&quot;;
+        for (var key in data) {
+            qs += qs.length ? &#x27;&amp;&#x27; : &#x27;&#x27;;
+            qs += key;
+            qs += &quot;=&quot; + encodeURIComponent(data[key]);
+        }
+        if(qs)
+            return base + (base.indexOf(&#x27;?&#x27;) == -1 ? &#x27;?&#x27; : &#x27;&amp;&#x27;) + qs;
+        
+        return base;
+    }
+
+    ripestat = function () { &#x2F;&#x2F; Wrapper static class
+        
+		WIDGET_SIZES = {
+			micro: 160,
+			mini: 256,
+			small: 360,
+			compact: 480,
+			medium: 640,
+			large: 1280
+		}
+        
+        $.fn.statWidget = function() {
+            return $(this).closest(&quot;.stat-widget&quot;).data(&quot;widget&quot;);
+        }
+
+        var RipestatClass = function (div, widget_name, params, styling) { &#x2F;&#x2F; Ripestat manipulation class
+
+            var w_main_div = $(div);
+            var w_inner_div = null;
+            var w_info_div = null;
+            var w_data_div = null;
+            var w_data_area_div = null;
+
+			&#x2F;&#x2F; this is a list of callbacks that get built up when the widget builds
+			var w_data_url_callbacks = [];
+
+            var w_widget_name = widget_name.toLowerCase();
+            var w_params = (typeof params == &#x27;undefined&#x27;)?{}:params;
+            var w_initial_params = null;
+            var w_spec = null;
+            var w_invalid_params = null;
+
+            var w_data_params = null;
+            var w_data = null;
+            &#x2F;* when the processing of the widget is done (successful or not) this is set to true *&#x2F;
+            var w_loaded = false;
+
+            var w_styling = (typeof styling != &#x27;object&#x27;)?{}:styling;
+			var w_width = null;
+            var w_disable_styling = (&#x27;disable&#x27; in w_styling)?w_styling.disable:[];
+            
+            &#x2F;&#x2F; change all argurments to lower-case
+            for (var i = 0; i &lt; w_disable_styling.length; i++)
+                w_disable_styling[i] = w_disable_styling[i].toLowerCase();
+            
+            &#x2F;* controls are disabled by default unless it is explicitly set!!! *&#x2F;
+            if (!(w_styling.show_controls &amp;&amp; 
+                typeof w_styling.show_controls == &quot;string&quot;  &amp;&amp;
+                w_styling.show_controls.toLowerCase() == &quot;yes&quot;))
+                w_disable_styling.push(&quot;controls&quot;);
+
+            var _construct = function() {
+
+                if (!(w_spec = _load_spec()))
+                    return;
+
+                &#x2F;&#x2F; If the main div doesn&#x27;t have an ID then we create one here
+                var widget_id = w_main_div.attr(&quot;id&quot;);
+                if (!widget_id) {
+                    for (i=0; ; i++) {
+                        widget_id = w_widget_name; 
+                        if (i)
+                            widget_id += &quot;-&quot; + i;
+                        if (!$(&quot;#&quot; + widget_id).length)
+                            break;
+                    }
+                    w_main_div.attr(&quot;id&quot;, widget_id);
+                }
+                &#x2F;&#x2F; Register this widget for onhashchange events
+                _WIDGETS.push(widget_id);
+
+                &#x2F;&#x2F; Update the given parameters with the hash state
+				var state_params = getHashNamespace(widget_id);
+                if (state_params) {
+                    for (var param in state_params) {
+                        w_params[param] = state_params[param];
+                    }
+                }
+                
+                w_data_params = _get_data_params();
+
+                _validate_params();
+
+                if (w_invalid_params.length &amp;&amp; !w_styling.show_controls) {
+                    for (i=0; i &lt; w_invalid_params.length; i++)
+                        _req_error(&quot;Mandatory parameter &lt;b&gt;&quot; +
+                            w_invalid_params[i] + &quot;&lt;&#x2F;b&gt; is missing.&quot;);
+                    return;
+                }
+
+                w_initial_params = w_params;
+
+                _build_scaffolding();       
+
+            }   
+
+            var _load_spec = function() {
+                var orig = STAT_WIDGETS_SPEC[w_widget_name];
+                if(! orig) {
+                    _req_error(&quot;Widget name &lt;b&gt;&quot; + w_widget_name + &quot;&lt;&#x2F;b&gt; does not exist.&quot;);
+                    return;
+                }
+
+                &#x2F;&#x2F; check for required attributes
+                if(! orig.pluginname) {
+                    _req_error(&quot;Invalid widget spec: &quot; + orig);
+                    return;
+                }
+
+                if(orig.apifunc === undefined)
+                    orig.apifunc = w_widget_name;
+
+                return $.extend(true, {}, SPEC_DEFAULTS, orig);
+            }
+
+            var _get_data_params = function() {
+                w_data_params = {};
+                for (param in w_spec.defaults) {
+                    w_data_params[param] = w_spec.defaults[param];
+                }
+                for (param in w_params) {
+                    w_data_params[param] = w_params[param];
+                }
+                return w_data_params;
+            }
+
+			var _update_data_params = function(new_params) {
+				w_data_params = new_params;
+				for (var i=0; i &lt; w_data_url_callbacks.length; i++)
+					w_data_url_callbacks[i]();
+			}
+
+            var _validate_params = function () {
+                w_invalid_params = [];
+                for (var i=0; i&lt; w_spec.mparam.length; i++) {
+                    var par = w_spec.mparam[i];
+                    if ( !(par in w_data_params) )
+                        w_invalid_params.push(par);
+                }
+                return !w_invalid_params.length;
+            }
+
+            &#x2F;*
+             * Push state implied by &#x27;new_params&#x27; to the URL hash, except 
+             * for default parameters
+             * *&#x2F;
+            var _push_state = function(new_params) {
+                var state = {};
+                for (var param in new_params)
+                    if (new_params[param] != w_spec.defaults[param])
+                        state[param] = new_params[param];
+				updateHashNamespace(w_main_div.attr(&quot;id&quot;), state);
+            }
+            
+            &#x2F;**
+             * Returns the url used to connect to the data API.
+             * 
+             * XSS safe
+             *&#x2F;
+            var _get_data_url = function (data_type, apifunc, url_params, validate) {
+                if (!data_type)
+                    data_type = &quot;json&quot;;
+				if (!apifunc)
+					apifunc = w_spec.apifunc;
+				if (!url_params)
+					url_params = w_data_params;
+				if (typeof validate == &quot;undefined&quot;)
+					validate = true;
+				else
+					validate = false;
+
+                if (!apifunc)
+                    return;
+
+                var basic_url = STAT_DATA_API_URL + apifunc + &#x27;&#x2F;data.&#x27; + data_type;
+
+                var necessary_url_params = {};
+                for (var p in url_params) {
+                    if (!validate || $.inArray(p, w_spec.mparam)&gt;-1 || $.inArray(p, w_spec.oparam)&gt;-1 ){
+                        necessary_url_params[p] = decodeURIComponent(url_params[p]);
+                    }
+                }
+                
+                data_api_url = jQuery.param.querystring(basic_url, necessary_url_params);
+                
+                return data_api_url;
+            }
+
+            var _get_methodology_url = function() {
+                return STAT_DATA_API_URL + &#x27;widget-documentation&#x2F;data.json?widget_name=&#x27; + w_spec.apifunc;
+            }
+
+            var _build_scaffolding = function () {
+                _build_naked();
+                _apply_sizing();
+                
+                &#x2F;* check if the container provides enough space to render the widget *&#x2F;                
+                var enoughSpace = true;
+                if (w_main_div.width &amp;&amp; w_spec.minwidth)
+                    enoughSpace = w_main_div.width() &gt;= w_spec.minwidth;
+
+                if ($.inArray(&#x27;container&#x27;, w_disable_styling) != -1) {
+                    w_main_div.addClass(&#x27;naked-box&#x27;);
+                } else {
+                    w_main_div.addClass(&#x27;full-box&#x27;);
+                    
+                    if (enoughSpace)
+                        if ($.inArray(&#x27;footer-buttons&#x27;, w_disable_styling) ==-1)
+                            _add_buttons();
+                }
+                
+                &#x2F;* title and RIPEstat logo will always be rendered *&#x2F;                
+                if ($.inArray(&#x27;title&#x27;, w_disable_styling) ==-1)
+                    _add_title();
+                if ($.inArray(&#x27;logo&#x27;, w_disable_styling) ==-1)
+                    _add_logo();
+                    
+                if (enoughSpace) {
+                    if ($.inArray(&#x27;theme&#x27;, w_disable_styling) == -1)
+                        w_main_div.addClass(&#x27;stat-theme&#x27;);
+                    if ($.inArray(&#x27;controls&#x27;, w_disable_styling) == -1)
+                        _add_controls();
+                    if (w_width&gt;450 &amp;&amp; $.inArray(&#x27;feedback&#x27;, w_disable_styling) ==-1)
+                        _add_user_feedback();
+                } else {
+                    var minWidthToDisplay = w_spec.minwidth;
+                    var text = &quot;&lt;ul class=&#x27;messages&#x27;&gt;&quot; +
+                                   &quot;  &lt;li class=&#x27;warning&#x27;&gt;The minimum width for this widget to be rendered correctly is &quot; + minWidthToDisplay + &quot;px!&lt;br&gt;&quot; +
+                                   &quot;                      &lt;a href=&#x27;https:&#x2F;&#x2F;stat.ripe.net&#x2F;feedback&#x27; target=&#x27;_blank&#x27;&gt;Your RIPEstat team&lt;&#x2F;a&gt;&quot; +
+                                   &quot;  &lt;&#x2F;li&gt;&quot; +
+                                   &quot;&lt;&#x2F;ul&gt;&quot;;
+                    $(w_main_div).append(text);
+                    w_invalid_params.push(&quot;Not enough space to render widget!&quot;); &#x2F;* this also prevents the loading of data *&#x2F;
+                }
+                
+            }
+
+            var _permalink = function(link_params) {
+                if (link_params == undefined) {
+                    link_params = w_params;
+                }
+
+                var _params = {};
+                for (var key in link_params) {
+                    _params[&quot;w.&quot; + key] = link_params[key];
+                }
+                    
+                var url = STAT_HOME + &#x27;widget&#x2F;&#x27; + w_widget_name;
+                
+                return $.param.fragment(url, _params);
+            }
+
+			var _apply_sizing = function() {
+				if (w_styling.size == &quot;fit&quot;) {
+					w_width = Math.max(0, w_main_div.parent().width());
+				} else {
+					w_width = WIDGET_SIZES[w_styling.size];
+					
+					if (!w_width &amp;&amp; parseInt(w_styling.size))
+					   w_width = parseInt(w_styling.size); 
+				}
+
+				if (!w_width)
+					w_width = WIDGET_SIZES.medium;
+
+                w_main_div.css(&#x27;width&#x27;, w_width);
+			}
+
+            var _build_naked = function() {
+                w_main_div.empty();
+                w_main_div.addClass(&#x27;stat-widget&#x27;);
+                w_main_div.css(&#x27;position&#x27;,&#x27;relative&#x27;);
+                
+                w_inner_div = $(&#x27;&lt;div class=&quot;inner-div&quot;&gt;&#x27;);
+                $(&#x27;&lt;div class=&quot;box-content&quot;&gt;&#x27;).appendTo(w_main_div)
+                                              .append($(&quot;&lt;div class=&#x27;controlls-container&#x27;&gt;&quot;))
+                                              .append(w_inner_div);
+            }
+            
+            &#x2F;**
+             * Creates and adds the title to the widget.
+             * 
+             *&#x2F;
+            var _add_title = function () {
+                var title_txt = w_spec.title;
+                if ( ($.inArray(&#x27;resource&#x27;, w_spec.mparam)!=-1 || $.inArray(&#x27;resource&#x27;, w_spec.oparam)!=-1) &amp;&amp; &#x27;resource&#x27; in w_params &amp;&amp; w_params.resource != &quot;&quot;) {
+                    title_txt += &#x27; (&#x27; + decodeURIComponent(w_params.resource) + &#x27;)&#x27;;
+                }
+                var title_el = $(&#x27;&lt;h2&gt;&#x27;).append(
+                                            $(&#x27;&lt;a href=&quot;&#x27; + _permalink()  + &#x27;&quot; class=&quot;widget-title&quot;&gt;&#x27;).text(title_txt)
+                                        );	
+                
+                &#x2F;&#x2F; Add top pad to avoid overlap with logo
+                if (w_width&lt;360 &amp;&amp; !((&#x27;disable&#x27; in w_styling) &amp;&amp; (w_styling.disable.indexOf(&#x27;logo&#x27;) &gt; -1)))
+                	title_el.css(&#x27;padding-top&#x27;, &#x27;8px&#x27;);
+                
+                $(&#x27;.box-content&#x27;, w_main_div).prepend(title_el);
+            }
+
+            var _add_controls = function() {
+				var _add_resource_box = $.inArray(&quot;resource&quot;, w_spec.mparam) !=
+					-1 || $.inArray(&quot;resource&quot;, w_spec.oparam) != -1;
+				if (!_add_resource_box)
+					return;  &#x2F;&#x2F; this is the only control at the moment
+                var _initial = &quot;Reload this widget by entering a resource here&quot;;
+                if (w_styling.resource_input_text &amp;&amp; typeof w_styling.resource_input_text == &#x27;string&#x27; ) 
+                    _initial = w_styling.resource_input_text
+                    
+                var _controls = $(&quot;&lt;form&gt;&lt;fieldset class=controls&gt;&lt;input type=text class=&#x27;widget-resource-input&#x27; value=&#x27;&quot; + _initial + &quot;&#x27;&gt;&lt;button type=submit&gt;&lt;&#x2F;fieldset&gt;&lt;&#x2F;form&gt;&quot;);
+                _controls.find(&quot;button&quot;).css(&quot;background&quot;, &quot;url(&quot; + STAT_WIDGET_API_URL + &quot;lib&#x2F;img&#x2F;search_button.png?v=1) repeat scroll 0 0 transparent&quot;);
+
+                _controls.submit(function() {
+                    var _val = $(this).find(&quot;input&quot;).val();
+                    if (_val &amp;&amp; _val != _initial) {
+                        var _widget = $(this).statWidget();
+                        var _params = _widget.get_params();
+                        _params.resource = _val;
+                        _widget.navigate(_params);
+                    }
+                    return false;
+                });
+
+                var _input = _controls.find(&quot;input&quot;);
+                _input.css(&quot;color&quot;, &quot;grey&quot;);
+                _input.focusin(function() {
+                    if ($(this).val() == _initial) {
+                        $(this).val(&quot;&quot;);
+                        $(this).css(&quot;color&quot;, &quot;black&quot;);
+                    }
+                });
+                _input.focusout(function() {
+                    if (!$(this).val()) {
+                        $(this).val(_initial);
+                        $(this).css(&quot;color&quot;, &quot;grey&quot;);
+                    }
+                });
+                $(&quot;.controlls-container&quot;, w_main_div).append(_controls);
+            }
+
+            var _add_logo = function () {
+                $(&#x27;&lt;a&gt;&#x27;)
+                    .attr(&#x27;href&#x27;, STAT_HOME)
+                    .css({&#x27;position&#x27;:&#x27;absolute&#x27;,&#x27;top&#x27;:&#x27;9px&#x27;,&#x27;left&#x27;:&#x27;7px&#x27;})
+                    .html(&#x27;&lt;img src=&quot;&#x27; + STAT_WIDGET_API_URL + &#x27;lib&#x2F;img&#x2F;logo-small.png&quot; class=&quot;widget-ripestat-logo&quot; title=&quot;RIPEStat&quot; alt=&quot;logo&quot;&gt;&#x27;)
+                    .prependTo(w_main_div);
+
+                if (&#x27;marknew&#x27; in w_spec &amp;&amp; w_spec.marknew) {
+                    $(&#x27;&lt;img title=&quot;RIPEStat&quot; alt=&quot;logo&quot;&gt;&#x27;)
+                        .css({&#x27;position&#x27;:&#x27;absolute&#x27;,&#x27;top&#x27;:&#x27;5px&#x27;,&#x27;right&#x27;:&#x27;5px&#x27;})
+                        .attr(&#x27;src&#x27;, STAT_WIDGET_API_URL + &#x27;lib&#x2F;img&#x2F;new-icon.png&#x27;)
+                        .prependTo(w_main_div);
+                }
+            }
+            
+            var fb_lnk;
+            var _add_user_feedback = function() {
+            	
+            	fb_lnk = $(&#x27;&lt;img src=&quot;&#x27; + STAT_WIDGET_API_URL + &#x27;lib&#x2F;img&#x2F;feedback-icon-small.png&quot; title=&quot;Tell us what you think about this RIPEstat widget&quot;&gt;&#x27;).css({
+            		position: &#x27;absolute&#x27;,
+            		top: 4,
+            		right: 5,
+            		width: 34,
+            		height: 34,
+            		cursor: &#x27;pointer&#x27;
+            	}).hide();
+            	
+            	require([ STAT_WIDGET_API_URL + &quot;js&#x2F;user_feedback.js&quot; ], function(fb) {
+            		var fb_form = fb.add_widget_feedback_form($(&#x27;.box-content&#x27;, w_main_div), w_widget_name, (&#x27;resource&#x27; in w_params)?w_params.resource:null);
+            	
+            		fb_lnk
+	            		.click(function() {
+	            			$(this).attr(&quot;src&quot;,STAT_WIDGET_API_URL + &#x27;lib&#x2F;img&#x2F;feedback-icon.png&#x27;);
+	            			fb_form.dialog(&quot;open&quot;);
+	            		})
+	            		.hover(
+	            			function() {
+	            				$(this).attr(&quot;src&quot;, STAT_WIDGET_API_URL + &#x27;lib&#x2F;img&#x2F;feedback-icon-rev-small.png&#x27;);
+	        				}, 
+	        				function() {
+	        					$(this).attr(&quot;src&quot;,STAT_WIDGET_API_URL + &#x27;lib&#x2F;img&#x2F;feedback-icon-small.png&#x27;);
+	        				}
+	        			);
+            		
+            		$(&#x27;.box-content&#x27;, w_main_div).prepend(fb_lnk);
+            	});
+            }
+
+            var _add_data_div = function (left_ul, footer_div) {
+				if (!w_data_area_div)
+					w_data_area_div = $(&#x27;&lt;div&gt;&lt;h3&gt;Data used in this widget&lt;&#x2F;h3&gt;&lt;&#x2F;div&gt;&#x27;);
+				else
+					w_data_area_div.empty();
+
+                if (!w_data_div)
+					w_data_div = $(&#x27;&lt;textarea readonly rows=10 style=&quot;width:95%; resize: none;font-size: 90%&quot;&gt;&#x27;);
+				w_data_div.appendTo(w_data_area_div);
+                
+                left_ul.append(
+                    $(&quot;&lt;li&gt;&quot;).append($(&#x27;&lt;a class=&quot;button&quot; href=&quot;&#x27; + _get_data_url(&quot;json&quot;) +&#x27;&quot;&gt;source data&lt;&#x2F;a&gt;&#x27;).trigger_area_toggle(&#x27;dataview&#x27;, 3))
+                );
+
+                var data_popup_div = $(&#x27;&lt;div&gt;&#x27;).addClass(&#x27;dataview popup&#x27;).appendTo(footer_div).hide();
+
+                if ($.inArray(&#x27;data-download&#x27;, w_disable_styling) ==-1) {
+                    data_popup_div.append(
+                        &#x27;&lt;h3&gt;Sample data API call&lt;&#x2F;h3&gt;&#x27;,
+                        &#x27;&lt;input style=&quot;width:95%&quot; value=&quot;&#x27; + _get_data_url(&#x27;json&#x27;) + &#x27;&quot;&gt;&#x27;,
+                        &#x27;&lt;br&gt;&lt;br&gt;&#x27;,
+                        &#x27;Download as: &#x27;,
+                        &#x27;&lt;a href=&quot;&#x27; + _get_data_url(&#x27;json&#x27;) + &#x27;&quot; target=&quot;_blank&quot;&gt;json&lt;&#x2F;a&gt;&#x27;,
+                        &#x27; | &lt;a href=&quot;&#x27; + _get_data_url(&#x27;yaml&#x27;) + &#x27;&quot; target=&quot;_blank&quot;&gt;yaml&lt;&#x2F;a&gt;&#x27;,
+                        &#x27;&lt;br&gt;&lt;br&gt;&#x27;
+                    );
+                }
+
+				w_data_url_callbacks.push(function() {
+					data_popup_div.find(&quot;input&quot;).attr(&quot;value&quot;,
+						_get_data_url(&quot;json&quot;));
+					var anchors = data_popup_div.find(&quot;a&quot;);
+					anchors.first().attr(&quot;href&quot;, _get_data_url(&quot;json&quot;));
+					anchors.last().attr(&quot;href&quot;, _get_data_url(&quot;yaml&quot;));
+				});
+
+                data_popup_div.append(w_data_area_div.hide());
+            };
+
+            var _add_buttons = function () {
+
+            	var smallSize = (w_width&lt;=230); &#x2F;&#x2F; Size too small to have all buttons
+            	
+                var footer_div = $(&#x27;&lt;div&gt;&#x27;).addClass(&#x27;box-buttons&#x27;).appendTo(w_main_div);
+
+                var left_ul = $(&#x27;&lt;ul&gt;&#x27;).addClass(&#x27;left&#x27;).css(&#x27;margin-left&#x27;, &#x27;0&#x27;).appendTo(footer_div);
+                var right_ul = $(&#x27;&lt;ul&gt;&#x27;).addClass(&#x27;right&#x27;).appendTo(footer_div);
+
+                var first_button=true;
+                if (!smallSize &amp;&amp; $.inArray(&#x27;data&#x27;, w_disable_styling) == -1 &amp;&amp; _get_data_url(&#x27;json&#x27;)) {
+                    _add_data_div(left_ul, footer_div);
+                }
+
+                if ($.inArray(&#x27;embed-code&#x27;, w_disable_styling) ==-1) {
+                    right_ul.append(
+                        $(&quot;&lt;li&gt;&quot;).append($(&#x27;&lt;a class=&quot;embed-code-link button&quot; href=&quot;javascript: void(0);&quot;&gt;embed code&lt;&#x2F;a&gt;&#x27;).trigger_area_toggle(&#x27;embed_code&#x27;, 3))
+                    );
+                    first_button=false;
+
+                    $(&#x27;&lt;div&gt;&#x27;).addClass(&#x27;embed_code popup&#x27;).append(
+                        &#x27;&lt;h3&gt;Embed this widget on your page&lt;&#x2F;h3&gt;&#x27;,
+                        _get_embed_code()
+                    ).appendTo(footer_div).hide();
+                }
+
+                if ($.inArray(&#x27;permalink&#x27;, w_disable_styling) ==-1) {
+                    right_ul.append(
+                        $(&quot;&lt;li&gt;&quot;).append($(&#x27;&lt;a class=&quot;permalink-popup-link button&quot; href=&quot;&#x27; + _permalink() + &#x27;&quot;&gt;permalink&lt;&#x2F;a&gt;&#x27;).trigger_area_toggle(&#x27;permalink&#x27;, 3))
+                    );
+                    first_button=false;
+
+                    $(&#x27;&lt;div&gt;&#x27;).addClass(&#x27;permalink popup&#x27;).append(
+                        &#x27;&lt;h3&gt;Permalink&lt;&#x2F;h3&gt;&#x27;,
+                        &#x27;&lt;input style=&quot;width:85%&quot; value=&quot;&#x27; + _permalink() + &#x27;&quot;&gt;&#x27;,
+                        &#x27;&lt;a href=&quot;&#x27; + _permalink() + &#x27;&quot;&gt;open&lt;&#x2F;a&gt;&#x27;
+                    ).appendTo(footer_div).hide();
+                }
+
+                if (!smallSize &amp;&amp; $.inArray(&#x27;info&#x27;, w_disable_styling) ==-1) {
+
+                    w_info_div = $(&#x27;&lt;div class=&quot;widget-documentation&quot;&gt;&#x27;);
+                    
+                    var toggleLink = $(&#x27;&lt;a class=&quot;info-popup-link button&quot; href=&quot;javascript:void(0);&quot;&gt;&#x27;).html(&quot;info&quot;);
+                    &#x2F;* Load info&#x2F;methodology only on demand *&#x2F;
+                    toggleLink.click(function () {
+                        if (!toggleLink.hasClass(&quot;loaded&quot;)) {
+                            
+                            var loading_splash = &quot;&lt;center&gt;&lt;img src=&#x27;&quot; + STAT_WIDGET_API_URL + &quot;lib&#x2F;img&#x2F;ajax-loader.gif&#x27;&gt;&lt;br&gt;&quot; +
+                                                 &quot;&lt;span&gt;Loading content documentation...&lt;&#x2F;span&gt;&lt;&#x2F;center&gt;&quot;; 
+                            w_info_div.html(loading_splash);
+                            
+                            $.jsonp({
+                                url: _get_methodology_url(),
+                                callbackParameter: &quot;callback&quot;,
+                                cache: true,
+                                error: function (xOptions, textStatus) {
+                                    w_info_div.text(&#x27;Loading methodology failed.&#x27;);
+                                    _handle_ajax_error(xOptions, textStatus);
+                                },
+                                success: function (response) {
+                                    w_info_div.html(response.data.documentation);
+                                }
+                            });
+                            toggleLink.addClass(&quot;loaded&quot;);
+                        }
+                    });
+                                                      
+                    right_ul.append(
+                        $(&quot;&lt;li&gt;&quot;).append(toggleLink.trigger_area_toggle(&#x27;methodology&#x27;, 3))
+                    );
+                    first_button=false;
+                    
+                    $(&#x27;&lt;div&gt;&#x27;).addClass(&#x27;methodology popup&#x27;).append(
+                        &#x27;&lt;h3&gt;Content Explanation&lt;&#x2F;h3&gt;&#x27;,
+                        w_info_div
+                    ).appendTo(footer_div).hide();
+                }
+            };
+
+            var _fill_widget = function(callback) {
+                
+                &#x2F;*
+                 * Make sure all widget code is executed with the same JQuery version
+                 *&#x2F;                
+                var preservedJQuery = jQuery;
+                var preservedJQueryShort = $;
+                jQuery = ripestat.jQuery;
+                $ = jQuery;
+                
+                var sources = [];
+                if(w_spec.jsfile) {
+                    sources.push(STAT_WIDGET_API_URL + &quot;widgets&#x2F;&quot; + w_spec.jsfile +
+                        &quot;?widget_api=&quot; + STAT_WIDGETS_VERSION);
+                }
+                
+                
+                
+                require(sources, function() {
+                    _catch_errors(function () {
+                        w_inner_div.empty();
+                        
+                        var mark_loaded = function () {
+                            w_loaded = true;
+                        }
+                        
+                        var pluginObj = w_inner_div[w_spec.pluginname](w_data, w_width, mark_loaded);
+                        
+                        &#x2F;* if the widget needs to set the &quot;loaded&quot; property individually  *&#x2F;
+                        if (!(pluginObj &amp;&amp; pluginObj[&quot;markLoadedCallback&quot;])) {
+                            mark_loaded();
+                        }
+
+                        if (typeof callback == &#x27;function&#x27;)
+                            callback();
+                    });
+                    
+                    &#x2F;*
+                     * Return to the global JQuery version
+                     *&#x2F;
+                    jQuery = preservedJQuery;
+                    $ = preservedJQueryShort;
+                });
+                
+                
+            };
+
+            var _get_embed_code = function () {
+
+                var script_incs = &#x27;&amp;lt;script src=&quot;&#x27; + STAT_WIDGET_API_URL + &#x27;widget_api.js&quot;&amp;gt;&amp;lt;&#x2F;script&amp;gt;&#x27;;
+                
+                var embed_styling = $.extend(true, {}, w_styling);
+                if (&#x27;disable&#x27; in embed_styling) {
+                	for (var i in embed_styling.disable) { &#x2F;&#x2F; Never include logo disabling in the displayed embed code
+                		if (embed_styling.disable[i] == &#x27;logo&#x27;) { 
+                			embed_styling.disable.splice(i,1);
+                			break;
+                		}
+                	}
+                }
+                
+
+                var js_code = &#x27;ripestat.init(&#x27;
+                    + &#x27;&quot;&#x27; + w_widget_name + &#x27;&quot;&#x27;
+                    + ((hash_length(w_params) == 0)?&#x27;,{}&#x27;:&#x27;,&#x27; + JSON.stringify(w_params))
+                    + &#x27;,null&#x27;
+                    + ((hash_length(embed_styling) == 0) ? &#x27;&#x27; : &#x27;,&#x27; + JSON.stringify(embed_styling))  
++ &#x27;)&#x27;;
+
+var embed_code =
+&#x27;&lt;textarea readonly rows=3 style=&quot;width:95%; height: auto; resize: none;font-size: 90%; padding: 5px;&quot;&gt;&#x27; 
++ script_incs + &#x27;\n&#x27;
++ &#x27;&amp;lt;div class=&quot;&#x27; + STAT_DOM_CLASS_NAME + &#x27;&quot;&amp;gt;&#x27;
++ &#x27;&amp;lt;script&amp;gt;&#x27; + js_code + &#x27;&amp;lt;&#x2F;script&amp;gt;&#x27;
++ &#x27;&amp;lt;&#x2F;div&amp;gt;&#x27;
++ &#x27;&lt;&#x2F;textarea&gt; &lt;br&gt;&#x27;
++ &#x27;Copy and paste this code into an HTML webpage. Note: &lt;i&gt;widget_api.js&lt;&#x2F;i&gt; (the 1st line) only needs to be included once per page.&#x27;
++ &#x27;&lt;br&gt;&lt;br&gt;&#x27;
++ &#x27;For more usage details please view the RIPEstat Widget API &lt;a href=&quot;http:&#x2F;&#x2F;stat.ripe.net&#x2F;docs&#x2F;widget_api&#x2F;&quot;&gt;documentation&lt;&#x2F;a&gt;.&#x27;;
+
+return embed_code;
+            }
+
+            var _req_error = function (descr) {
+                w_main_div.html(&quot;&lt;b&gt;Request Error&lt;&#x2F;b&gt;: &quot; + descr);
+            };
+           
+            &#x2F;&#x2F; log, show the user, and report to the server
+            &#x2F;&#x2F; expects a standard Error object with MDN extensions.
+            var _report = function(err) {
+                
+                var data = {
+                    level: err.level || &quot;error&quot;,
+                    message: err.toString(),
+                    file: err.fileName || err.sourceURL,
+                    line: err.lineNumber || err.line,
+                    stack: err.stack,
+                    widget: w_widget_name,
+                    params: w_params
+                };
+                
+                $(&#x27;.box-content&#x27;, w_main_div).addMsg(data.level, err.toString());
+
+                if(window.console)
+                    console.error(&#x27;reporting &#x27;, err.toString(), data);
+
+                $.jsonp({
+                    url: STAT_OTHER_API_URL + &#x27;report&#x27;,
+                    callbackParameter: &quot;callback&quot;,
+                    data: data
+                });
+            };
+
+            var _catch_errors = function(fun) {
+                &#x2F;&#x2F; define ?THROW_ERRORS to aid debugging in IE
+                if(location.href.indexOf(&#x27;THROW_ERRORS&#x27;) != -1) {
+                    fun();
+                    return;
+                }
+
+                try {
+                    fun();
+                } catch(err) {
+                    w_loaded = true;
+                    _report(err);
+                }
+            };
+
+            &#x2F;&#x2F; construct an error object from a failed JSON-P call and report on it
+            var _handle_ajax_error = function(xOptions, textStatus) {
+                var err = Error(&#x27;Error loading &#x27; + xOptions.url);
+
+                if(textStatus != &quot;error&quot;)
+                    err.message += &quot; (&quot; + textStatus + &quot;)&quot;;
+
+                err.fileName = xOptions.url;
+
+                _report(err);
+            };
+
+            &#x2F;*
+             * This function takes care of the div showing the loaded data in plain form.
+             *&#x2F;
+			var _update_data_div = function() {
+				if (w_data &amp;&amp; w_data_div) {
+					w_data_div.val(JSON.stringify(w_data, null, 4));
+					w_data_area_div.show();
+				}
+			}
+
+			var _get_data = function(apifunc, params, success, error) {
+				var url = _get_data_url(&quot;json&quot;, apifunc, params, false);
+				
+				&#x2F;&#x2F; multi-origin request, so we use JSONP instead of JSON
+				$.jsonp({
+					url: url,
+					callbackParameter: &quot;callback&quot;,
+					cache: true,
+					error: function (xOptions, textStatus) {
+						_handle_ajax_error(xOptions, textStatus);
+						if (error)
+							error(textStatus);
+					},
+					success: function (json) {
+						_catch_errors(function () {
+						    
+						    require([ STAT_WIDGET_API_URL + &quot;js&#x2F;misc.js&quot; ], function(misc) {
+    							&#x2F;&#x2F; add messages
+    							var existing = [];
+    							$(&quot;.box-content ul.messages li&quot;, w_main_div).each(
+    								function(i, msg_el) {
+    									var el = $(msg_el);
+    									existing.push(el.text());
+    								}
+    							);
+    							$.each(json.messages, function (_i, msg) { 
+    								if ($.inArray(msg[1], existing) == -1) 
+    									$(&#x27;.box-content&#x27;, w_main_div).addMsg(msg[0], msg[1]);
+    							});
+    
+    							&#x2F;&#x2F; add see-also resources
+    							if(json.see_also.length &gt; 0) {
+    								var also = $(&#x27;&lt;ul&gt;&#x27;);
+    								$.each(json.see_also, function(_i, see) {
+    									$(&#x27;&lt;li&gt;&#x27;)
+    									.text(&#x27; (&#x27; + see.relation + &#x27;)&#x27;)
+    									.prepend(misc.stat_link(see.resource))
+    									.appendTo(also);
+    								});
+    
+    								$(&#x27;&lt;div&gt;&lt;h3&gt;See Also:&lt;&#x2F;h3&gt;&#x27;)
+    								.append(also)
+    								.appendTo($(&#x27;.box-content&#x27;, w_main_div))
+    								.collapsable({state: &quot;on&quot;})
+    								;
+    							}
+							});
+
+						});
+
+                        &#x2F;*
+                         * In case the data call is not successful the API will return a status code 
+                         * different from 200.
+                         *&#x2F;
+						if (json.status_code == 200) {
+						    if (json.status != &quot;maintenance&quot;) {
+    							success(json.data);
+						    } else {
+						        w_inner_div.empty();
+						    }
+						} else {
+							error(json.data);
+						}
+					}
+				});
+			}
+
+            var _load_data = function(callback) {
+                
+                &#x2F;*
+                 * Make sure all widget code is executed with the same JQuery version
+                 *&#x2F;
+                preservedJQuery = jQuery;
+                preservedJQueryShort = $;
+                jQuery = ripestat.jQuery;
+                $ = jQuery;
+                
+                require([ STAT_WIDGET_API_URL + &quot;js&#x2F;misc.js&quot; ], function(misc) {
+
+                    w_inner_div.html(&#x27;&lt;div class=&quot;center&quot;&gt;&lt;img class=&quot;ajax_loader_image&quot; src=&quot;&#x27; + STAT_WIDGET_API_URL + &#x27;lib&#x2F;img&#x2F;ajax-loader&#x27; + (w_width&lt;=WIDGET_SIZES.micro?&quot;-small&quot;:&quot;&quot;) + &#x27;.gif&quot; title=&quot;Data is loading&quot; alt=&quot;loading image&quot;&gt;&lt;&#x2F;div&gt;&#x27;);
+                    
+					_get_data(null, null, function(response_data) {
+						w_data = response_data;
+						w_inner_div.empty();
+						_update_data_div();
+
+						callback();
+					}, function(error_status) {
+						w_inner_div.empty();
+						w_loaded = true;
+					});
+                });
+                &#x2F;*
+                 * Return to the global JQuery version
+                 *&#x2F;        
+                jQuery = preservedJQuery;
+                $ = preservedJQueryShort;
+            };
+
+            _construct();
+
+            return {
+
+                load : function(callback) {   
+                    function after_load() {
+                        _catch_errors(function () {
+                            _fill_widget(callback);
+                        });
+                    }
+
+                    if(_get_data_url(&#x27;json&#x27;)) {
+                        _load_data(after_load);
+                    } else {
+                        after_load();
+                    }
+                    
+                    if (fb_lnk) {
+                        $(fb_lnk).show();
+                        &#x2F;&#x2F; TODO:
+                        &#x2F;&#x2F; only load when data is loaded &#x2F; not when widget is in preload state
+                        &#x2F;&#x2F; also only load if a certain width and height is available - check that
+                    }
+                },
+
+                get_title : function() {
+                    return w_spec[&#x27;title&#x27;];
+                },
+
+				get_name : function() {
+					return w_widget_name;
+				},
+
+                get_param : function(param_name) {
+                    if (param_name in w_params)
+                        return w_params[param_name];
+                    return null;
+                },
+
+                get_params : function() {
+                    return $.extend({}, w_params);
+                },
+
+                get_data_uri : function(data_type) {
+                    return _get_data_url(data_type);
+                },
+
+                get_data : function() {
+                    return w_data;
+                },
+
+				get_data_params : function() {
+					return w_data_params;
+				},
+                
+                get_styling: function (){
+                    return $.extend({}, w_styling);
+                },
+
+                reset : function() {
+                    w_loaded = false;
+                    w_inner_div.empty();
+					w_data_url_callbacks = [];
+                    w_data = null;
+                    if(w_data_div)
+                        w_data_div.empty();
+                    if(w_data_area_div)
+                        w_data_area_div.hide();   
+                },
+
+                reload : function(callback) {
+                    this.reset();
+                    this.load(callback);
+                },
+
+                navigate : function(new_params) {
+                    _push_state(new_params);
+                },
+
+                update : function(new_params, callback) {
+                    &#x2F;&#x2F; ToDo: On v2 this needs to be reviewed to allow the widget to update itself with new params without reloading
+                    if (!new_params)
+                        new_params = w_initial_params;
+
+                    var diffs = false;
+                    var all_params = $.extend({}, w_params, new_params);
+                    for (var param in all_params)
+                        if (new_params[param] != w_params[param]) {
+                            diffs = true;
+                            break;
+                        }
+                    if (!diffs)
+                        return;
+
+                    this.reset();
+                    w_params = new_params;
+
+                    w_data_params = _get_data_params();
+
+                    _validate_params();
+                    if (!w_invalid_params.length) {
+                        _build_scaffolding();       
+                        this.load(callback);
+                    }
+                },
+
+                get_permalink : function(link_params) {
+                    return _permalink(link_params);
+                },
+
+                get_invalid_params : function() {
+                    return w_invalid_params;
+                },
+                
+                &#x2F;*
+                 * This method might be handy to get the available width
+                 *&#x2F;
+                get_main_div: function () {
+                    return w_main_div;
+                },
+
+				get_new_data: function(apifunc, params, callback) {
+					return _get_data(apifunc, params, callback);
+				},
+
+				update_data: function(new_data) {
+					w_data = new_data;
+					
+					&#x2F;*
+					 * Just in case this function triggers an AJAX loader image and 
+					 * doesn&#x27;t take care to remove it on a high level.
+					 *&#x2F;
+					if (!w_data &amp;&amp; w_info_div) {
+					    var ajaxLoaderImg = w_info_div.find(&quot;img&quot;);
+					    if (ajaxLoaderImg)
+					       ajaxLoaderImg.attr(&quot;src&quot;, &quot;lib&#x2F;img&#x2F;ajax-loader-error.png&quot;);
+                    }
+					
+					_update_data_div();
+				},
+
+				update_data_params: function(new_params) {
+					_update_data_params(new_params);
+				},
+				
+				is_loaded: function () {
+				    return w_loaded;
+				}
+
+            }
+        } &#x2F;&#x2F;&#x2F; End of RipestatClass
+        
+        return {
+
+			WIDGET_SIZES: WIDGET_SIZES,
+
+            list_widgets : function() {
+                var wlist = [];
+                for (var w in STAT_WIDGETS_SPEC) {
+                    if(w[0] != &#x27;_&#x27;) &#x2F;&#x2F; ignore private widgets
+                        wlist.push(w);
+                }
+                return wlist.sort();
+            },
+
+            preload : function (widget_name, params, selector, styling) {
+
+                var div;
+                if (typeof selector == &quot;string&quot; &amp;&amp; $.trim(selector)) {
+                    &#x2F;&#x2F; If an ID was specified
+                    div = $(&quot;#&quot; + selector).first();
+                } else if (typeof selector == &quot;object&quot; &amp;&amp; selector) {
+                    div = selector.first();
+                } else {
+                    &#x2F;&#x2F; If it is based on the &quot;magic&quot; class name
+                    div = $(&#x27;.&#x27; + STAT_DOM_CLASS_NAME).first().removeClass(STAT_DOM_CLASS_NAME);
+                }
+
+                if(div.length &lt; 1) {
+                    console.error(&quot;no element found to place widget&quot;);
+                    return null;
+                }
+
+                widget_obj = RipestatClass(div, widget_name, params, styling);
+                div.data(&quot;widget&quot;, widget_obj);
+                return widget_obj;
+            },
+
+            init : function(widget_name, params, selector, styling, callback) {
+                var widget = this.preload(widget_name, params, selector, styling);
+                if(!widget.get_invalid_params().length)
+                    widget.load(callback);
+                return widget;
+            },
+            
+            jQuery: $
+        };
+    }();
+
+})(jQuery);
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

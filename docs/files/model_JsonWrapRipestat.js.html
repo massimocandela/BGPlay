@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>model\JsonWrapRipestat.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: model\JsonWrapRipestat.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*
+ * BGPlay.js #9660
+ * A web-based service for the visualization of the Internet routing
+ *
+ * Copyright (c) 2012 Roma Tre University and RIPE NCC
+ *
+ * See the file LICENSE.txt for copying permission.
+ *&#x2F;
+
+&#x2F;**
+ * This class is a wrapper of the inputs.
+ * @class JsonWrapRipestat
+ * @module model
+ *&#x2F;
+function JsonWrapRipestat(environment){
+    return {
+
+        &#x2F;**
+         * This method converts input parameters.
+         * @param {Map} A Map of parameters valid outside the environment
+         * @return {Map} A Map of parameters valid inside the environment
+         *&#x2F;
+        getParams:function(params){
+            var out={};
+            if (params.unix_timestamps==&quot;TRUE&quot;){
+                out={
+                    starttimestamp:params.starttime,
+                    endtimestamp:params.endtime,
+                    targets:params.resource.replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;),
+                    selectedRrcs:params.selectedRrcs || arrayToString(environment.config.possibleRrcs),
+                    ignoreReannouncements:(params.ignoreReannouncements==true),
+                    instant:params.instant,
+                    preventNewQueries:params.preventNewQueries,
+                    nodesPosition:params.nodesPosition,
+                    type:&quot;bgp&quot;
+                };
+            }else{
+                &#x2F;&#x2F; Not yet implemented
+            }
+            return out;
+        },
+
+        &#x2F;**
+         * This method converts input parameters.
+         * @param {Map} A Map of parameters valid inside the environment
+         * @return {Map} A Map of parameters valid outside the environment
+         *&#x2F;
+        setParams:function(params){
+            var out=environment.thisWidget.get_params();
+
+            out.unix_timestamps=&quot;TRUE&quot;;
+            out.starttime=params.starttimestamp;
+            out.endtime=params.endtimestamp;
+            out.resource=params.targets;
+            out.selectedRrcs=params.selectedRrcs || arrayToString(environment.config.possibleRrcs);
+            out.ignoreReannouncements=(params.ignoreReannouncements==true);
+            out.instant=params.instant;
+            out.preventNewQueries=params.preventNewQueries;
+            out.nodesPosition=params.nodesPosition;
+            out.type=&quot;bgp&quot;;
+
+            return out;
+        },
+
+        &#x2F;**
+         * This method returns the URL where the json file related to the provided parameters is placed.
+         * @param {String} A string where the data-source is placed
+         * @param {Map} A Map of parameters valid inside the environment
+         * @return {String} An URL
+         *&#x2F;
+        getJsonUrl:function(datasource,params){
+            return datasource+&quot;?unix_timestamps=TRUE&amp;type=bgp&amp;resource=[&quot;+params.targets+&quot;]&amp;rrc=&quot;+params.selectedRrcs
+                + ((params.endtimestamp!=null)? &quot;&amp;endtime=&quot;+params.endtimestamp : &quot;&quot;)
+                + ((params.starttimestamp!=null)? &quot;&amp;starttime=&quot;+params.starttimestamp : &quot;&quot;);
+
+        },
+
+        &#x2F;**
+         * This method populates Bgplay instantiating all the object of the model layer.
+         * @param {Object} A json data object
+         *&#x2F;
+        readJson:function(wrap){
+            if (wrap.nodes.length==0){
+                if (environment.thisWidget){
+                    environment.message={text: &quot;No information available for this query parameters. The previous query will be loaded.&quot;, type:&quot;error&quot;};
+                    return false;
+                }else{
+                    alert(&#x27;No information available&#x27;);
+                    document.location=environment.config.homeUrl;
+                }
+            }
+
+            environment.bgplay = new Bgplay({
+                cur_instant:new Instant({
+                    id:0,
+                    timestamp:wrap.query_starttime
+                }),
+                starttimestamp:wrap.query_starttime,
+                endtimestamp:wrap.query_endtime,
+                type:&quot;bgp&quot;
+            });
+            var bgplay=environment.bgplay;
+
+            function createNodes(wrap){
+                var node, asnumber, newnode;
+
+                for (var n=0;n&lt;wrap.nodes.length;n++){
+                    node=wrap.nodes[n];
+                    asnumber=node.as_number;
+                    newnode=new Node({id:asnumber,asnumber:asnumber,as:asnumber,owner:node.owner,nodeUrl:&quot;https:&#x2F;&#x2F;stat.ripe.net&#x2F;AS&quot;+asnumber, environment:environment});
+                    bgplay.addNode(newnode);
+                }
+                delete wrap.nodes;
+            }
+
+            function createSources(wrap){
+                var source, sourceNode, newsource;
+                for (var n=0;n&lt;wrap.sources.length;n++){
+                    source=wrap.sources[n];
+                    sourceNode=bgplay.getNode(source.as_number);
+                    newsource=new Source({id:source.id, group:sourceNode, environment:environment});
+                    bgplay.addSource(newsource);
+                    if (sourceNode!=null)
+                        sourceNode.addSource(newsource);
+                }
+                delete wrap.sources;
+            }
+
+            function createTargets(wrap){
+                var target;
+                var newtarget;
+                for (var n=0;n&lt;wrap.targets.length;n++){
+                    target=wrap.targets[n];
+                    newtarget=new Target({id:target.prefix, environment:environment});
+                    bgplay.addTarget(newtarget);
+                }
+            }
+
+            function createInitialState(wrap){
+                var path, event, initialstate, source, tmpPath, target, tmpNode;
+                var uniquePAth=[];
+
+                for (var n = 0, length=wrap.initial_state.length; n&lt;length; n++){
+                    initialstate=wrap.initial_state[n];
+
+                    target=bgplay.getTarget(initialstate.target_prefix);
+                    source=bgplay.getSource(initialstate.source_id);
+
+                    path=new Path({id:n,announcedPath:initialstate.path.join(&quot; &quot;),target:target,source:source, environment:environment});
+                    uniquePAth[source.id+&quot;-&quot;+target.id]=path;
+
+                    tmpPath=initialstate.path;
+
+                    tmpNode = bgplay.getNode(tmpPath[tmpPath.length-1]);
+                    tmpNode.addTarget(target); &#x2F;&#x2F;In this way we can check hijacking
+                    if (!target.get(&quot;nodes&quot;).contains(tmpNode)){
+                        target.addNode(tmpNode);
+                    }
+
+                    for (var i=0;i&lt;tmpPath.length;i++){
+                        if (!tmpPath[i-1] || tmpPath[i-1]!=tmpPath[i])
+                            path.addNode(bgplay.getNode(tmpPath[i]));
+                    }
+                    event=new Event({subType:&quot;initialstate&quot;,type:&quot;initialstate&quot;,source:source,target:target,path:path,instant:bgplay.get(&quot;cur_instant&quot;), environment:environment});
+                    source.addEvent(event);
+                    bgplay.get(&quot;allEvents&quot;).put(bgplay.get(&quot;cur_instant&quot;),event);
+                    delete wrap.initial_state[n];
+                }
+
+                return uniquePAth;
+            }
+
+            function createEvents(uniquePAth,wrap){
+                var event_id=1;
+                var event, tmpNode, instant,eventType,currentPath,attributes,shortdescription,source,longdescription,path,target,tmpEvent,prevPath,tmpPath,subType;
+                var ignoreReannouncements=(environment.params.ignoreReannouncements || environment.config.ignoreReannouncementsByDefault)
+                var path_start_id=uniquePAth.length;
+
+
+
+                for (var n=0;n&lt;wrap.events.length;n++){
+                    event=wrap.events[n];
+                    eventType=event.type;
+                    attributes=event.attrs;
+                    source=bgplay.getSource(attributes.source_id);
+                    target=bgplay.getTarget(attributes.target_prefix);
+
+                    prevPath=uniquePAth[source.id+&quot;-&quot;+target.id];
+
+                    if (eventType==&#x27;W&#x27; &amp;&amp; prevPath==null)
+                        continue;
+
+                    currentPath=(attributes.path)?attributes.path.join(&quot; &quot;):&quot;&quot;;
+                    instant=new Instant({id:event_id,timestamp:event.timestamp, environment:environment});
+                    path=new Path({id:n+path_start_id,announcedPath:currentPath,target:target,source:source, environment:environment});&#x2F;&#x2F;n is a good id (must be integer)
+                    tmpEvent=new Event({source:source,target:target,type:event.type,instant:instant,community:(attributes.community)?attributes.community.join(&quot;,&quot;):null, environment:environment});
+                    tmpPath=attributes.path;
+
+                    if (eventType==&#x27;W&#x27; &amp;&amp; prevPath!=null){
+                        shortdescription=&quot;The route &quot;+ prevPath.toString()+&quot; has been withdrawn.&quot;;
+                        longdescription=&quot;The route &quot;+ prevPath.toString()+&quot; has been withdrawn...more&quot;;
+                        subType=&quot;withdrawal&quot;;
+                        tmpEvent.attributes.path=null;
+                    }else if (eventType==&#x27;A&#x27; || eventType==&#x27;B&#x27;){
+
+                        tmpNode=bgplay.getNode(tmpPath[tmpPath.length-1]);
+                        tmpNode.addTarget(target);&#x2F;&#x2F;In this way we can check hijacking
+                        if (!target.get(&quot;nodes&quot;).contains(tmpNode)){
+                            target.addNode(tmpNode);
+                        }
+
+                        for (var i=0;i&lt;tmpPath.length;i++){
+                            if (!tmpPath[i-1] || tmpPath[i-1]!=tmpPath[i])
+                                path.addNode(bgplay.getNode(tmpPath[i]));
+                        }
+
+                        if (prevPath==null){
+                            shortdescription=&quot;The new route &quot;+ path.get(&#x27;announcedPath&#x27;)+&quot; has been announced&quot;;
+                            longdescription=&quot;The new route &quot;+ path.get(&#x27;announcedPath&#x27;)+&quot; has been announced..more&quot;;
+                            subType=&quot;announce&quot;;
+                            tmpEvent.attributes.path=path; &#x2F;&#x2F;The new path
+                        }else{
+                            if (prevPath.toString()==path.toString()){
+                                if (prevPath.get(&#x27;announcedPath&#x27;)==path.get(&#x27;announcedPath&#x27;)){
+                                    if (!ignoreReannouncements){
+                                        shortdescription=&quot;The route &quot;+ prevPath.get(&#x27;announcedPath&#x27;)+&quot; has been announced again&quot;;
+                                        longdescription=&quot;The route &quot;+ prevPath.get(&#x27;announcedPath&#x27;)+&quot; has been announced again..more&quot;;
+                                        subType=&quot;reannounce&quot;;
+                                        tmpEvent.attributes.path=prevPath; &#x2F;&#x2F;The previous path
+                                    }else{
+                                        continue; &#x2F;&#x2F;skip re-announcements
+                                    }
+                                }else{
+                                    shortdescription=&quot;The route &quot;+ prevPath.get(&#x27;announcedPath&#x27;)+&quot; introduced&#x2F;removed prepending &quot;+path.get(&#x27;announcedPath&#x27;);
+                                    longdescription=&quot;The route &quot;+ prevPath.get(&#x27;announcedPath&#x27;)+&quot; introduced&#x2F;removed prepending &quot;+path.get(&#x27;announcedPath&#x27;)+&quot; ..more&quot;;
+                                    subType=&quot;prepending&quot;;
+                                    tmpEvent.attributes.path=path;
+                                }
+                            }else{
+                                shortdescription=&quot;The route &quot;+ prevPath.get(&#x27;announcedPath&#x27;)+&quot; is changed to &quot;+path.get(&#x27;announcedPath&#x27;);
+                                longdescription=&quot;The route &quot;+ prevPath.get(&#x27;announcedPath&#x27;)+&quot; is changed to &quot;+path.get(&#x27;announcedPath&#x27;)+&quot; ..more&quot;;
+                                subType=&quot;pathchange&quot;;
+                                tmpEvent.attributes.path=path;&#x2F;&#x2F;The new path
+                            }
+                        }
+                    }
+                    uniquePAth[source.id+&quot;-&quot;+target.id]=tmpEvent.attributes.path;
+                    tmpEvent.attributes.shortdescription=shortdescription;
+                    tmpEvent.attributes.longdescription=longdescription;
+                    tmpEvent.attributes.prevPath=prevPath;
+                    tmpEvent.attributes.subType=subType;
+                    source.addEvent(tmpEvent);
+                    bgplay.get(&quot;allEvents&quot;).put(instant,tmpEvent);
+                    event_id++;
+                }
+                delete wrap.events[n];
+                delete uniquePAth;
+            }
+            createNodes(wrap);
+            createSources(wrap);
+            createTargets(wrap);
+            createEvents(createInitialState(wrap),wrap);
+
+            bgplay.updateState();
+
+            return true;
+        }
+    }
+}
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

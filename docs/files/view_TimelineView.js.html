@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>view\TimelineView.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: view\TimelineView.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*
+ * BGPlay.js #9660
+ * A web-based service for the visualization of the Internet routing
+ *
+ * Copyright (c) 2012 Roma Tre University and RIPE NCC
+ *
+ * See the file LICENSE.txt for copying permission.
+ *&#x2F;
+
+&#x2F;**
+ * Template: timeline.html
+ * @class TimelineView
+ * @module modules
+ *&#x2F;
+var TimelineView=Backbone.View.extend({
+    events:function(){
+        return {
+            &quot;click .bgplayTimelineControlCanvas&quot;:&quot;updateCursorPosition&quot;,
+            &quot;click .bgplayTimelineSelectionCanvas&quot;:&quot;updateSelectedEvent&quot;,
+            &quot;click .bgplayTimelineSelectionNext&quot;:&quot;nextSelectionChart&quot;,
+            &quot;click .bgplayTimelineSelectionPrev&quot;:&quot;prevSelectionChart&quot;
+        }
+    },
+
+    &#x2F;**
+     * The initialization method of this object.
+     * @method initialize
+     * @param {Map} A map of parameters
+     *&#x2F;
+    initialize:function(){
+        this.environment=this.options.environment;
+        this.bgplay=this.environment.bgplay;
+        this.fileRoot=this.environment.fileRoot;
+        this.eventAggregator=this.environment.eventAggregator;
+
+        this.eventAggregator.trigger(&quot;moduleLoading&quot;, true);
+        this.eventAggregator=this.environment.eventAggregator;
+        this.allEvents=this.bgplay.get(&quot;allEvents&quot;);
+        this.selectionChartPage=0;
+        this.stopTriggerEvents=false;
+        this.offsetOfVisibilityOnSelectionTimeline = this.environment.config.timeline.offsetOfVisibilityOnSelectionTimeline;
+        this.eventOnSelectionChart=new net.webrobotics.TreeMap(comparator,{allowDuplicateKeys:false,suppressDuplicateKeyAlerts:true});
+
+        this.selectionChartWidth=this.environment.config.timeline.minSelectionChartWidth;
+        this.controlChartHeight=this.environment.config.timeline.controlChartHeight;
+        this.selectionChartHeight=this.environment.config.timeline.selectionChartHeight;
+        this.cursorsWidth=this.environment.config.timeline.controlChartCursorsWidth;
+        this.halfCursorWidth=this.environment.config.timeline.controlChartCursorsWidth&#x2F;2;
+        this.halfWarpWidth=this.environment.config.timeline.timeWarpWidth&#x2F;2;
+
+        this.seekTimers=[];
+        this.selectedIntervalCursorColor=this.environment.config.timeline.selectedIntervalCursorColor;
+        this.animation=false; &#x2F;&#x2F;No animation at initialization
+        this.selectionStart=new Instant({id:0,timestamp:this.bgplay.get(&quot;starttimestamp&quot;)});
+        this.selectionEnd=new Instant({id:0,timestamp:this.bgplay.get(&quot;endtimestamp&quot;)});
+        this.selectionFirstStart=this.selectionStart;
+        this.selectionFirstEnd=this.selectionEnd;
+        this.globalTimeOffset=this.bgplay.get(&quot;endtimestamp&quot;)-this.bgplay.get(&quot;starttimestamp&quot;);
+
+        this.graphAnimationsOngoing=0;
+
+        this.eventAggregator.on(&quot;destroyAll&quot;, function(){
+            this.destroyMe();
+        },this);
+
+        this.eventAggregator.on(&quot;animate&quot;,function(start){
+            this.stopAnimation();
+            this.animation=start;
+            this.animate();
+        },this);
+
+        this.bgplay.on(&quot;change:cur_instant&quot;,function(){
+            this.updateControlCanvas();
+            this.scrollSelectionCanvas(this.bgplay.get(&quot;cur_instant&quot;));
+            this.updateSelectionCanvas();
+        },this);
+
+        this.eventAggregator.on(&quot;allAnimationsCompleted&quot;,function(parameters){
+            this.controlCanvasDom.css(&quot;cursor&quot;,&quot;pointer&quot;);
+            this.selectionCanvasDom.css(&quot;cursor&quot;,&quot;pointer&quot;);
+            this.stopTriggerEvents=false;
+            this.animate();
+        },this);
+
+        this.eventAggregator.on(&quot;graphAnimationComplete&quot;,function(value){
+            if (value==false){
+                this.controlCanvasDom.css(&quot;cursor&quot;,&quot;wait&quot;);
+                this.selectionCanvasDom.css(&quot;cursor&quot;,&quot;wait&quot;);
+                this.stopTriggerEvents=true;
+            }
+        },this);
+
+        this.render();
+        log(&quot;Timelines loaded.&quot;);
+    },
+
+    &#x2F;*
+     * This method creates the pointers to the DOM elements.
+     *&#x2F;
+    getDomElements:function(){
+        this.timelineControlCanvasDate = this.dom.find(&#x27;.bgplayTimelineControlCanvasDate&#x27;);
+        this.timelineControlCanvasText = this.dom.find(&#x27;.bgplayTimelineControlCanvasText&#x27;);
+        this.controlCanvasDom = this.dom.find(&#x27;.bgplayTimelineControlCanvas&#x27;);
+        this.selectionCanvasDom = this.dom.find(&#x27;.bgplayTimelineSelectionCanvas&#x27;);
+        this.timelineSelectionDiv = this.dom.find(&#x27;.bgplayTimelineSelectionDiv&#x27;);
+        this.timelineControlCanvasSlider = this.dom.find(&quot;.bgplayTimelineControlCanvasSlider&quot;);
+        this.timelineSelectionNext = this.dom.find(&#x27;.bgplayTimelineSelectionNext&#x27;);
+        this.timelineSelectionPrev = this.dom.find(&#x27;.bgplayTimelineSelectionPrev&#x27;);
+        this.timelineSelectionWaitIco = this.dom.find(&#x27;.bgplayTimelineSelectionWaitIco&#x27;);
+        this.timelineControlCanvasSliderLeft = this.dom.find(&quot;.bgplayTimelineControlCanvasSliderLeft&quot;);
+        this.timelineControlCanvasSliderRight  = this.dom.find(&quot;.bgplayTimelineControlCanvasSliderRight&quot;);
+        this.timelineSelectionSliderLeft=this.dom.find(&#x27;.bgplayTimelineSelectionSliderLeft&#x27;);
+        this.timelineSelectionSliderRight=this.dom.find(&#x27;.bgplayTimelineSelectionSliderRight&#x27;);
+    },
+
+    &#x2F;**
+     * This method draws this module (eg. inject the DOM and elements).
+     * @method render
+     *&#x2F;
+    render:function(){
+        this.dom=$(this.el);
+        this.selectionChartContainerWidth=this.dom.width()-90;
+        this.selectionChartWidth=this.selectionChartContainerWidth;
+        this.controlChartWidth=this.dom.width();
+        this.sliderLeftPosition=0;
+        this.sliderRightPosition=this.controlChartWidth;
+
+        parseTemplate(&#x27;timeline.html&#x27;,this,this.el);
+        this.getDomElements();
+
+        this.drawControlChart();
+        this.drawSelectionChart();
+        this.updateControlCanvas();
+        this.timelineSelectionDiv.width(this.selectionChartContainerWidth);
+
+        var $this=this; &#x2F;&#x2F;The stop function needs only 2 parameters (event and ui), inside this function &#x27;this&#x27; refers to the DOM element dragged
+        this.timelineControlCanvasSlider.draggable({
+            axis:&quot;x&quot;,
+            stop:function(event,ui){
+                $this.confirmSlidersSelection($this);
+            },
+            drag:function(event,ui){
+                return $this.checkSliderSelection(event,$this);
+            }
+        });
+
+        this.selectionCanvasDom.draggable({
+            axis:&quot;x&quot;,
+            stop:function(){
+                $this.miniArrowsManager($this);
+            },
+            drag:function(event,ui){
+                var element=$(event.target);
+                var container=element.parent();
+                var elementLeft=element.position().left;
+                var elementRight=element.position().left+element.width();
+                if (elementLeft&gt;0){
+                    element.css(&#x27;left&#x27;,&#x27;0&#x27;);
+                    return false;
+                }
+                if (elementRight&lt;container.width()){
+                    element.css(&#x27;left&#x27;,container.width()-element.width());
+                    return false;
+                }
+            }
+        });
+        return this;
+    },
+
+    &#x2F;**
+     * This method returns the next event in the timeline.
+     * @method nextEvent
+     * @param {Object} An instance of Instant
+     * @param {Boolean} If this optional parameter is true then the next event will be the first of the next block
+     * @return {Object} An instance of Event
+     *&#x2F;
+    nextEvent:function(instant,forceNotCumulative){
+        var nextInstant, event, forceNotCumulative;
+        forceNotCumulative=forceNotCumulative||false;
+
+        if (this.environment.config.cumulativeAnimations &amp;&amp; forceNotCumulative==false){
+            event=this.nextEvent(instant,true); &#x2F;&#x2F;The real next event
+
+            if (event!=null){
+                nextInstant=new Instant({id:0,timestamp:event.get(&quot;instant&quot;).get(&quot;timestamp&quot;)+1});
+                event=this.allEvents.nearest(nextInstant,true,true); &#x2F;&#x2F;The next event of this group of events
+
+                if (event!=null){
+                    nextInstant=new Instant({id:event.get(&quot;instant&quot;)-1,timestamp:event.get(&quot;instant&quot;).get(&quot;timestamp&quot;)});
+                }else{
+                    nextInstant=new Instant({id:0,timestamp:this.bgplay.get(&quot;endtimestamp&quot;)});
+                }
+                event=this.allEvents.nearest(nextInstant,false,true); &#x2F;&#x2F;The last event of this group
+            }
+        }else{
+            event=this.allEvents.nearest(instant,true,false);
+        }
+
+        return event;
+    },
+
+    &#x2F;**
+     * This method manages the animation of the time cursor along the timeline.
+     * @method seek
+     * @param {Object} An instance of Instant which will be the final position of the time cursor
+     * @param {Float} The duration of the animation
+     *&#x2F;
+    seek:function(instant,delay){
+        var fps=this.environment.config.timeline.timelineCursorFps;
+        var $this=this; &#x2F;&#x2F;A local copy of this
+
+        var curTimestamp=this.bgplay.get(&quot;cur_instant&quot;).get(&quot;timestamp&quot;);
+        var timeOffset=instant.get(&quot;timestamp&quot;)-curTimestamp;
+
+        if (timeOffset&lt;=0){  &#x2F;&#x2F;backward, fast jump
+            $this.bgplay.setCurInstant(instant,false);
+            return null;
+        }
+
+        delay=(delay*1000); &#x2F;&#x2F;Seconds to milliseconds
+
+        var interval=Math.ceil(1000&#x2F;fps);
+        var totalFrames=Math.ceil(delay&#x2F;interval);
+        if (totalFrames&lt;1)
+            totalFrames=1;
+
+        var fixedStep = timeOffset&#x2F;totalFrames;
+
+        var i;
+        for(i=1;i &lt;= totalFrames;i++) {
+            (function() {
+                var n = i;
+                function seekInTime(){  &#x2F;&#x2F;Remember: this function is &quot;an instance&quot; of a function, all vars are local clones
+                    var newTimestamp= curTimestamp+(fixedStep*n);
+                    if (totalFrames==n){ &#x2F;&#x2F;When totalFrames==n the cursor has reached the final seek position
+                        &#x2F;*
+                         * We can&#x27;t check $this.animation in order to trigger the event because $this.animation is a static
+                         * clone (doesn&#x27;t change after its allocation) of this.animation.
+                         *&#x2F;
+                        if ($this.allEvents.compare(instant, $this.selectionEnd)&gt;=0){
+
+                            &#x2F;&#x2F;No more events in the timeline, the animation stops
+                            $this.animation=false;
+                            $this.eventAggregator.trigger(&quot;animationEnd&quot;);
+                            if ($this.environment.config.timeline.reloadAnimationWhenItEnds){
+                                $this.eventAggregator.trigger(&quot;animationReload&quot;);
+                            }else{
+                                $this.bgplay.setCurInstant($this.selectionEnd,false);
+                            }
+                        }else{
+                            $this.bgplay.setCurInstant(instant,false);
+                        }
+                    }else{
+                        &#x2F;*
+                         * When totalFrames!=n the cursor has reached a intermediate position calculated
+                         * by the seek function itself to emulate a fluid animation.
+                         *&#x2F;
+                        $this.bgplay.setCurInstant(new Instant({id:0,timestamp:newTimestamp}),true);&#x2F;&#x2F;silent=true prevents the propagation of events, there are no BGP updates to be applied
+                        $this.updateSelectionCanvas();
+                        $this.updateControlCanvas();&#x2F;&#x2F;We changed the current instant, now draw the cursor at the new position.
+                    }
+                }
+
+                &#x2F;*
+                 * Important: if we don&#x27;t store the pointers to the timers then we can&#x27;t stop animation in any way
+                 *&#x2F;
+                $this.seekTimers.push(setTimeout(seekInTime,interval*n));
+            })();
+        }
+    },
+
+    &#x2F;**
+     * This method is useful to calculate the duration for a seek operation with a logarithm approach.
+     * @method logarithmicSeekTime
+     * @param {Float} A time interval
+     * @return {Float} A time interval
+     *&#x2F;
+    logarithmicSeekTime:function(offset){
+        var base=this.environment.config.timeline.controlChartLogBaseWarp; &#x2F;&#x2F;Tuning it, for 10 use common constant
+        return Math.log(Math.sqrt(Math.sqrt(offset)))&#x2F;Math.log(base);
+    },
+
+    finishAnimation:function(){
+        var seekTime;
+        &#x2F;&#x2F;No more events in the timeline, the animation stops
+        this.animation=false;
+
+        &#x2F;&#x2F; Ok, the animation stops, but the cursor must reach the full scale or rather the endtimestamp
+        var timestampOffsetToEnd=this.selectionEnd.get(&quot;timestamp&quot;)- this.bgplay.get(&quot;cur_instant&quot;).get(&quot;timestamp&quot;); &#x2F;&#x2F;In seconds
+        seekTime=Math.ceil(this.logarithmicSeekTime(timestampOffsetToEnd));
+        this.seek(this.selectionEnd,seekTime);
+    },
+
+    &#x2F;**
+     * This method starts the animation of the timeline.
+     * The animation of the timeline is a set of consecutive seek invocation.
+     * @method animate
+     *&#x2F;
+    animate:function(){
+        if(this.animation!=true){
+            this.stopAnimation();
+            return;
+        }
+        var seekTime;
+        var tmpEvent=this.nextEvent(this.bgplay.get(&quot;cur_instant&quot;),false);
+
+        if (tmpEvent==null){
+            this.finishAnimation();
+            return;
+        }
+
+        &#x2F;&#x2F;Seconds between the current event and the next event on the treeMap
+        var timestampOffsetToNextEvent=tmpEvent.get(&quot;instant&quot;).get(&quot;timestamp&quot;) - this.bgplay.get(&quot;cur_instant&quot;).get(&quot;timestamp&quot;); &#x2F;&#x2F;In seconds
+
+        if (timestampOffsetToNextEvent&lt;2){  &#x2F;&#x2F;this can be also &lt;5 (equal for humans)
+            this.seek(tmpEvent.get(&quot;instant&quot;),0); &#x2F;&#x2F;Move the pointer to the new timestamp in 0 sec
+        }else{
+            seekTime=Math.ceil(this.logarithmicSeekTime(timestampOffsetToNextEvent)); &#x2F;&#x2F;Calculate the log of the offset for a faster seek
+            this.seek(tmpEvent.get(&quot;instant&quot;),seekTime); &#x2F;&#x2F;Move the pointer to the new timestamp in seekTime sec
+        }
+    },
+
+    &#x2F;**
+     * This method returns the number of events occurring between two unix timestamps.
+     * @method getNumberOfEventsBetween
+     * @param {Integer} A unix timestamp
+     * @param {Integer} A unix timestamp
+     * @return {Integer} The number of events
+     *&#x2F;
+    getNumberOfEventsBetween:function(start,end){
+        var subTreeMap=this.allEvents.getSubTreeMap(new Instant({id:1,timestamp:start}),new Instant({id:0,timestamp:(end+1)}));
+        return (subTreeMap)?subTreeMap.size():0;
+    },
+
+    &#x2F;**
+     * This method prints information about the timeline.
+     * @method writeTimelineInfo
+     * @param {String} Information
+     *&#x2F;
+    writeTimelineInfo: function(text,fontColor,fontStyle){
+        this.timelineControlCanvasText.html(text);
+        &#x2F;*
+         var ctx=this.contextControlCanvas;
+         ctx.fillStyle = fontColor;
+         ctx.font = fontStyle;
+         ctx.textBaseline = &#x27;top&#x27;;
+         ctx.fillText(text, 5, 0);
+         *&#x2F;
+    },
+
+    &#x2F;**
+     * This method prints information about the position of the time cursor.
+     * @method writeTimelineDate
+     *&#x2F;
+    writeTimelineDate: function($this){
+        $this.timelineControlCanvasDate.html(&quot;Current instant: &quot;+dateToString(this.bgplay.get(&quot;cur_instant&quot;).get(&quot;timestamp&quot;)));
+        &#x2F;*
+         var ctx=this.contextControlCanvas;
+         ctx.fillStyle = this.environment.config.timeline.timelineDateColor;
+         ctx.font = this.environment.config.timeline.timelineDateFont;
+         ctx.textBaseline = &#x27;top&#x27;;
+         ctx.fillText(dateToString(this.bgplay.get(&quot;cur_instant&quot;).get(&quot;timestamp&quot;)), 480, 0);
+         *&#x2F;
+    },
+
+    &#x2F;**
+     * This method draws the Control Timeline
+     * @method drawControlChart
+     *&#x2F;
+    drawControlChart:function(){
+        this.unit2pixel=this.environment.config.timeline.controlChartRulerUnitWidth; &#x2F;&#x2F;1 unit on the ruler takes N pixels
+        this.cursorColor=this.environment.config.timeline.controlChartCursorsColor;
+        var fontColor=&quot;#000000&quot;;
+        var peakColor=&quot;#FFFFFF&quot;;&#x2F;&#x2F;for now
+        var rulerColor=&quot;#000000&quot;;
+        var fontStyle=&quot;bold 11px Arial&quot;;
+        var lineColor=&quot;blue&quot;;
+        var lineWidth=0.6;
+        var rulerNotchWidth=0.8;
+        var timeOffset=this.globalTimeOffset;
+        this.globalCursorTimeOffset=this.controlChartWidth&#x2F;this.globalTimeOffset;
+        var unit2time=timeOffset&#x2F;(this.controlChartWidth&#x2F;this.unit2pixel); &#x2F;&#x2F;Number of seconds represented by a unit on the ruler
+        var numberOfIntervals=Math.ceil(timeOffset&#x2F;unit2time); &#x2F;&#x2F;Number of intervals needed to represent the timeOffset
+        var canvas = this.controlCanvasDom[0];
+        var ctx = canvas.getContext(&#x27;2d&#x27;);
+        this.contextControlCanvas = ctx;
+        var rulerUnitHeight=this.environment.config.timeline.controlChartRulerUnitHeight;
+        var infoCanvasHeight=13;
+        var peak=0;
+        var eventHeight;
+        var graph2YZero=this.environment.config.timeline.controlChartHeight-rulerUnitHeight-2; &#x2F;&#x2F;The 0 in the Y axis of the graph2
+
+        &#x2F;&#x2F;draw the ruler
+        var rulerPosition=this.controlChartHeight-rulerUnitHeight;
+        var amount=getAmountOfTime(timeOffset);
+        var amountStr=&quot;&quot;;
+        if (amount.days&gt;0)amountStr=amountStr+amount.days+&quot; days &quot;;
+        if (amount.hours&gt;0)amountStr=amountStr+amount.hours+&quot; hours &quot;;
+        if (amount.minutes&gt;0)amountStr=amountStr+amount.minutes+&quot; minutes &quot;;
+        amountStr=amountStr+amount.seconds+&quot; seconds&quot;;
+        &#x2F;&#x2F;Unit: ~&quot;+Math.round(unit2time)+&quot; seconds.
+        &#x2F;&#x2F;this.writeTimelineInfo(&quot;From &quot;+dateToString(this.bgplay.get(&quot;starttimestamp&quot;))+&quot; to &quot;+dateToString(this.bgplay.get(&quot;endtimestamp&quot;))+&quot; (&quot;+amountStr+&quot;) [&quot;+(this.allEvents.size()-1)+&quot; events]&quot;,fontColor,fontStyle); &#x2F;&#x2F;-1 because the initial state is an event
+        this.writeTimelineInfo(&quot;Period: &quot;+amountStr+&quot; [&quot;+(this.allEvents.size()-1)+&quot; events]&quot;,fontColor,fontStyle); &#x2F;&#x2F;-1 because the initial state is an event
+        ctx.fillStyle = &quot;black&quot;;
+        var ntime2pixel;
+        var npixel2time;
+        var numEvent;
+        var maxEventHeight=this.controlChartHeight+infoCanvasHeight-rulerUnitHeight;
+
+        &#x2F;&#x2F;Draw the first ruler&#x27;s notch
+        ctx.fillRect(0,rulerPosition,rulerNotchWidth,rulerUnitHeight);
+
+        for(n=0;n&lt;numberOfIntervals;n++){
+            ntime2pixel=n*this.unit2pixel;
+            npixel2time=n*unit2time;
+            &#x2F;&#x2F;In the same for we can calculate the number event peak
+            numEvent=this.getNumberOfEventsBetween(
+                this.bgplay.get(&quot;starttimestamp&quot;)+npixel2time,
+                this.bgplay.get(&quot;starttimestamp&quot;)+npixel2time+unit2time
+            );
+            if (numEvent&gt;peak){
+                peak=numEvent;
+            }
+
+            &#x2F;&#x2F;Draw the ruler units
+            ctx.fillStyle=rulerColor;
+            ctx.fillRect(ntime2pixel,rulerPosition,rulerNotchWidth,rulerUnitHeight);
+        }
+
+        eventHeight=maxEventHeight&#x2F;peak;
+        ctx.beginPath();
+        ctx.moveTo(0, graph2YZero);
+        for(var n=0;n&lt;numberOfIntervals;n++){
+            ntime2pixel=n*this.unit2pixel;
+            npixel2time=n*unit2time;
+            var pointX=ntime2pixel;
+            var numOfEvents=this.getNumberOfEventsBetween(
+                this.bgplay.get(&quot;starttimestamp&quot;)+npixel2time,
+                this.bgplay.get(&quot;starttimestamp&quot;)+npixel2time+unit2time
+            );
+            var pointY=Math.abs((eventHeight*numOfEvents)-(this.controlChartHeight-rulerUnitHeight-2));
+            ctx.lineTo(pointX, pointY);
+
+            &#x2F;*
+             &#x2F;&#x2F;Draw a background for the peak
+             if (numOfEvents==peak){
+             ctx.fillStyle = peakColor;
+             ctx.fillRect(Math.abs(n-1)*this.unit2pixel+1,infoCanvasHeight,(this.unit2pixel*2)-1,this.controlChartHeight-infoCanvasHeight);
+             ctx.fillStyle=rulerColor;
+             ctx.fillRect(ntime2pixel,rulerPosition,rulerNotchWidth,rulerUnitHeight);
+             }
+             *&#x2F;
+        }
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = lineColor;
+        ctx.stroke();
+        this.controlCanvasCache=ctx.getImageData(0,0, canvas.width,canvas.height);
+    },
+
+    &#x2F;**
+     * This method draws the Selection Timeline
+     * @method drawSelectionChart
+     *&#x2F;
+    drawSelectionChart:function(nextFirstStep){
+        var canvas,ctx,prevEvent;
+        var fontStyle=&quot;bold 11px Arial&quot;;
+        var second2pixel=this.environment.config.timeline.selectionChartSecondToPixels; &#x2F;&#x2F;how many pixels for a second?
+        var lineHeight=this.selectionChartHeight-14;
+        var timeWarpWidth=this.environment.config.timeline.timeWarpWidth;
+        var legendPositionX=100;
+        var uniqueEventTypeLegend=new Array();
+        var selectionChartHeight=this.selectionChartHeight;
+        var nextEvent=nextFirstStep||this.allEvents.at(0);
+        var position=0;
+        var drawnEvents=this.environment.config.timeline.maxSelectionChartEvents;
+        var sameTimestampEvent=new Array(); &#x2F;&#x2F;An array of events with the same timestamp (1 second)
+
+        this.manageSelectionChartArrows(); &#x2F;&#x2F;Draw arrows
+
+        this.eventOnSelectionChart.empty(); &#x2F;&#x2F;Empty the TreeMap containing the events shown in the chart
+
+        this.selectionCanvasCache=null;
+
+        canvas = this.selectionCanvasDom[0];
+        if (this.contextSelectionCanvas==null){
+            ctx = canvas.getContext(&#x27;2d&#x27;);
+            this.contextSelectionCanvas=ctx;
+        }else{
+            ctx=this.contextSelectionCanvas;
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, this.selectionChartWidth, this.selectionChartHeight);
+            ctx.restore();
+        }
+        this.selectionCanvasDom.css(&quot;left&quot;,&quot;0&quot;); &#x2F;&#x2F;Reset canvas position
+
+        while (nextEvent!=null &amp;&amp; drawnEvents&gt;0){
+
+            if (sameTimestampEvent[0]!=null &amp;&amp; sameTimestampEvent[0].get(&quot;instant&quot;).get(&quot;timestamp&quot;)!=nextEvent.get(&quot;instant&quot;).get(&quot;timestamp&quot;)){ &#x2F;&#x2F;If the next event isn&#x27;t in the same second
+                position=drawSameTimestampEvents(this,position); &#x2F;&#x2F;Draw this set of events with the same timestamp
+                drawWarp(position,timeWarpWidth,this,nextEvent.get(&quot;instant&quot;).get(&quot;timestamp&quot;)-sameTimestampEvent[0].get(&quot;instant&quot;).get(&quot;timestamp&quot;)); &#x2F;&#x2F;Draw the temporal warp (arrows)
+                position+=timeWarpWidth; &#x2F;&#x2F;The position of the next event
+                sameTimestampEvent=new Array(); &#x2F;&#x2F;Empty this set
+                drawnEvents--;
+            }
+
+            legendPositionX=drawLegend(nextEvent.get(&quot;subType&quot;),second2pixel,legendPositionX,this); &#x2F;&#x2F; Draw the legend if there is a new type of event
+            sameTimestampEvent.push(nextEvent);
+
+            prevEvent=nextEvent;&#x2F;&#x2F;If the next iteration fails then this is the last treated event
+            nextEvent=this.nextEvent(nextEvent.get(&quot;instant&quot;),true);
+
+            if (position+second2pixel+timeWarpWidth&gt;this.selectionChartWidth){ &#x2F;&#x2F;Enlarge the canvas or the next event could not fit into it
+                updateCanvasWidth(canvas,this,second2pixel+timeWarpWidth);
+            }
+        }
+
+        if (drawnEvents&gt;0)
+            position=drawSameTimestampEvents(this,position);
+
+        if (nextEvent==null){&#x2F;&#x2F;prevEvent is the last one event of the whole analyzed period
+            var finalInterval=this.bgplay.get(&quot;endtimestamp&quot;)-prevEvent.get(&quot;instant&quot;).get(&quot;timestamp&quot;);
+            if (finalInterval&gt;0){
+                drawWarp(position,timeWarpWidth,this,finalInterval);
+            }
+        }
+
+        this.drawIntervalOnSelectionCanvas();
+
+        ctx.fillStyle=&quot;black&quot;;
+        ctx.fillRect(0,selectionChartHeight-1,this.selectionChartWidth,1);
+        ctx.fillRect(1,5,second2pixel,1);
+        ctx.fillRect(1,3,1,4);
+        ctx.fillRect(second2pixel,3,1,4);
+        ctx.font = fontStyle;
+        ctx.textBaseline = &#x27;top&#x27;;
+        ctx.fillText(&quot;1 sec&quot;,second2pixel+5, 0);
+
+        function updateCanvasWidth(canvas,env,width){
+            env.selectionCanvasCache=ctx.getImageData(0,0,env.selectionChartWidth,env.selectionChartHeight);
+            env.selectionChartWidth+=width;
+            canvas.width=env.selectionChartWidth;
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.clearRect(0, 0, env.selectionChartWidth, env.selectionChartHeight);
+            ctx.restore();
+            ctx.putImageData(env.selectionCanvasCache, 0, 0);
+            env.selectionCanvasCache=null;
+        }
+
+        function drawLegend(eventType,second2pixel,position,env){
+            if(uniqueEventTypeLegend.contains(eventType)){
+                return position;
+            }
+            uniqueEventTypeLegend.push(eventType);
+            ctx=env.contextSelectionCanvas;
+            ctx.beginPath();
+            ctx.rect(position,1,10,10);
+            ctx.fillStyle = env.getEventColor(eventType);
+            ctx.fill();
+            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = &#x27;black&#x27;;
+            ctx.stroke();
+            position += 13;
+            ctx.fillStyle=&quot;black&quot;;
+            ctx.font = fontStyle;
+            ctx.textBaseline = &#x27;top&#x27;;
+            ctx.fillText(env.getEventVerboseType(eventType),position, 0);
+            return position+90;
+        }
+
+        function drawSameTimestampEvents(env,position){
+            var internalWidth=((second2pixel-(sameTimestampEvent.length+1))&#x2F;sameTimestampEvent.length); &#x2F;&#x2F;pixels for each event in this second - 1px of margin between each event
+
+            &#x2F;&#x2F;Draw a group of events
+            for(var internalPosition=0;internalPosition&lt;sameTimestampEvent.length;internalPosition++){
+                var eventTmp=sameTimestampEvent[internalPosition];
+                var eventPositionXTmp=(internalWidth*internalPosition)+position+internalPosition+1;
+                ctx.fillStyle=env.getEventColor(eventTmp.get(&quot;subType&quot;));
+                eventTmp.drawEventOnselectionCanvasX=eventPositionXTmp;
+                eventTmp.drawEventOnselectionCanvasY=selectionChartHeight-lineHeight;
+                eventTmp.drawEventOnselectionCanvasWidth=internalWidth;
+                eventTmp.drawEventOnselectionCanvasHeight=lineHeight;
+                env.eventOnSelectionChart.put(eventTmp.drawEventOnselectionCanvasX,eventTmp);
+                ctx.fillRect(eventTmp.drawEventOnselectionCanvasX,eventTmp.drawEventOnselectionCanvasY,eventTmp.drawEventOnselectionCanvasWidth,eventTmp.drawEventOnselectionCanvasHeight);
+            }
+            position+=second2pixel;
+            return position;
+        }
+
+        function drawWarp(position,width,env,offset){ &#x2F;&#x2F;width can be useful with a more complex warp representation
+            var image=this.fileRoot+&quot;view&#x2F;html&#x2F;img&#x2F;warp.gif&quot;;
+            var posY;
+            var ctx=env.contextSelectionCanvas;
+
+            if (env.warpImageCache==null){
+                var img = new Image();
+                img.onload = function() {
+                    env.warpImageCache=img;
+                    draw(position,env,width,offset);
+                };
+                img.src = image;
+            }else{
+                return draw(position,env,width,offset);
+            }
+
+            function draw(position,env,width,offset){
+                ctx.fillStyle = &quot;#000000&quot;;
+                ctx.font = &quot;bold 10px Arial&quot;;
+                ctx.textBaseline = &#x27;top&#x27;;
+                var textPositionY=lineHeight&#x2F;5;
+                var amount=getAmountOfTime(offset);
+                var halfHeightWarpImage=env.warpImageCache.height&#x2F;2;
+                posY=Math.round(env.selectionChartHeight&#x2F;3)-halfHeightWarpImage;
+
+                position+=2;&#x2F;&#x2F;margin
+                &#x2F;&#x2F;ctx.drawImage(env.warpImageCache,position,posY);
+                ctx.drawImage(env.warpImageCache,position,posY*2);
+                &#x2F;&#x2F;ctx.drawImage(env.warpImageCache,position,posY*3);
+
+                position+=13; &#x2F;&#x2F;17
+                if (amount.days&gt;0) ctx.fillText(amount.days+&quot; d&quot;, position, textPositionY*2);
+                if (amount.hours&gt;0) ctx.fillText(amount.hours+&quot; h&quot;, position, textPositionY*3);
+                if (amount.minutes&gt;0) ctx.fillText(amount.minutes+&quot; m&quot;, position, textPositionY*4);
+                if (amount.seconds&gt;0) ctx.fillText(amount.seconds+&quot; s&quot;, position, textPositionY*5);
+
+                position+=24;&#x2F;&#x2F;32
+                &#x2F;&#x2F;ctx.drawImage(env.warpImageCache,position,posY);
+                ctx.drawImage(env.warpImageCache,position,posY*2);
+                &#x2F;&#x2F;ctx.drawImage(env.warpImageCache,position,posY*3);
+            }
+        }
+    },
+
+    &#x2F;**
+     * This method draws the next page of the Selection Timeline
+     * @method nextSelectionChart
+     *&#x2F;
+    nextSelectionChart:function(event){
+        event.preventDefault();
+        this.selectionChartPage++;
+        this.drawSelectionChart(this.selectionChartPages()[this.selectionChartPage]); &#x2F;&#x2F;Go to the next page
+        this.updateSelectionCanvas();
+    },
+
+    &#x2F;**
+     * This method draws the previous page of the Selection Timeline
+     * @method prevSelectionChart
+     *&#x2F;
+    prevSelectionChart:function(event){
+        event.preventDefault();
+        this.selectionChartPage--;
+        this.drawSelectionChart(this.selectionChartPages()[this.selectionChartPage]); &#x2F;&#x2F;Go to the previous page
+        this.updateSelectionCanvas();
+    },
+
+    &#x2F;**
+     * This method creates an array of events each of which is the first of the related page.
+     * @method selectionChartPages
+     * @return {Array} Array of events
+     *&#x2F;
+    selectionChartPages:function(){
+        var numberOfPages, n, nop;
+        var differentTimestampEvents=[];
+        if (!this.selectionChartPagesList){
+            this.selectionChartPagesList=[];
+            nop=this.environment.config.timeline.maxSelectionChartEvents;
+
+            this.allEvents.forEachKey(function(key){
+                if (!differentTimestampEvents.contains(key.getTimestamp()))
+                    differentTimestampEvents.push(key.getTimestamp());
+            });
+
+            numberOfPages=Math.ceil(differentTimestampEvents.length&#x2F;nop);
+            for (n=0;n&lt;numberOfPages;n++){ &#x2F;&#x2F;This calculates all pages
+                this.selectionChartPagesList[n]=this.allEvents.nearest(new Instant({id:0,timestamp:differentTimestampEvents[n*nop]}),true);
+            }
+        }
+        return this.selectionChartPagesList;
+    },
+
+    &#x2F;**
+     * This method manages the arrows useful to change the page of the Selection Timeline.
+     * @method manageSelectionChartArrows
+     *&#x2F;
+    manageSelectionChartArrows:function(){
+        if (this.selectionChartPage&gt;0){
+            this.timelineSelectionPrev.show();
+        }else{
+            this.timelineSelectionPrev.hide();
+        }
+
+        if (this.selectionChartPage&lt;this.selectionChartPages().length-1){
+            this.timelineSelectionNext.show();
+        }else{
+            this.timelineSelectionNext.hide();
+        }
+    },
+
+
+    &#x2F;**
+     * This method updates the representation of the Control Timeline
+     * @method updateControlCanvas
+     *&#x2F;
+    updateControlCanvas:function(){
+        var positionX,ctx;
+        if (this)
+            var $this=this; &#x2F;&#x2F;else $this must be declared by the calling function (do not separate declaration from initialization)
+
+        var timeOffsetPosition=(this.bgplay.get(&quot;cur_instant&quot;).get(&quot;timestamp&quot;)-this.bgplay.get(&quot;starttimestamp&quot;));
+        var timestampOffsetPosition=timeOffsetPosition+this.bgplay.get(&quot;starttimestamp&quot;);
+
+        if (this.environment.config.timeline.disableNotSelectedInstants==false || timestampOffsetPosition&gt;=$this.selectionStart.get(&quot;timestamp&quot;) &amp;&amp; timestampOffsetPosition&lt;=$this.selectionEnd.get(&quot;timestamp&quot;)){
+            ctx=$this.contextControlCanvas;
+            ctx.putImageData($this.controlCanvasCache, 0, 0);
+            positionX=($this.globalCursorTimeOffset*timeOffsetPosition)-(this.cursorsWidth&#x2F;2);
+
+            &#x2F;&#x2F;Draw the margins for the selected interval
+            ctx.fillStyle=$this.selectedIntervalCursorColor;
+            ctx.fillRect(this.sliderLeftPosition,0,this.cursorsWidth,this.selectionChartHeight);
+            ctx.fillRect(this.sliderRightPosition,0,this.cursorsWidth,this.selectionChartHeight);
+
+            if (this.environment.config.timeline.darkenDisabledTimeline){
+                ctx.globalAlpha=0.3;
+                ctx.fillStyle=&quot;black&quot;;
+                ctx.fillRect(0,0,this.sliderLeftPosition,this.selectionChartHeight);
+                ctx.fillRect(this.sliderRightPosition,0,this.controlChartWidth,this.selectionChartHeight);
+                ctx.globalAlpha=1;
+            }
+
+            &#x2F;&#x2F;Draw the time cursor
+            ctx.fillStyle=$this.cursorColor;
+            ctx.fillRect(positionX,0,$this.cursorsWidth,$this.controlChartHeight);
+
+            $this.writeTimelineDate($this);
+        }
+    },
+
+    &#x2F;**
+     * This method updates the representation of the Selection Timeline
+     * @method updateSelectionCanvas
+     *&#x2F;
+    updateSelectionCanvas:function(){
+        var selectedEventColor=this.environment.config.bgpEventSelectedColor;
+        var ctx=this.contextSelectionCanvas;
+        if (this.selectionCanvasCache==null){
+            this.selectionCanvasCache=ctx.getImageData(0,0, this.selectionChartWidth,this.selectionChartHeight);
+        }else{
+            ctx.putImageData(this.selectionCanvasCache, 0, 0);
+        }
+
+        var curInstant=this.bgplay.get(&quot;cur_instant&quot;);
+        var eventTmp=this.allEvents.get(curInstant);
+        var cursorPosition;
+
+        this.drawIntervalOnSelectionCanvas();
+
+        if (eventTmp!=null &amp;&amp; this.eventOnSelectionChart.containsValue(eventTmp)){ &#x2F;&#x2F;The cursor is on an event
+            ctx.fillStyle=selectedEventColor;
+
+            &#x2F;&#x2F;uncomment the line below to emphasize the selected event
+            &#x2F;&#x2F;ctx.fillRect(eventTmp.drawEventOnselectionCanvasX,eventTmp.drawEventOnselectionCanvasY,eventTmp.drawEventOnselectionCanvasWidth,eventTmp.drawEventOnselectionCanvasHeight);
+
+            ctx.fillStyle=this.cursorColor;
+            cursorPosition=eventTmp.drawEventOnselectionCanvasX + (eventTmp.drawEventOnselectionCanvasWidth&#x2F;2) - this.halfCursorWidth; &#x2F;&#x2F;Position of the event + half of the width of the event (px) - half cursor size
+            ctx.fillRect(cursorPosition,0,this.cursorsWidth,this.selectionChartHeight);
+
+        }else{&#x2F;&#x2F;The cursor is on a warp
+            eventTmp=this.allEvents.nearest(curInstant,false,true);
+            if (this.eventOnSelectionChart.containsValue(eventTmp)){
+                cursorPosition=eventTmp.drawEventOnselectionCanvasX + this.halfWarpWidth + this.environment.config.timeline.selectionChartSecondToPixels; &#x2F;&#x2F;Position of the prev Event + the half of the width of the warp
+            }
+            ctx.fillStyle=this.cursorColor;
+            ctx.fillRect(cursorPosition,0,this.cursorsWidth,this.selectionChartHeight);
+        }
+    },
+
+    &#x2F;**
+     * This method returns the page of the given event.
+     * @method calculateSelectionChartPage
+     * @param {Object} An instance of Event
+     * @return {Integer} The number of the current page
+     *&#x2F;
+    calculateSelectionChartPage:function(event){
+        var n;
+        for (n=0;n&lt;this.selectionChartPages().length-1;n++){
+            if (this.selectionChartPages()[n+1].get(&quot;instant&quot;).get(&quot;timestamp&quot;)&gt;event.get(&quot;instant&quot;).get(&quot;timestamp&quot;))
+                break;
+        }
+        return n;
+    },
+
+    &#x2F;**
+     * This method auto-scrolls the Selection Canvas when the selected instant is represented close to a margin.
+     * @method scrollSelectionCanvas
+     * @param {Object} An instance of Instant
+     *&#x2F;
+    scrollSelectionCanvas:function(instant) {
+        var event, curPage, container, sumVisiblePosition, subVisiblePosition, offsetOfVisibility, element, realElementLeft, eventPosition, absRealElementLeft, instantVisiblePosition;
+
+
+        event = this.allEvents.nearest(instant, false);
+        if (event == null)
+            return null;
+
+        curPage = this.calculateSelectionChartPage(event); &#x2F;&#x2F;Calculate the number of the page of this event
+
+        if (curPage != this.selectionChartPage) {
+            this.selectionChartPage = curPage;
+            this.drawSelectionChart(this.selectionChartPages()[this.selectionChartPage]); &#x2F;&#x2F;Go to the right page
+        }
+
+        element = this.selectionCanvasDom;
+
+        container = element.parent();
+        offsetOfVisibility = (container.width() &#x2F; 100) * this.offsetOfVisibilityOnSelectionTimeline;
+
+        realElementLeft = element.position().left;
+
+        eventPosition = event.drawEventOnselectionCanvasX;
+
+        absRealElementLeft = Math.abs(realElementLeft);
+        instantVisiblePosition = eventPosition - absRealElementLeft;
+        sumVisiblePosition = instantVisiblePosition + offsetOfVisibility;
+        subVisiblePosition = instantVisiblePosition - offsetOfVisibility;
+
+        if (sumVisiblePosition &lt;= container.width() &amp;&amp;
+            subVisiblePosition &gt;= 0)
+            return null; &#x2F;&#x2F;Is already visible
+
+        var newLeft = 0;
+        if (subVisiblePosition &lt; 0) {
+            newLeft = (absRealElementLeft - eventPosition) + realElementLeft + offsetOfVisibility;
+        } else if (sumVisiblePosition &gt; container.width()) {
+            newLeft = realElementLeft - (sumVisiblePosition - container.width());
+        }
+
+        &#x2F;&#x2F;Check position
+        if (newLeft &gt; 0)
+            newLeft = 0;
+
+        if (newLeft + this.selectionChartWidth &lt; container.width())
+            newLeft = container.width() - this.selectionChartWidth;
+
+        element.animate(
+            {left:newLeft},
+            500,
+            function () {
+                &#x2F;&#x2F;end
+            }
+        );
+    },
+
+    &#x2F;**
+     * This method is triggered when a user changes the selection on the Control Timeline.
+     * @method confirmSlidersSelection
+     *&#x2F;
+    confirmSlidersSelection:function($this){
+        if (this.animation)
+            return;
+        var confirmAfter=0; &#x2F;&#x2F;Seconds between a request and an update in order to prevent flood
+
+        this.timelineSelectionWaitIco.show();
+        this.selectionCanvasDom.hide();
+
+        if ($this.selectionAntifloodTimer!=null){
+            clearTimeout(this.selectionAntifloodTimer);
+        }
+
+        (function() {
+            function updateSelectionCanvasAntiFlood(){
+                var pixel2time=$this.globalTimeOffset&#x2F;$this.controlChartWidth;
+                var newTimestampLeft=Math.round($this.sliderLeftPosition*pixel2time) + $this.bgplay.get(&quot;starttimestamp&quot;);
+                var newTimestampRight=Math.round($this.sliderRightPosition*pixel2time) + $this.bgplay.get(&quot;starttimestamp&quot;);
+                $this.selectionStart=new Instant({id:0,timestamp:newTimestampLeft});
+                $this.selectionEnd=new Instant({id:0,timestamp:newTimestampRight});
+
+                var numEvents=$this.getNumberOfEventsBetween(newTimestampLeft,newTimestampRight);
+                $this.writeTimelineInfo(&quot;From &quot;+ dateToString(newTimestampLeft) + &quot; to &quot; + dateToString(newTimestampRight)+&quot; [&quot;+numEvents+&quot; events]&quot;);
+
+                $this.eventAggregator.trigger(&quot;newSelectionStart&quot;,$this.selectionStart);
+                $this.eventAggregator.trigger(&quot;newSelectionEnd&quot;,$this.selectionEnd);
+                $this.eventAggregator.trigger(&#x27;releasePlayButton&#x27;,true);
+                $this.bgplay.setCurInstant($this.selectionStart);
+
+                $this.timelineSelectionWaitIco.hide();
+                $this.selectionCanvasDom.show();
+            }
+            $this.selectionAntifloodTimer=setTimeout(updateSelectionCanvasAntiFlood, confirmAfter*1000);
+        })();
+
+    },
+
+    &#x2F;**
+     * This method provides a color for each type of event.
+     * @method getEventColor
+     * @param {String} The type of an event
+     *&#x2F;
+    getEventColor:function(eventType){
+        var color;
+        var mainType=this.bgplay.get(&quot;type&quot;);
+        switch (mainType) {
+            case &quot;traceroute&quot;: &#x2F;&#x2F;another source type
+                break;
+            default: &#x2F;&#x2F;bgp
+                switch (eventType) {
+                    case &quot;withdrawal&quot;:
+                        color=this.environment.config.bgpEventWithdrawalColor;
+                        break;
+                    case &quot;announce&quot;:
+                        color=this.environment.config.bgpEventAnnounceColor;
+                        break;
+                    case &quot;reannounce&quot;:
+                        color=this.environment.config.bgpEventReannunceColor;
+                        break;
+                    case &quot;pathchange&quot;:
+                        color=this.environment.config.bgpEventPathchangeColor;
+                        break;
+                    case &quot;prepending&quot;:
+                        color=this.environment.config.bgpEventPrependingColor;
+                        break;
+                    case &quot;initialstate&quot;:
+                        color=this.environment.config.bgpEventInitialstateColor;
+                        break;
+                    default:
+                        color=&quot;black&quot;;
+                }
+        }
+        return color;
+    },
+
+    &#x2F;**
+     * This method provides a description for each type of event.
+     * @method getEventVerboseType
+     * @param {String} The type of an event
+     *&#x2F;
+    getEventVerboseType:function(eventType){
+        var text;
+        var mainType=this.bgplay.get(&quot;type&quot;);
+        switch (mainType) {
+            case &quot;traceroute&quot;: &#x2F;&#x2F;another source type
+                break;
+            default: &#x2F;&#x2F;bgp
+                switch (eventType) {
+                    case &quot;withdrawal&quot;:
+                        text=&quot;Withdrawal&quot;;
+                        break;
+                    case &quot;announce&quot;:
+                        text=&quot;Announce&quot;;
+                        break;
+                    case &quot;pathchange&quot;:
+                        text=&quot;Path Change&quot;;
+                        break;
+                    case &quot;reannounce&quot;:
+                        text=&quot;Re-announce&quot;;
+                        break;
+                    case &quot;prepending&quot;:
+                        text=&quot;Prepending&quot;;
+                        break;
+                    case &quot;initialstate&quot;:
+                        text=&quot;Initial state&quot;;
+                        break;
+                    default:
+                        text=&quot;event&quot;;
+                }
+        }
+        return text;
+    },
+
+    &#x2F;**
+     * This method is triggered when a user clicks on the Control Timeline in order to change the current instant
+     * @method updateCursorPosition
+     *&#x2F;
+    updateCursorPosition:function(event){
+        event.preventDefault();
+        var instant,newTimestamp,offsetX;
+        this.stopAnimation();
+        this.eventAggregator.trigger(&quot;animationEnd&quot;);
+        if (!this.stopTriggerEvents){
+            event=addOffset(event, null, true);
+            offsetX=event.offsetX;
+            if (this.environment.config.timeline.disableNotSelectedInstants==false || this.sliderLeftPosition&lt;offsetX &amp;&amp; offsetX&lt;this.sliderRightPosition){
+                newTimestamp=Math.round(offsetX*(this.globalTimeOffset&#x2F;this.controlChartWidth))+this.bgplay.get(&quot;starttimestamp&quot;);
+                instant=new Instant({id:0,timestamp:newTimestamp});
+                this.bgplay.setCurInstant(instant, false);
+            }
+        }
+    },
+
+    &#x2F;**
+     * This method is triggered when a user clicks on the Selection Timeline in order to change the current event
+     * @method updateSelectedEvent
+     *&#x2F;
+    updateSelectedEvent:function(event){
+        event.preventDefault();
+        if (!this.stopTriggerEvents){
+            event=addOffset(event, null, true);
+            var offsetX=event.offsetX;
+            var tmpEvent=this.eventOnSelectionChart.nearest(offsetX,false,true);
+
+            if (this.environment.config.timeline.disableNotSelectedInstants==false ||
+                (tmpEvent.get(&quot;instant&quot;).get(&quot;timestamp&quot;)&gt;=this.selectionStart.get(&quot;timestamp&quot;) &amp;&amp;
+                    tmpEvent.get(&quot;instant&quot;).get(&quot;timestamp&quot;)&lt;=this.selectionEnd.get(&quot;timestamp&quot;))){ &#x2F;&#x2F;If the selected event is in the selected interval
+
+                if (tmpEvent!=null &amp;&amp; offsetX&lt;tmpEvent.drawEventOnselectionCanvasX+tmpEvent.drawEventOnselectionCanvasWidth){
+                    this.stopAnimation();
+                    this.eventAggregator.trigger(&quot;animationEnd&quot;);
+                    this.bgplay.setCurInstant(tmpEvent.get(&quot;instant&quot;));
+                }
+            }
+        }
+    },
+
+    &#x2F;**
+     * This method stops a seek process
+     * @method stopAnimation
+     *&#x2F;
+    stopAnimation:function(){
+        var ntimer, length;
+        for (ntimer = 0, length = this.seekTimers.length; ntimer&lt;length; ntimer++){
+            clearTimeout(this.seekTimers[ntimer]);
+        }
+        this.seekTimers=[];
+    },
+
+    &#x2F;**
+     * This method checks and prevents inconsistent selection of the Control Timeline.
+     * @method checkSliderSelection
+     *&#x2F;
+    checkSliderSelection:function(event,env){
+        if (this.animation==true)
+            return false;
+
+        this.eventAggregator.trigger(&#x27;releasePlayButton&#x27;,false);
+        var sliderLeft=this.timelineControlCanvasSliderLeft;
+        var sliderRight=this.timelineControlCanvasSliderRight;
+        var xLeft= sliderLeft.position().left;
+        var xRight= sliderRight.position().left;
+
+        var sliderLeftWidth=sliderLeft.width();
+        var halfSliderLeft=sliderLeftWidth&#x2F;2;
+        var halfSliderRight=sliderRight.width()&#x2F;2;
+        var element=$(event.target);
+
+        if (xLeft&lt;-halfSliderLeft){
+            element.css(&#x27;left&#x27;,-halfSliderLeft+&#x27;px&#x27;);
+            return false;&#x2F;&#x2F;Drag option of jquery-ui expects null or false.
+        }
+        if (xRight+halfSliderRight&gt;env.controlChartWidth){
+            element.css(&#x27;left&#x27;,env.controlChartWidth-halfSliderRight+&#x27;px&#x27;);
+            return false;&#x2F;&#x2F;Drag option of jquery-ui expects null or false.
+        }
+        if (xLeft+sliderLeftWidth&gt;xRight){
+            if (element.position().left==xLeft){&#x2F;&#x2F;The target is the left slider
+                element.css(&#x27;left&#x27;,xRight-sliderLeftWidth+&#x27;px&#x27;);
+            }else{
+                element.css(&#x27;left&#x27;,xLeft+sliderLeftWidth+&#x27;px&#x27;)
+            }
+            return false;
+        }
+
+        this.sliderLeftPosition = xLeft + halfSliderLeft;
+        this.sliderRightPosition = xRight + halfSliderRight;
+
+        if (this.environment.config.timeline.showSelectionInformation){
+            var pixel2time=this.globalTimeOffset&#x2F;this.controlChartWidth;
+            var newTimestampLeft=Math.round(this.sliderLeftPosition*pixel2time)+this.bgplay.get(&quot;starttimestamp&quot;);
+            var newTimestampRight=Math.round(this.sliderRightPosition*pixel2time)+this.bgplay.get(&quot;starttimestamp&quot;);
+
+            this.writeTimelineInfo(&quot;From &quot;+ dateToString(newTimestampLeft) + &quot; to &quot; + dateToString(newTimestampRight));
+        }
+
+
+    },
+
+    &#x2F;**
+     * This method draws on the Selection Timeline an interval selected on the Control Timeline
+     * @method drawIntervalOnSelectionCanvas
+     *&#x2F;
+    drawIntervalOnSelectionCanvas:function(){
+        var start, stop, imageLeft, imageRight;
+        start=this.allEvents.nearest(this.selectionStart,true, true);
+        stop=this.allEvents.nearest(this.selectionEnd,false, true);
+        imageLeft=this.fileRoot+&quot;view&#x2F;html&#x2F;img&#x2F;leftSlider.png&quot;;
+        imageRight=this.fileRoot+&quot;view&#x2F;html&#x2F;img&#x2F;rightSlider.png&quot;;
+        var $this=this;
+
+        if ($this.selectorLeftImageCache==null){
+            var imgLeft = new Image();
+            imgLeft.onload = function() {
+                $this.selectorLeftImageCache=imgLeft;
+                var imgRight = new Image();
+                imgRight.onload = function() {
+                    $this.selectorRightImageCache=imgRight;
+                    draw(start,stop);
+                    $this.eventAggregator.trigger(&quot;moduleLoading&quot;, false);
+                };
+                imgRight.src = imageRight;
+            };
+            imgLeft.src = imageLeft;
+
+
+        }else{
+            draw(start,stop);
+        }
+
+        function draw(start,stop){
+            var positionXL,positionXR,warpWidth,halfWarpWidth,sliderWidth,halfSliderWidth,ctx, darkenDisabledParts, darkened;
+
+            darkenDisabledParts=$this.environment.config.timeline.darkenDisabledTimeline;
+            warpWidth=$this.environment.config.timeline.timeWarpWidth;
+            halfWarpWidth=warpWidth&#x2F;2;
+            sliderWidth=$this.selectorLeftImageCache.naturalWidth;
+            halfSliderWidth=sliderWidth&#x2F;2;
+            ctx=$this.contextSelectionCanvas;
+            darkened=false;
+
+            if (start!=null &amp;&amp; $this.selectionStart!=$this.selectionFirstStart &amp;&amp; start.drawEventOnselectionCanvasX!=null &amp;&amp; $this.eventOnSelectionChart.containsValue(start)){
+
+                positionXL=start.drawEventOnselectionCanvasX-halfWarpWidth-halfSliderWidth; &#x2F;&#x2F;Position of the first event included - the half of the warp - the half of the slider image
+
+                &#x2F;&#x2F;Draw the margins for the selected interval
+                ctx.fillStyle=$this.selectedIntervalCursorColor;
+                ctx.fillRect(positionXL+halfSliderWidth,0,$this.cursorsWidth,$this.selectionChartHeight);
+
+                if (darkenDisabledParts){
+                    darkened=true;
+                    ctx.globalAlpha=0.3;
+                    ctx.fillStyle=&quot;black&quot;;
+                    ctx.fillRect(0,0,positionXL+halfSliderWidth,$this.selectionChartHeight);
+                    ctx.globalAlpha=1;
+                }
+
+                ctx.drawImage($this.selectorLeftImageCache,positionXL,0);
+            }
+
+            if (stop!=null &amp;&amp; $this.selectionEnd!=$this.selectionFirstEnd &amp;&amp; stop.drawEventOnselectionCanvasX!=null &amp;&amp; $this.eventOnSelectionChart.containsValue(stop)){
+
+                positionXR=stop.drawEventOnselectionCanvasX + $this.environment.config.timeline.selectionChartSecondToPixels+halfWarpWidth-halfSliderWidth; &#x2F;&#x2F;Position of the first event included + width of the event + the half of the warp - the half of the slider image
+
+                if (positionXR==positionXL){ &#x2F;&#x2F;There are no events in the selected interval
+                    positionXR+=sliderWidth; &#x2F;&#x2F;Without this line the two sliders will be overlapped
+                }
+
+                &#x2F;&#x2F;Draw the margins for the selected interval
+                ctx.fillStyle=$this.selectedIntervalCursorColor;
+                ctx.fillRect(positionXR+halfSliderWidth,0,$this.cursorsWidth,$this.selectionChartHeight);
+
+                if (darkenDisabledParts){
+                    darkened=true;
+                    ctx.globalAlpha=0.3;
+                    ctx.fillStyle=&quot;black&quot;;
+                    ctx.fillRect(positionXR+halfSliderWidth,0,$this.selectionChartWidth,$this.selectionChartHeight);
+                    ctx.globalAlpha=1;
+                }
+
+                ctx.drawImage($this.selectorRightImageCache,positionXR,0);
+            }
+
+            if (darkenDisabledParts &amp;&amp; !darkened){
+                if ($this.allEvents.compare($this.eventOnSelectionChart.last().get(&quot;instant&quot;),start.get(&quot;instant&quot;))==-1){
+                    ctx.globalAlpha=0.3;
+                    ctx.fillStyle=&quot;black&quot;;
+                    ctx.fillRect(0,0,$this.selectionChartWidth,$this.selectionChartHeight);
+                    ctx.globalAlpha=1;
+                }else{
+                    if ($this.allEvents.compare(stop.get(&quot;instant&quot;),$this.eventOnSelectionChart.first().get(&quot;instant&quot;))==-1){
+                        ctx.globalAlpha=0.3;
+                        ctx.fillStyle=&quot;black&quot;;
+                        ctx.fillRect(0,0,$this.selectionChartWidth,$this.selectionChartHeight);
+                        ctx.globalAlpha=1;
+                    }
+                }
+            }
+
+            $this.miniArrowsManager($this);
+        }
+    },
+
+    &#x2F;**
+     * This method manages the mini arrows.
+     * The mini arrows are the two green arrows that appear when the timeline sliders (selectors) disappear from the visible selection timeline.
+     * @method miniArrowsManager
+     *&#x2F;
+    miniArrowsManager:function($this){
+        var $this=$this||this;
+
+        var arrowLeftElement,arrowRightElement,container,leftArrow,rightArrow,canvasElementLeft, leftIsVisible,rightIsVisible;
+
+        arrowLeftElement = this.timelineSelectionSliderLeft;
+        arrowRightElement = this.timelineSelectionSliderRight;
+
+        container=this.timelineSelectionDiv;
+
+        leftArrow=$this.allEvents.nearest($this.selectionStart,true);
+        rightArrow=$this.allEvents.nearest($this.selectionEnd,false);
+        canvasElementLeft=$this.selectionCanvasDom.position().left;
+
+        leftIsVisible=false;
+        rightIsVisible=false;
+        arrowRightElement.hide();
+        arrowLeftElement.hide();
+
+        if (leftArrow!=null &amp;&amp; rightArrow!=null){
+
+            if ($this.eventOnSelectionChart.containsValue(leftArrow)){ &#x2F;&#x2F;It is in the current drawn timeline
+                if (leftArrow.drawEventOnselectionCanvasX+canvasElementLeft&lt;0){
+                    leftIsVisible=true; &#x2F;&#x2F;It is in the current visible part of the current drawn timeline
+                }
+            }else{ &#x2F;&#x2F;It is out
+                if ($this.eventOnSelectionChart.first().get(&quot;instant&quot;).get(&quot;timestamp&quot;)&gt;$this.selectionStart.get(&quot;timestamp&quot;)){ &#x2F;&#x2F;Is not in the current visible part, but it is anyway on the left (previous selection timeline page)
+                    leftIsVisible=true;
+                }else{ &#x2F;&#x2F;It is not in the current visible part, but is on the right (next selection timeline page)
+                    rightIsVisible=true;
+                }
+            }
+
+            if ($this.eventOnSelectionChart.containsValue(rightArrow)){ &#x2F;&#x2F;Is in the current drawn timeline
+                if (rightArrow.drawEventOnselectionCanvasX+canvasElementLeft&gt;container.width()){
+                    rightIsVisible=true; &#x2F;&#x2F;It is in the current visible part of the current drawn timeline
+                }
+            }else{ &#x2F;&#x2F;It is out
+                if ($this.eventOnSelectionChart.last().get(&quot;instant&quot;).get(&quot;timestamp&quot;)&lt;$this.selectionEnd.get(&quot;timestamp&quot;)){ &#x2F;&#x2F;It is not in the current visible part, but it is anyway on the right (next selection timeline page)
+                    rightIsVisible=true;
+                }else{ &#x2F;&#x2F;It is not in the current visible part, but is on the left (prev selection timeline page)
+                    leftIsVisible=true;
+                }
+            }
+        }
+
+        if (leftIsVisible)
+            arrowLeftElement.show();
+
+        if (rightIsVisible)
+            arrowRightElement.show();
+
+    }
+});
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

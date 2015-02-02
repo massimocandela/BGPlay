@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>view\GraphView.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: view\GraphView.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*
+ * BGPlay.js #9660
+ * A web-based service for the visualization of the Internet routing
+ *
+ * Copyright (c) 2012 Roma Tre University and RIPE NCC
+ *
+ * See the file LICENSE.txt for copying permission.
+ *&#x2F;
+
+&#x2F;**
+ * GraphView provides the SVG graph.
+ * Template: graph.html
+ * @class GraphView
+ * @module modules
+ *&#x2F;
+var GraphView=Backbone.View.extend({
+    events:function(){
+        return {
+            &quot;touchstart .touchGraphEvents&quot;:&quot;activateTouch&quot;
+        }
+    },
+
+    &#x2F;**
+     * The initialization method of this object.
+     * @method initialize
+     * @param {Map} A map of parameters
+     *&#x2F;
+    initialize:function(){
+        this.environment=this.options.environment;
+        this.bgplay=this.environment.bgplay;
+        this.fileRoot=this.environment.fileRoot;
+        this.eventAggregator=this.environment.eventAggregator;
+
+        this.eventAggregator.trigger(&quot;moduleLoading&quot;, true);
+        this.el=this.options.el;
+        this.model=this.options.model;
+        this.pathViews={};
+        this.dom=$(this.el);
+        this.width=this.dom.width();
+        this.height=this.dom.height();
+        this.subtrees=[];
+        this.pathColorsDoublePrefixOne=this.environment.config.graph.pathColorsDoublePrefixOne;
+        this.pathColorsDoublePrefixTwo=this.environment.config.graph.pathColorsDoublePrefixTwo;
+        this.doublePath=[];
+        this.arcDeviationRedrawRequired=[];
+        this.uniquePathsCheck=[];
+        this.staticPaths=[];
+        this.selectedNodes=[];
+        this.isMobile=isMobileBrowser();
+        this.graphAnimationsOngoing=0;
+        this.environment.GraphView=this;
+
+        this.eventAggregator.on(&quot;destroyAll&quot;, function(){
+            this.destroyMe();
+        },this);
+
+        this.graph=new BgplayGraph({parentDimensionX:this.width,parentDimensionY:this.height, environment:this.environment});
+
+        this.bgplay.on(&#x27;change:cur_instant&#x27;,function(){
+            this.update();
+        },this);
+
+        this.eventAggregator.on(&#x27;allAnimationsCompleted&#x27;, function(parameters){
+            this.allConcurrentAnimationsCompleted();
+        },this);
+
+        this.eventAggregator.on(&quot;graphAnimationComplete&quot;,function(value){
+            this.graphAnimationsOngoing += (value) ? -1 : +1;
+
+            if (this.graphAnimationsOngoing==0){
+                this.eventAggregator.trigger(&quot;allAnimationsCompleted&quot;,null);
+            }
+
+        },this);
+
+
+        this.eventAggregator.on(&#x27;arcDeviationRedrawRequired&#x27;, function(nodes){
+            var $this=this;
+            if (nodes!=null){
+                nodes.forEach(function(node){
+                    if (!$this.arcDeviationRedrawRequired.contains(node)){
+                        $this.arcDeviationRedrawRequired.push(node);
+                    }
+                });
+            }
+        },this);
+
+        this.render();
+
+        this.animation=false;
+
+        this.paper=new Raphael(this.nodeContainer[0], this.width,this.height);
+        this.paper[&quot;node&quot;]=this.nodeContainer;
+        new paperAddOn(this.paper, true, true, true);
+        this.svgGraph = this.paper.set();
+        this.paper.graphSet=this.svgGraph;
+
+        var $this = this;
+
+        $(this.paper.node).dblclick(function(event){
+            $this.selectedNodes=[];
+        });
+
+        this.createAllNodes();
+        this.createAllPaths();
+
+        this.computeSubTrees();
+
+        if (this.environment.config.graph.computeNodesPosition==true &amp;&amp; this.environment.params.nodesPosition==null){
+            this.graph.computePosition();
+            this.eventAggregator.trigger(&quot;firstPathDraw&quot;); &#x2F;&#x2F;draw
+            this.eventAggregator.trigger(&quot;updateNodesPosition&quot;); &#x2F;&#x2F;draw
+        }else{
+            this.eventAggregator.trigger(&quot;firstPathDraw&quot;); &#x2F;&#x2F;draw
+        }
+
+
+        makeUnselectable(this.nodeContainer[0]);
+        log(&quot;Graph initialized.&quot;);
+        this.eventAggregator.trigger(&quot;moduleLoading&quot;, false);
+    },
+
+    &#x2F;*
+     * This method creates the pointers to the DOM elements.
+     *&#x2F;
+    getDomElements:function(){
+        this.nodeContainer = this.dom.find(&#x27;.bgplayNodeContainer&#x27;);
+        this.touchGraphEvents = this.dom.find(&#x27;.touchGraphEvents&#x27;)
+    },
+
+    &#x2F;**
+     * This method draws this module (eg. inject the DOM and elements).
+     * @method render
+     *&#x2F;
+    render:function(){
+        parseTemplate(&#x27;graph.html&#x27;, this, this.el);
+        this.getDomElements();
+
+        return this;
+    },
+
+    &#x2F;**
+     * This method activates touch gestures on the graph preventing the propagation of them on the whole page.
+     * @method activateTouch
+     *&#x2F;
+    activateTouch:function(event){
+        event.preventDefault();
+        this.paper.touchEnabled=!this.paper.touchEnabled;
+        if (this.paper.touchEnabled==true){
+            this.touchGraphEvents.attr(&#x27;src&#x27;,this.fileRoot+&#x27;view&#x2F;html&#x2F;img&#x2F;touch_icon_enabled.png&#x27;);
+        }else{
+            this.touchGraphEvents.attr(&#x27;src&#x27;,this.fileRoot+&#x27;view&#x2F;html&#x2F;img&#x2F;touch_icon_disabled.png&#x27;);
+        }
+    },
+
+    &#x2F;**
+     * This method is called during an animation.
+     * Use this method if you want to make some changes to the entire graph.
+     * Do not use this method to make changes to a particular vertex or edge,
+     * use instead dedicated event-triggered methods in the relative views.
+     * @method update
+     *&#x2F;
+    update:function(){
+
+    },
+
+    &#x2F;**
+     * This method will be called at the end of all the concurrent animation on the graph.
+     * Use this method if you want to make some changes to the entire graph.
+     * Do not use this method to make changes to a particular vertex or edge,
+     * use instead dedicated event-triggered method in the relative views.
+     * @method allConcurrentAnimationsCompleted
+     *&#x2F;
+    allConcurrentAnimationsCompleted:function(){
+        var $this=this;
+        this.arcDeviationRedrawRequired.forEach(function(node){
+            $this.eventAggregator.trigger(&#x27;nodeMoved&#x27;,node);
+        });
+        this.arcDeviationRedrawRequired=[];
+    },
+
+    &#x2F;**
+     * This method initializes all the NodeView needed to represent the nodes of the model layer.
+     * @method createAllNodes
+     *&#x2F;
+    createAllNodes:function(){
+        var $this=this;
+        this.bgplay.get(&quot;nodes&quot;).forEach(function(node){
+            $this.graph.addNode(new NodeView({model:node,paper:$this.paper,visible:true,graphView:$this, environment:$this.environment}));
+        });
+    },
+
+    &#x2F;**
+     * This method initializes a PathView object for each source-target pair of the model layer.
+     * Hence a PathView represents the transition between a set of path objects of the model layer involving the same source-target pair.
+     * PathView uses events to update itself.
+     * @method createAllPaths
+     *&#x2F;
+    createAllPaths:function(){
+        var $this=this;
+        this.bgplay.get(&quot;sources&quot;).each(function(source){
+            $.each(source.get(&quot;events&quot;),function(key,tree){ &#x2F;&#x2F;A tree for each target, almost always one
+                var path,target,event;
+                event=tree.first();
+                path=event.get(&quot;path&quot;);
+                target=event.get(&quot;target&quot;);
+
+                $this.pathViews[source.id+&quot;-&quot;+target.id] = new PathView({source:source,target:target,path:path,paper:$this.paper,visible:(event.get(&quot;type&quot;)==&quot;initialstate&quot;),graphView:$this, environment:$this.environment});&#x2F;&#x2F;We instantiate a new PathView
+
+                tree.forEach(function(event){
+                    var path=event.get(&quot;path&quot;);
+                    if (path!=null){
+                        var target=path.get(&quot;target&quot;);
+                        var keyForUniquenessCheck=source.id+&quot;-&quot;+path.toString()+&quot;-&quot;+target.id;
+                        var keyForStaticCheck=source.id+&quot;-&quot;+target.id;
+
+                        if ($this.uniquePathsCheck[keyForUniquenessCheck]==null){ &#x2F;&#x2F;In this stage, we want to skip both null and duplicated paths in order to have only unique and valid paths
+                            $this.uniquePathsCheck[keyForUniquenessCheck]=true;
+                            $this.pathViews[keyForStaticCheck].static=($this.pathViews[keyForStaticCheck].static==null)?true:false;
+                            $this.graph.addPath(path);
+                        }
+                    }
+                });
+            });
+        });
+
+        $.each(this.pathViews,function(key,element){
+            if (element.static==true){
+                $this.staticPaths.push(element.path);
+            }
+        });
+    },
+
+    checkCycleOneWay:function(path1,path2){
+        var n,node,iteration;
+        var notCommon=false;
+
+        iteration=path1.length-1;
+        for (n=1;n&lt;=iteration;n++){
+            node=path1[iteration-n]; &#x2F;&#x2F;On-fly reverse
+
+            if (!path2.contains(node)){
+
+                notCommon=true;
+            }else{
+                if (notCommon){
+                    return true; &#x2F;&#x2F;A common node after a notCommon node
+                }
+            }
+        }
+        return false; &#x2F;&#x2F;There isn&#x27;t a cycle (the worst case for this algorithm, all nodes were checked)
+    },
+
+    &#x2F;**
+     * This method checks if there is a cycle between two paths in order to understand if they can be collapsed together.
+     * @method thereIsCycle
+     * @param {Object} An instance of Path
+     * @param {Object} An instance of Path
+     * @return {Boolean} True if there is a cycle
+     *&#x2F;
+    thereIsCycle:function(path1,path2){
+        var nodes1,nodes2;
+
+        nodes1=path1.get(&quot;nodes&quot;);
+        nodes2=path2.get(&quot;nodes&quot;);
+
+        &#x2F;&#x2F;First fast check
+        if (nodes1[nodes1.length-1].id!=nodes2[nodes2.length-1].id){
+            return true; &#x2F;&#x2F;Avoids checks between paths with different targets
+        }
+        return (this.checkCycleOneWay(nodes1,nodes2) || this.checkCycleOneWay(nodes2,nodes1)); &#x2F;&#x2F;If the first check returns true, the second will not start
+    },
+
+    getRedArrayOfColours:function(){
+        if (!this.getRedArrayOfColoursCache){
+            this.getRedArrayOfColoursCache=[];
+
+            var  red, green, offset, secondColour_tmp, offset2, blue;
+            red = 255;
+            blue = 0;
+            green = 0;
+            offset=20;
+            offset2=20;
+            while (red&gt;=0){
+                red-=offset;
+                secondColour_tmp=blue;
+                this.getRedArrayOfColoursCache.push((&quot;#&quot; + red.toString(16) + green.toString(16) + secondColour_tmp.toString(16)).toUpperCase());
+                while (secondColour_tmp&lt;=255){
+                    secondColour_tmp+=offset2;
+                    this.getRedArrayOfColoursCache.push((&quot;#&quot; + red.toString(16) + green.toString(16) + secondColour_tmp.toString(16)).toUpperCase());
+                }
+
+            }
+        }
+        return this.getRedArrayOfColoursCache;
+    },
+
+    getGreenArrayOfColours:function(){
+        if (!this.getGreenArrayOfColoursCache){
+            this.getGreenArrayOfColoursCache=[];
+
+            var  red, green, offset, secondColour_tmp, offset2, blue;
+            red = 0;
+            blue = 0;
+            green=255;
+            offset=20;
+            offset2=20;
+            while (green&gt;=0){
+                green-=offset;
+                secondColour_tmp=blue;
+                this.getGreenArrayOfColoursCache.push((&quot;#&quot; + red.toString(16) + green.toString(16) + secondColour_tmp.toString(16)).toUpperCase());
+                while (secondColour_tmp&lt;=255){
+                    secondColour_tmp+=offset2;
+                    this.getGreenArrayOfColoursCache.push((&quot;#&quot; + red.toString(16) + green.toString(16) + secondColour_tmp.toString(16)).toUpperCase());
+                }
+
+            }
+        }
+        return this.getGreenArrayOfColoursCache;
+    },
+    getFromToColor:function(firstColour, secondColour){
+        var  green, offset, out, secondColour_tmp, offset2;
+        green=0;
+        offset=20;
+        offset2=40
+        out=[];
+        while (firstColour&gt;=0){
+            firstColour-=offset;
+            out.push((&quot;#&quot; + firstColour.toString(16) + green.toString(16) + secondColour.toString(16)).toUpperCase());
+            secondColour_tmp=secondColour;
+            while (secondColour_tmp&gt;=0){
+                secondColour_tmp-=offset2;
+                out.push((&quot;#&quot; + firstColour.toString(16) + green.toString(16) + secondColour_tmp.toString(16)).toUpperCase());
+            }
+
+        }
+        return out;
+    },
+
+    &#x2F;**
+     * This method returns a unique color for a given PathView.
+     * The objective of this method is to provide unambiguous colours for the paths of the graph.
+     * As a first approach, the returned colours are taken from an array declared in config.js.
+     * The default array is generated using the CMC(l:c) colour algorithm.
+     * As a second approach, when the array of colours ends, a random generation is used.
+     * This second approach does not guarantee that the generated colours are distinguishable.
+     * Therefore, tune the array of colours to prevent as much as possible the second approach.
+     * @method getPathColor
+     * @param {Object} An instance of PathView
+     * @return {String} An hexadecimal color
+     *&#x2F;
+    getPathColor:function(pathView){
+        var color;
+        if (!this.colorRedTmp){
+            this.colorRedTmp=[&#x27;#8B8989&#x27;,&#x27;#8B6969&#x27;,&#x27;#BC8F8F&#x27;,&#x27;#C67171&#x27;,&#x27;#CD5555&#x27;,&#x27;#8E2323&#x27;,&#x27;#CD3333&#x27;,&#x27;#8B1A1A&#x27;,&#x27;#DB2929&#x27;,&#x27;#EE6363&#x27;,&#x27;#330000&#x27;,&#x27;#8B0000&#x27;,&#x27;#FF0000&#x27;,&#x27;#FF4040&#x27;,&#x27;#FFC1C1&#x27;,&#x27;#A02422&#x27;,&#x27;#F2473F&#x27;,&#x27;#CDB7B5&#x27;,&#x27;#FC1501&#x27;,&#x27;#FA8072&#x27;,&#x27;#D66F62&#x27;,&#x27;#8A3324&#x27;,&#x27;#FF5333&#x27;,&#x27;#8B3626&#x27;,&#x27;#FF7256&#x27;,&#x27;#F5785A&#x27;,&#x27;#8B4C39&#x27;,&#x27;#EE8262&#x27;,&#x27;#E9967A&#x27;,&#x27;#E04006&#x27;,&#x27;#EE4000&#x27;,&#x27;#8B5742&#x27;,&#x27;#B13E0F&#x27;,&#x27;#5C4033&#x27;,&#x27;#CD6839&#x27;,&#x27;#FF7D40&#x27;,&#x27;#DB9370&#x27;,&#x27;#F87531&#x27;,&#x27;#BD9178&#x27;,&#x27;#FF6103&#x27;,&#x27;#FF7722&#x27;,&#x27;#733D1A&#x27;,&#x27;#FF9955&#x27;,&#x27;#E9C2A6&#x27;,&#x27;#8B4513&#x27;,&#x27;#FFF5EE&#x27;,&#x27;#BC7642&#x27;,&#x27;#C76114&#x27;,&#x27;#EE8833&#x27;,&#x27;#8B7765&#x27;,&#x27;#F4A460&#x27;,&#x27;#B87333&#x27;,&#x27;#FFA54F&#x27;,&#x27;#CD7F32&#x27;,&#x27;#CC7722&#x27;,&#x27;#EE7600&#x27;,&#x27;#FFCC99&#x27;,&#x27;#B67C3D&#x27;,&#x27;#E38217&#x27;,&#x27;#9F703A&#x27;,&#x27;#EDC393&#x27;,&#x27;#DD7500&#x27;,&#x27;#8B7355&#x27;,&#x27;#ED9121&#x27;,&#x27;#FFEFDB&#x27;,&#x27;#CDAA7D&#x27;,&#x27;#C48E48&#x27;,&#x27;#EEC591&#x27;,&#x27;#FCE6C9&#x27;,&#x27;#8B8378&#x27;,&#x27;#8B795E&#x27;,&#x27;#DC8909&#x27;,&#x27;#AA6600&#x27;,&#x27;#FFDEAD&#x27;,&#x27;#EED6AF&#x27;,&#x27;#FFE4B5&#x27;,&#x27;#CDBA96&#x27;,&#x27;#FDF5E6&#x27;,&#x27;#EE9A00&#x27;,&#x27;#D5B77A&#x27;,&#x27;#FFAA00&#x27;,&#x27;#E8C782&#x27;,&#x27;#FEE5AC&#x27;,&#x27;#DAA520&#x27;,&#x27;#EEB422&#x27;,&#x27;#CD950C&#x27;,&#x27;#E6B426&#x27;,&#x27;#CDAB2D&#x27;,&#x27;#FFF8DC&#x27;,&#x27;#EEE8CD&#x27;,&#x27;#FEF1B5&#x27;,&#x27;#EEDC82&#x27;,&#x27;#8B8878&#x27;,&#x27;#EEDD82&#x27;,&#x27;#EEC900&#x27;,&#x27;#FBDB0C&#x27;,&#x27;#FFE303&#x27;,&#x27;#D6C537&#x27;,&#x27;#FFE600&#x27;,&#x27;#8B864E&#x27;,&#x27;#EEE685&#x27;,&#x27;#BDB76B&#x27;,&#x27;#FFFCCF&#x27;,&#x27;#7B7922&#x27;,&#x27;#8B8B83&#x27;,&#x27;#CDCDC1&#x27;,&#x27;#4F4F2F&#x27;,&#x27;#777733&#x27;,&#x27;#F5F5DC&#x27;,&#x27;#D9D919&#x27;,&#x27;#8B8B00&#x27;,&#x27;#EEEE00&#x27;,&#x27;#FFFFAA&#x27;,&#x27;#FFFFF0&#x27;,&#x27;#98A148&#x27;,&#x27;#AEBB51&#x27;,&#x27;#B3C95A&#x27;,&#x27;#FCFFF0&#x27;,&#x27;#668014&#x27;,&#x27;#54632C&#x27;,&#x27;#D4ED91&#x27;,&#x27;#A2C257&#x27;,&#x27;#79973F&#x27;,&#x27;#9ACD32&#x27;,&#x27;#DFFFA5&#x27;,&#x27;#A2CD5A&#x27;,&#x27;#ADFF2F&#x27;];
+            this.colorNumberLeft=0;
+            this.colorNumberRight=this.colorRedTmp.length;
+        }
+
+        if (this.environment.config.graph.pathIncrementalColoringForTwoPrefixes==true &amp;&amp; this.bgplay.getPrefixes().length==2){
+            if (this.doublePath[0]==null){
+                this.doublePath[0]=pathView.target;
+            }else if (pathView.target!=this.doublePath[0] &amp;&amp; this.doublePath[1]==null){
+                this.doublePath[1]=pathView.target;
+            }
+            if (pathView.target==this.doublePath[0]){
+                color=this.colorRedTmp[this.colorNumberLeft];
+                this.colorNumberLeft+=1;
+            }else if (pathView.target==this.doublePath[1]){
+
+                color=this.colorRedTmp[this.colorNumberRight];
+                this.colorNumberRight-=1;
+            }
+
+        }else{
+            if (this.notUsedColor==null){
+                this.notUsedColor=this.environment.config.graph.pathColors.slice(this.subtrees.length); &#x2F;&#x2F;Initialize the array of colours
+            }
+
+            if (pathView.static==true){
+                color=this.environment.config.graph.pathColors[pathView.subTreeId]; &#x2F;&#x2F;Dedicated color for static paths
+            }else{
+                color=this.notUsedColor.pop();
+            }
+        }
+
+        color=(color)?color:this.getRandomColor();
+
+        return color;
+    },
+
+    getRandomColor:function(){
+        var letters = &#x27;0123456789ABCDEF&#x27;.split(&#x27;&#x27;);
+        var color = &#x27;#&#x27;;
+        for (var i = 0; i &lt; 6; i++ ) {
+            color += letters[Math.round(Math.random() * 15)];
+        }
+        return color;
+    },
+
+    &#x2F;**
+     * The objective of this method is to identify a set of trees composed of static paths that can be collapsed
+     * together and coloured with the same colour without introducing ambiguity.
+     * An ambiguity is generated when there is a cycle between two paths.
+     * @method computeSubTrees
+     *&#x2F;
+    computeSubTrees:function(){
+        if (this.staticPaths.length==0)
+            return;
+        var n, i, tree, h, path1, path2, inThisTree,key;
+        this.subtrees.push([this.staticPaths[0]]); &#x2F;&#x2F;Initializes the first set (alias tree)
+        this.pathViews[this.staticPaths[0].get(&quot;source&quot;).id+&quot;-&quot;+this.staticPaths[0].get(&quot;target&quot;).id].subTreeId=0;&#x2F;&#x2F;The id of the subTree is the index of the array
+
+        for (h=1;h&lt;this.staticPaths.length;h++){ &#x2F;&#x2F;For each static path
+            path1=this.staticPaths[h];
+
+            inThisTree=true;
+
+            for (n=0;n&lt;this.subtrees.length;n++){ &#x2F;&#x2F;Tries to insert the current static path in a set
+                inThisTree=true;
+
+                tree=this.subtrees[n];
+
+                for (i=0;i&lt;tree.length;i++){ &#x2F;&#x2F;Checks if there is a cycle between the new path and the paths already in the set
+                    path2=tree[i]; &#x2F;&#x2F;A path in the set
+
+                    if (this.thereIsCycle(path1,path2)){ &#x2F;&#x2F;There is a cycle between two paths in the same set
+                        inThisTree=false;
+                        break; &#x2F;&#x2F;Skip to check the other paths in the same tree
+                    }
+                }
+
+                if (inThisTree){ &#x2F;&#x2F;If no checks generates a negative result then we can put this path in the current set
+                    this.pathViews[path1.get(&quot;source&quot;).id+&quot;-&quot;+path1.get(&quot;target&quot;).id].subTreeId=n;&#x2F;&#x2F;The id of the subTree is the index of the array
+                    this.subtrees[n].push(path1);
+                    break; &#x2F;&#x2F;Don&#x27;t check in other trees
+                }
+            }
+
+            if (!inThisTree){
+                this.pathViews[path1.get(&quot;source&quot;).id+&quot;-&quot;+path1.get(&quot;target&quot;).id].subTreeId=this.subtrees.length;
+                this.subtrees.push([path1]);
+            }
+        }
+        this.applyTreeAtEdges();
+    },
+
+    applyTreeAtEdges:function(){
+        var $this=this;
+        this.graph.edges.forEach(function(edge){
+            edge.subTreeId=$this.pathViews[edge.key].subTreeId;
+        });
+    }
+
+});
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

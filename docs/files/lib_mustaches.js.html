@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>lib\mustaches.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/BgpDataChecksView.html">BgpDataChecksView</a></li>
+            
+                <li><a href="..&#x2F;classes/Bgplay.html">Bgplay</a></li>
+            
+                <li><a href="..&#x2F;classes/ControllerView.html">ControllerView</a></li>
+            
+                <li><a href="..&#x2F;classes/Event.html">Event</a></li>
+            
+                <li><a href="..&#x2F;classes/FullScreenView.html">FullScreenView</a></li>
+            
+                <li><a href="..&#x2F;classes/GraphView.html">GraphView</a></li>
+            
+                <li><a href="..&#x2F;classes/InfoPanelView.html">InfoPanelView</a></li>
+            
+                <li><a href="..&#x2F;classes/Instant.html">Instant</a></li>
+            
+                <li><a href="..&#x2F;classes/JsonWrapRipestat.html">JsonWrapRipestat</a></li>
+            
+                <li><a href="..&#x2F;classes/LivePermalinkView.html">LivePermalinkView</a></li>
+            
+                <li><a href="..&#x2F;classes/MainView.html">MainView</a></li>
+            
+                <li><a href="..&#x2F;classes/Node.html">Node</a></li>
+            
+                <li><a href="..&#x2F;classes/NodePositionView.html">NodePositionView</a></li>
+            
+                <li><a href="..&#x2F;classes/NodeView.html">NodeView</a></li>
+            
+                <li><a href="..&#x2F;classes/Path.html">Path</a></li>
+            
+                <li><a href="..&#x2F;classes/PathView.html">PathView</a></li>
+            
+                <li><a href="..&#x2F;classes/ScreenShotView.html">ScreenShotView</a></li>
+            
+                <li><a href="..&#x2F;classes/Source.html">Source</a></li>
+            
+                <li><a href="..&#x2F;classes/Target.html">Target</a></li>
+            
+                <li><a href="..&#x2F;classes/TimelineView.html">TimelineView</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/model.html">model</a></li>
+            
+                <li><a href="..&#x2F;modules/modules.html">modules</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: lib\mustaches.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;*!
+ * mustache.js - Logic-less {{mustache}} templates with JavaScript
+ * http:&#x2F;&#x2F;github.com&#x2F;janl&#x2F;mustache.js
+ *&#x2F;
+
+&#x2F;*global define: false*&#x2F;
+
+var Mustache;
+
+(function (exports) {
+    if (typeof module !== &quot;undefined&quot;) {
+        module.exports = exports; &#x2F;&#x2F; CommonJS
+    } else if (typeof define === &quot;function&quot;) {
+        define(exports); &#x2F;&#x2F; AMD
+    } else {
+        Mustache = exports; &#x2F;&#x2F; &lt;script&gt;
+    }
+}((function () {
+    var exports = {};
+
+    exports.name = &quot;mustache.js&quot;;
+    exports.version = &quot;0.5.2&quot;;
+    exports.tags = [&quot;{{&quot;, &quot;}}&quot;];
+
+    exports.parse = parse;
+    exports.clearCache = clearCache;
+    exports.compile = compile;
+    exports.compilePartial = compilePartial;
+    exports.render = render;
+
+    exports.Scanner = Scanner;
+    exports.Context = Context;
+    exports.Renderer = Renderer;
+
+    &#x2F;&#x2F; This is here for backwards compatibility with 0.4.x.
+    exports.to_html = function (template, view, partials, send) {
+        var result = render(template, view, partials);
+
+        if (typeof send === &quot;function&quot;) {
+            send(result);
+        } else {
+            return result;
+        }
+    };
+
+    var whiteRe = &#x2F;\s*&#x2F;;
+    var spaceRe = &#x2F;\s+&#x2F;;
+    var nonSpaceRe = &#x2F;\S&#x2F;;
+    var eqRe = &#x2F;\s*=&#x2F;;
+    var curlyRe = &#x2F;\s*\}&#x2F;;
+    var tagRe = &#x2F;#|\^|\&#x2F;|&gt;|\{|&amp;|=|!&#x2F;;
+
+    &#x2F;&#x2F; Workaround for https:&#x2F;&#x2F;issues.apache.org&#x2F;jira&#x2F;browse&#x2F;COUCHDB-577
+    &#x2F;&#x2F; See https:&#x2F;&#x2F;github.com&#x2F;janl&#x2F;mustache.js&#x2F;issues&#x2F;189
+    function testRe(re, string) {
+        return RegExp.prototype.test.call(re, string);
+    }
+
+    function isWhitespace(string) {
+        return !testRe(nonSpaceRe, string);
+    }
+
+    var isArray = Array.isArray || function (obj) {
+        return Object.prototype.toString.call(obj) === &quot;[object Array]&quot;;
+    };
+
+    &#x2F;&#x2F; OSWASP Guidelines: escape all non alphanumeric characters in ASCII space.
+    var jsCharsRe = &#x2F;[\x00-\x2F\x3A-\x40\x5B-\x60\x7B-\xFF\u2028\u2029]&#x2F;gm;
+
+    function quote(text) {
+        var escaped = text.replace(jsCharsRe, function (c) {
+            return &quot;\\u&quot; + (&#x27;0000&#x27; + c.charCodeAt(0).toString(16)).slice(-4);
+        });
+
+        return &#x27;&quot;&#x27; + escaped + &#x27;&quot;&#x27;;
+    }
+
+    function escapeRe(string) {
+        return string.replace(&#x2F;[\-\[\]{}()*+?.,\\\^$|#\s]&#x2F;g, &quot;\\$&amp;&quot;);
+    }
+
+    var entityMap = {
+        &quot;&amp;&quot;: &quot;&amp;amp;&quot;,
+        &quot;&lt;&quot;: &quot;&amp;lt;&quot;,
+        &quot;&gt;&quot;: &quot;&amp;gt;&quot;,
+        &#x27;&quot;&#x27;: &#x27;&amp;quot;&#x27;,
+        &quot;&#x27;&quot;: &#x27;&amp;#39;&#x27;,
+        &quot;&#x2F;&quot;: &#x27;&amp;#x2F;&#x27;
+    };
+
+    function escapeHtml(string) {
+        return String(string).replace(&#x2F;[&amp;&lt;&gt;&quot;&#x27;\&#x2F;]&#x2F;g, function (s) {
+            return entityMap[s];
+        });
+    }
+
+    &#x2F;&#x2F; Export these utility functions.
+    exports.isWhitespace = isWhitespace;
+    exports.isArray = isArray;
+    exports.quote = quote;
+    exports.escapeRe = escapeRe;
+    exports.escapeHtml = escapeHtml;
+
+    function Scanner(string) {
+        this.string = string;
+        this.tail = string;
+        this.pos = 0;
+    }
+
+    &#x2F;**
+     * Returns &#x60;true&#x60; if the tail is empty (end of string).
+     *&#x2F;
+    Scanner.prototype.eos = function () {
+        return this.tail === &quot;&quot;;
+    };
+
+    &#x2F;**
+     * Tries to match the given regular expression at the current position.
+     * Returns the matched text if it can match, the empty string otherwise.
+     *&#x2F;
+    Scanner.prototype.scan = function (re) {
+        var match = this.tail.match(re);
+
+        if (match &amp;&amp; match.index === 0) {
+            this.tail = this.tail.substring(match[0].length);
+            this.pos += match[0].length;
+            return match[0];
+        }
+
+        return &quot;&quot;;
+    };
+
+    &#x2F;**
+     * Skips all text until the given regular expression can be matched. Returns
+     * the skipped string, which is the entire tail if no match can be made.
+     *&#x2F;
+    Scanner.prototype.scanUntil = function (re) {
+        var match, pos = this.tail.search(re);
+
+        switch (pos) {
+            case -1:
+                match = this.tail;
+                this.pos += this.tail.length;
+                this.tail = &quot;&quot;;
+                break;
+            case 0:
+                match = &quot;&quot;;
+                break;
+            default:
+                match = this.tail.substring(0, pos);
+                this.tail = this.tail.substring(pos);
+                this.pos += pos;
+        }
+
+        return match;
+    };
+
+    function Context(view, parent) {
+        this.view = view;
+        this.parent = parent;
+        this.clearCache();
+    }
+
+    Context.make = function (view) {
+        return (view instanceof Context) ? view : new Context(view);
+    };
+
+    Context.prototype.clearCache = function () {
+        this._cache = {};
+    };
+
+    Context.prototype.push = function (view) {
+        return new Context(view, this);
+    };
+
+    Context.prototype.lookup = function (name) {
+        var value = this._cache[name];
+
+        if (!value) {
+            if (name === &quot;.&quot;) {
+                value = this.view;
+            } else {
+                var context = this;
+
+                while (context) {
+                    if (name.indexOf(&quot;.&quot;) &gt; 0) {
+                        var names = name.split(&quot;.&quot;), i = 0;
+
+                        value = context.view;
+
+                        while (value &amp;&amp; i &lt; names.length) {
+                            value = value[names[i++]];
+                        }
+                    } else {
+                        value = context.view[name];
+                    }
+
+                    if (value != null) {
+                        break;
+                    }
+
+                    context = context.parent;
+                }
+            }
+
+            this._cache[name] = value;
+        }
+
+        if (typeof value === &quot;function&quot;) {
+            value = value.call(this.view);
+        }
+
+        return value;
+    };
+
+    function Renderer() {
+        this.clearCache();
+    }
+
+    Renderer.prototype.clearCache = function () {
+        this._cache = {};
+        this._partialCache = {};
+    };
+
+    Renderer.prototype.compile = function (tokens, tags) {
+        if (typeof tokens === &quot;string&quot;) {
+            tokens = parse(tokens, tags);
+        }
+
+        var fn = compileTokens(tokens),
+            self = this;
+
+        return function (view) {
+            return fn(Context.make(view), self);
+        };
+    };
+
+    Renderer.prototype.compilePartial = function (name, tokens, tags) {
+        this._partialCache[name] = this.compile(tokens, tags);
+        return this._partialCache[name];
+    };
+
+    Renderer.prototype.render = function (template, view) {
+        var fn = this._cache[template];
+
+        if (!fn) {
+            fn = this.compile(template);
+            this._cache[template] = fn;
+        }
+
+        return fn(view);
+    };
+
+    Renderer.prototype._section = function (name, context, callback) {
+        var value = context.lookup(name);
+
+        switch (typeof value) {
+            case &quot;object&quot;:
+                if (isArray(value)) {
+                    var buffer = &quot;&quot;;
+
+                    for (var i = 0, len = value.length; i &lt; len; ++i) {
+                        buffer += callback(context.push(value[i]), this);
+                    }
+
+                    return buffer;
+                }
+
+                return value ? callback(context.push(value), this) : &quot;&quot;;
+            case &quot;function&quot;:
+                &#x2F;&#x2F; TODO: The text should be passed to the callback plain, not rendered.
+                var sectionText = callback(context, this),
+                    self = this;
+
+                var scopedRender = function (template) {
+                    return self.render(template, context);
+                };
+
+                return value.call(context.view, sectionText, scopedRender) || &quot;&quot;;
+            default:
+                if (value) {
+                    return callback(context, this);
+                }
+        }
+
+        return &quot;&quot;;
+    };
+
+    Renderer.prototype._inverted = function (name, context, callback) {
+        var value = context.lookup(name);
+
+        &#x2F;&#x2F; From the spec: inverted sections may render text once based on the
+        &#x2F;&#x2F; inverse value of the key. That is, they will be rendered if the key
+        &#x2F;&#x2F; doesn&#x27;t exist, is false, or is an empty list.
+        if (value == null || value === false || (isArray(value) &amp;&amp; value.length === 0)) {
+            return callback(context, this);
+        }
+
+        return &quot;&quot;;
+    };
+
+    Renderer.prototype._partial = function (name, context) {
+        var fn = this._partialCache[name];
+
+        if (fn) {
+            return fn(context);
+        }
+
+        return &quot;&quot;;
+    };
+
+    Renderer.prototype._name = function (name, context, escape) {
+        var value = context.lookup(name);
+
+        if (typeof value === &quot;function&quot;) {
+            value = value.call(context.view);
+        }
+
+        var string = (value == null) ? &quot;&quot; : String(value);
+
+        if (escape) {
+            return escapeHtml(string);
+        }
+
+        return string;
+    };
+
+    &#x2F;**
+     * Low-level function that compiles the given &#x60;tokens&#x60; into a
+     * function that accepts two arguments: a Context and a
+     * Renderer. Returns the body of the function as a string if
+     * &#x60;returnBody&#x60; is true.
+     *&#x2F;
+    function compileTokens(tokens, returnBody) {
+        var body = [&#x27;&quot;&quot;&#x27;];
+        var token, method, escape;
+
+        for (var i = 0, len = tokens.length; i &lt; len; ++i) {
+            token = tokens[i];
+
+            switch (token.type) {
+                case &quot;#&quot;:
+                case &quot;^&quot;:
+                    method = (token.type === &quot;#&quot;) ? &quot;_section&quot; : &quot;_inverted&quot;;
+                    body.push(&quot;r.&quot; + method + &quot;(&quot; + quote(token.value) + &quot;, c, function (c, r) {\n&quot; +
+                        &quot;  &quot; + compileTokens(token.tokens, true) + &quot;\n&quot; +
+                        &quot;})&quot;);
+                    break;
+                case &quot;{&quot;:
+                case &quot;&amp;&quot;:
+                case &quot;name&quot;:
+                    escape = token.type === &quot;name&quot; ? &quot;true&quot; : &quot;false&quot;;
+                    body.push(&quot;r._name(&quot; + quote(token.value) + &quot;, c, &quot; + escape + &quot;)&quot;);
+                    break;
+                case &quot;&gt;&quot;:
+                    body.push(&quot;r._partial(&quot; + quote(token.value) + &quot;, c)&quot;);
+                    break;
+                case &quot;text&quot;:
+                    body.push(quote(token.value));
+                    break;
+            }
+        }
+
+        &#x2F;&#x2F; Convert to a string body.
+        body = &quot;return &quot; + body.join(&quot; + &quot;) + &quot;;&quot;;
+
+        &#x2F;&#x2F; Good for debugging.
+        &#x2F;&#x2F; console.log(body);
+
+        if (returnBody) {
+            return body;
+        }
+
+        &#x2F;&#x2F; For great evil!
+        return new Function(&quot;c, r&quot;, body);
+    }
+
+    function escapeTags(tags) {
+        if (tags.length === 2) {
+            return [
+                new RegExp(escapeRe(tags[0]) + &quot;\\s*&quot;),
+                new RegExp(&quot;\\s*&quot; + escapeRe(tags[1]))
+            ];
+        }
+
+        throw new Error(&quot;Invalid tags: &quot; + tags.join(&quot; &quot;));
+    }
+
+    &#x2F;**
+     * Forms the given linear array of &#x60;tokens&#x60; into a nested tree structure
+     * where tokens that represent a section have a &quot;tokens&quot; array property
+     * that contains all tokens that are in that section.
+     *&#x2F;
+    function nestTokens(tokens) {
+        var tree = [];
+        var collector = tree;
+        var sections = [];
+        var token, section;
+
+        for (var i = 0; i &lt; tokens.length; ++i) {
+            token = tokens[i];
+
+            switch (token.type) {
+                case &quot;#&quot;:
+                case &quot;^&quot;:
+                    token.tokens = [];
+                    sections.push(token);
+                    collector.push(token);
+                    collector = token.tokens;
+                    break;
+                case &quot;&#x2F;&quot;:
+                    if (sections.length === 0) {
+                        throw new Error(&quot;Unopened section: &quot; + token.value);
+                    }
+
+                    section = sections.pop();
+
+                    if (section.value !== token.value) {
+                        throw new Error(&quot;Unclosed section: &quot; + section.value);
+                    }
+
+                    if (sections.length &gt; 0) {
+                        collector = sections[sections.length - 1].tokens;
+                    } else {
+                        collector = tree;
+                    }
+                    break;
+                default:
+                    collector.push(token);
+            }
+        }
+
+        &#x2F;&#x2F; Make sure there were no open sections when we&#x27;re done.
+        section = sections.pop();
+
+        if (section) {
+            throw new Error(&quot;Unclosed section: &quot; + section.value);
+        }
+
+        return tree;
+    }
+
+    &#x2F;**
+     * Combines the values of consecutive text tokens in the given &#x60;tokens&#x60; array
+     * to a single token.
+     *&#x2F;
+    function squashTokens(tokens) {
+        var lastToken;
+
+        for (var i = 0; i &lt; tokens.length; ++i) {
+            var token = tokens[i];
+
+            if (lastToken &amp;&amp; lastToken.type === &quot;text&quot; &amp;&amp; token.type === &quot;text&quot;) {
+                lastToken.value += token.value;
+                tokens.splice(i--, 1); &#x2F;&#x2F; Remove this token from the array.
+            } else {
+                lastToken = token;
+            }
+        }
+    }
+
+    &#x2F;**
+     * Breaks up the given &#x60;template&#x60; string into a tree of token objects. If
+     * &#x60;tags&#x60; is given here it must be an array with two string values: the
+     * opening and closing tags used in the template (e.g. [&quot;&lt;%&quot;, &quot;%&gt;&quot;]). Of
+     * course, the default is to use mustaches (i.e. Mustache.tags).
+     *&#x2F;
+    function parse(template, tags) {
+        tags = tags || exports.tags;
+
+        var tagRes = escapeTags(tags);
+        var scanner = new Scanner(template);
+
+        var tokens = [],      &#x2F;&#x2F; Buffer to hold the tokens
+            spaces = [],      &#x2F;&#x2F; Indices of whitespace tokens on the current line
+            hasTag = false,   &#x2F;&#x2F; Is there a {{tag}} on the current line?
+            nonSpace = false; &#x2F;&#x2F; Is there a non-space char on the current line?
+
+        &#x2F;&#x2F; Strips all whitespace tokens array for the current line
+        &#x2F;&#x2F; if there was a {{#tag}} on it and otherwise only space.
+        var stripSpace = function () {
+            if (hasTag &amp;&amp; !nonSpace) {
+                while (spaces.length) {
+                    tokens.splice(spaces.pop(), 1);
+                }
+            } else {
+                spaces = [];
+            }
+
+            hasTag = false;
+            nonSpace = false;
+        };
+
+        var type, value, chr;
+
+        while (!scanner.eos()) {
+            value = scanner.scanUntil(tagRes[0]);
+
+            if (value) {
+                for (var i = 0, len = value.length; i &lt; len; ++i) {
+                    chr = value.charAt(i);
+
+                    if (isWhitespace(chr)) {
+                        spaces.push(tokens.length);
+                    } else {
+                        nonSpace = true;
+                    }
+
+                    tokens.push({type: &quot;text&quot;, value: chr});
+
+                    if (chr === &quot;\n&quot;) {
+                        stripSpace(); &#x2F;&#x2F; Check for whitespace on the current line.
+                    }
+                }
+            }
+
+            &#x2F;&#x2F; Match the opening tag.
+            if (!scanner.scan(tagRes[0])) {
+                break;
+            }
+
+            hasTag = true;
+            type = scanner.scan(tagRe) || &quot;name&quot;;
+
+            &#x2F;&#x2F; Skip any whitespace between tag and value.
+            scanner.scan(whiteRe);
+
+            &#x2F;&#x2F; Extract the tag value.
+            if (type === &quot;=&quot;) {
+                value = scanner.scanUntil(eqRe);
+                scanner.scan(eqRe);
+                scanner.scanUntil(tagRes[1]);
+            } else if (type === &quot;{&quot;) {
+                var closeRe = new RegExp(&quot;\\s*&quot; + escapeRe(&quot;}&quot; + tags[1]));
+                value = scanner.scanUntil(closeRe);
+                scanner.scan(curlyRe);
+                scanner.scanUntil(tagRes[1]);
+            } else {
+                value = scanner.scanUntil(tagRes[1]);
+            }
+
+            &#x2F;&#x2F; Match the closing tag.
+            if (!scanner.scan(tagRes[1])) {
+                throw new Error(&quot;Unclosed tag at &quot; + scanner.pos);
+            }
+
+            tokens.push({type: type, value: value});
+
+            if (type === &quot;name&quot; || type === &quot;{&quot; || type === &quot;&amp;&quot;) {
+                nonSpace = true;
+            }
+
+            &#x2F;&#x2F; Set the tags for the next time around.
+            if (type === &quot;=&quot;) {
+                tags = value.split(spaceRe);
+                tagRes = escapeTags(tags);
+            }
+        }
+
+        squashTokens(tokens);
+
+        return nestTokens(tokens);
+    }
+
+    &#x2F;&#x2F; The high-level clearCache, compile, compilePartial, and render functions
+    &#x2F;&#x2F; use this default renderer.
+    var _renderer = new Renderer();
+
+    &#x2F;**
+     * Clears all cached templates and partials.
+     *&#x2F;
+    function clearCache() {
+        _renderer.clearCache();
+    }
+
+    &#x2F;**
+     * High-level API for compiling the given &#x60;tokens&#x60; down to a reusable
+     * function. If &#x60;tokens&#x60; is a string it will be parsed using the given &#x60;tags&#x60;
+     * before it is compiled.
+     *&#x2F;
+    function compile(tokens, tags) {
+        return _renderer.compile(tokens, tags);
+    }
+
+    &#x2F;**
+     * High-level API for compiling the &#x60;tokens&#x60; for the partial with the given
+     * &#x60;name&#x60; down to a reusable function. If &#x60;tokens&#x60; is a string it will be
+     * parsed using the given &#x60;tags&#x60; before it is compiled.
+     *&#x2F;
+    function compilePartial(name, tokens, tags) {
+        return _renderer.compilePartial(name, tokens, tags);
+    }
+
+    &#x2F;**
+     * High-level API for rendering the &#x60;template&#x60; using the given &#x60;view&#x60;. The
+     * optional &#x60;partials&#x60; object may be given here for convenience, but note that
+     * it will cause all partials to be re-compiled, thus hurting performance. Of
+     * course, this only matters if you&#x27;re going to render the same template more
+     * than once. If so, it is best to call &#x60;compilePartial&#x60; before calling this
+     * function and to leave the &#x60;partials&#x60; argument blank.
+     *&#x2F;
+    function render(template, view, partials) {
+        if (partials) {
+            for (var name in partials) {
+                compilePartial(name, partials[name]);
+            }
+        }
+
+        return _renderer.render(template, view);
+    }
+
+    return exports;
+}())));
+
+
+
+
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>
