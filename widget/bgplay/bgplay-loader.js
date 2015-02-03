@@ -145,7 +145,7 @@ define([
 
 ], function($, Backbone, Mustache, raphael, config, modules, MainView) {
 
-    debugMode = (getUrlParam("debug")=="true") ? true : false;// false to prevent console logs
+    debugMode = getUrlParam("debug")=="true";// false to prevent console logs
 
     window.Mustache = Mustache;
     loadCss(BGPLAY_STYLESHEETS_URL + 'jquery-ui-191.css');
@@ -175,13 +175,13 @@ define([
     //Override of some methods
     main.advancedInit = function(){
         main.environment.thisWidget = thisWidget;
-    }
+    };
 
 
     main.alert = function(msg, type){
         alert(msg);
         //main.environment.dom.append(misc.infoMessage(type,msg));
-    }
+    };
 
 
     //Initialization of the BGPlay environment

@@ -22,7 +22,6 @@ define(
             BGPLAY_MODULES_URL + "bgplay/OptionRestoreGraph.js",
             BGPLAY_MODULES_URL + "bgplay/OptionGraphDeep.js",
             BGPLAY_MODULES_URL + "bgplay/OptionLinkWeight.js"
-//        BGPLAY_MODULES_URL + "tplay/RTTView.js"
 
     ],  function(
 
@@ -39,7 +38,6 @@ define(
         OptionRestoreGraph,
         OptionGraphDeep,
         OptionLinkWeight
-        //RTTView
 
         ){
 
@@ -57,7 +55,6 @@ define(
             {"types":["all"], "modes":["consistent"], "view": OptionGraphDeep},
             {"types":["all"], "modes":["consistent"], "view": OptionLinkWeight},
             {"types":["all"], "modes":["consistent"], "view": OptionRestoreGraph}
-            //            {"types":["bgp"], "modes":["consistent"], "domClass": "tplayRttTimeline", "view": RTTView}
         ]
 
     });
