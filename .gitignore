@@ -2,3 +2,15 @@ modules/bgplay_ripestat
 widget/bgplay-ripestat
 .hgignore
 widget/bgplay/bgplay-config_old.js
+
+.idea/.name
+
+.idea/BGPlay.iml
+
+.idea/modules.xml
+
+.idea/misc.xml
+
+.idea/workspace.xml
+
+.idea/vcs.xml

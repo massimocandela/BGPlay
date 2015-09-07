@@ -12,7 +12,8 @@ var DataEmulator = function(){
     this._usedPaths = {};
     this._target = {
         as_number: 4555,
-        ip: "192.168.1.1"
+        owner: "OWNER",
+        prefix: "193.0.20.0/21"
     };
 
     this._getUsedSource = function(){
@@ -73,7 +74,6 @@ var DataEmulator = function(){
         var numberItems, path;
 
         path = [];
-        path.push(source);
         numberItems = parseInt((Math.random() * 10) + 2);
         for (var i = 0; i < numberItems; i++) {
             path.push(this._getNode());
@@ -135,9 +135,13 @@ var DataEmulator = function(){
     };
 
     this._generateItem = function(){
+        var source;
+
+        source = this._getSource();
         return {
             type: "A",
-            path: this._getPath(this._getSource(), this._target)
+            source: this._getSource(),
+            path: this._getPath(source, this._target)
         };
     };
 
