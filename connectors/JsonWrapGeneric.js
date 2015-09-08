@@ -367,6 +367,20 @@ function JsonWrap(environment){
 
             bgplay.updateState();
 
+            // TEST
+            var dataEmulator = new DataEmulator(environment);
+            var wrap = new SWrap(environment);
+
+            dataEmulator.start(function(data){
+                wrap.sampleCallback(data);
+                environment.eventAggregator.trigger("newSample", new Instant({
+                    id: 0,
+                    timestamp: data.timestamp,
+                    environment: environment
+                }));
+
+            });
+
             return true;
         }
     }

@@ -15,11 +15,11 @@
 define(
     [
         //Sub-modules
-            BGPLAY_MODULES_URL + "bgplay/NodeView.js",
-            BGPLAY_MODULES_URL + "bgplay/PathView.js",
+        BGPLAY_MODULES_URL + "bgplay/NodeView.js",
+        BGPLAY_MODULES_URL + "bgplay/PathView.js",
 
         //Template
-            BGPLAY_TEMPLATES_NOCORS_URL + "graph.html.js"
+        BGPLAY_TEMPLATES_NOCORS_URL + "graph.html.js"
 
     ],  function(NodeView, PathView){
 
@@ -73,6 +73,19 @@ define(
 
                 this.eventAggregator.on("destroyAll", function(){
                     this.destroyMe();
+                },this);
+
+                this.eventAggregator.on("newSample", function(instant){
+                    console.log("sample");
+                    this.updateScene();
+                    this.graph.computePosition();
+                    //this.autoScale();
+                    //this.eventAggregator.trigger("firstPathDraw"); //draw
+                    //this.eventAggregator.trigger("updateNodesPosition"); //draw
+                    //this.pruneGraph();
+
+                    this.bgplay.setCurInstant(instant);
+
                 },this);
 
                 this.graph = new BgplayGraph({
@@ -245,39 +258,42 @@ define(
 
 
             pruneGraph: function(){
-                var $this, pruneByWeight;
-
-                $this = this;
-                pruneByWeight = this.pruneByWeight;
-
-                this.bgplay.get("nodes").forEach(function(node){
-                    node.view.pruned = true;
-                });
-
-                this.graph.edges.forEachKey(function(key, values){
-                    var start, stop, value, keys;
-
-                    start = key.vertexStart;
-                    stop = key.vertexStop;
-
-                    for (var n=0,length=values.length; n<length; n++) {
-                        value = values[n];
-
-                        if (value.beforeHopsLimit && value.drawn && length > pruneByWeight) {
-                            start.pruned = false;
-                            stop.pruned = false;
-                        }
-                    }
-
-                });
-
-                this.bgplay.get("nodes").forEach(function(node){
-                    if (node.view.pruned == true){
-                        node.view.view.attr({ opacity: $this.environment.config.graph.notSelectedElementOpacity });
-                    }else{
-                        node.view.view.attr({ opacity: 1 });
-                    }
-                });
+                //var $this, pruneByWeight;
+                //
+                //$this = this;
+                //pruneByWeight = this.pruneByWeight;
+                //
+                //this.bgplay.get("nodes")
+                //    .forEach(function(node){
+                //        console.log(node);
+                //        node.view.pruned = true;
+                //    });
+                //
+                //this.graph.edges
+                //    .forEachKey(function(key, values){
+                //        var start, stop, value;
+                //
+                //        start = key.vertexStart;
+                //        stop = key.vertexStop;
+                //
+                //        for (var n=0,length=values.length; n<length; n++) {
+                //            value = values[n];
+                //
+                //            if (value.beforeHopsLimit && value.drawn && length > pruneByWeight) {
+                //                start.pruned = false;
+                //                stop.pruned = false;
+                //            }
+                //        }
+                //
+                //    });
+                //
+                //this.bgplay.get("nodes").forEach(function(node){
+                //    if (node.view.pruned == true){
+                //        node.view.view.attr({ opacity: $this.environment.config.graph.notSelectedElementOpacity });
+                //    }else{
+                //        node.view.view.attr({ opacity: 1 });
+                //    }
+                //});
             },
 
             /**
@@ -286,10 +302,41 @@ define(
              */
             createAllNodes: function(){
                 var $this = this;
-                this.bgplay.get("nodes").forEach(function(node){
-                    $this.graph.addNode(new NodeView({model:node,paper:$this.paper,visible:true,graphView:$this, environment:$this.environment}));
-                });
+                this.bgplay.get("nodes")
+                    .forEach(function(node){
+                        $this.graph.addNode(new NodeView({
+                            model:node,
+                            paper: $this.paper,
+                            visible: true,
+                            graphView: $this,
+                            environment: $this.environment
+                        }));
+                    });
             },
+
+            /**
+             * This method initializes all the NodeView needed to represent the nodes of the model layer.
+             * @method createAllNewNodes
+             */
+            createAllNewNodes: function(){
+                var $this = this;
+                this.bgplay.get("nodes")
+                    .forEach(function(node){
+                        if (node.new){
+                            node.new = false;
+                            $this.graph.addNode(new NodeView({
+                                model: node,
+                                paper: $this.paper,
+                                visible: true,
+                                graphView: $this,
+                                environment: $this.environment
+                            }));
+                        }
+                    });
+            },
+
+
+
 
             /**
              * This method initializes a PathView object for each source-target pair of the model layer.
@@ -333,6 +380,62 @@ define(
                         });
                     });
                 });
+
+                $.each(this.pathViews,function(key, element){
+                    if (element.static == true){
+                        $this.staticPaths.push(element.path);
+                    }
+                });
+            },
+
+            createAllNewPaths: function(){
+                var $this = this;
+
+                this.skipAfterHops = 0;
+                this.bgplay.get("sources")
+                    .each(function(source){
+                        if (source.new) {
+                            source.new = false;
+                            $.each(source.get("events"), function (key, tree) { //A tree for each target, almost always one
+                                var path, target, event, pathView;
+                                event = tree.first();
+                                path = event.get("path");
+                                target = event.get("target");
+
+                                pathView = new PathView({
+                                    source: source,
+                                    target: target,
+                                    path: path,
+                                    paper: $this.paper,
+                                    visible: (event.get("type") == "initialstate"),
+                                    graphView: $this,
+                                    environment: $this.environment
+                                }); //We instantiate a new PathView
+
+                                $this.pathViews[source.id + "-" + target.id] = pathView;
+
+                                tree.forEach(function (event) {
+                                    var path, nodes, target, keyForUniquenessCheck, keyForStaticCheck;
+
+                                    path = event.get("path");
+
+                                    if (path != null) {
+                                        target = path.get("target");
+                                        nodes = path.get("nodes");
+                                        $this.skipAfterHops = (nodes.length + 1 >= $this.skipAfterHops) ? nodes.length + 1 : $this.skipAfterHops;
+                                        keyForUniquenessCheck = source.id + "-" + path.toString() + "-" + target.id;
+                                        keyForStaticCheck = source.id + "-" + target.id;
+
+                                        if ($this.uniquePathsCheck[keyForUniquenessCheck] == null) { //In this stage, we want to skip both null and duplicated paths in order to have only unique and valid paths
+                                            $this.uniquePathsCheck[keyForUniquenessCheck] = true;
+                                            $this.pathViews[keyForStaticCheck].static = ($this.pathViews[keyForStaticCheck].static == null) ? true : false;
+                                            $this.graph.addPath(path);
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
 
                 $.each(this.pathViews,function(key, element){
                     if (element.static == true){
@@ -432,8 +535,8 @@ define(
                 var  green, offset, out, secondColour_tmp, offset2;
                 green = 0;
                 offset = 20;
-                offset2 = 40
-                out=[];
+                offset2 = 40;
+                out = [];
                 while (firstColour >= 0){
                     firstColour -= offset;
                     out.push(("#" + firstColour.toString(16) + green.toString(16) + secondColour.toString(16)).toUpperCase());
@@ -554,6 +657,11 @@ define(
                     }
                 }
                 this.applyTreeAtEdges();
+            },
+
+            updateScene: function(){
+                this.createAllNewNodes();
+                this.createAllNewPaths();
             },
 
             applyTreeAtEdges: function(){

@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <title></title>
     <script src="connectors/DataEmulator.js"></script>
+    <script src="connectors/sWrapGeneric.js"></script>
 </head>
 <body>
 
 <script>
+    var environment, now, dataEmulator, wrap;
 
-    var dataEmulator = new DataEmulator();
+    now = parseInt(new Date().getTime()/1000);
+    environment = {};
+    environment.bgplay = new Bgplay({
+        cur_instant:new Instant({
+            id:0,
+            timestamp: now
+        }),
+        starttimestamp: now,
+        endtimestamp: null,
+        type:"bgp"
+    });
+
+    dataEmulator = new DataEmulator(environment);
+    wrap = new JsonWrap(environment);
 
     dataEmulator.start(function(data){
         console.log(data);
+        wrap.sampleCallback(data);
     });
 </script>
 

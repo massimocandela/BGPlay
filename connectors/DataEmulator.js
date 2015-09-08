@@ -13,7 +13,7 @@ var DataEmulator = function(){
     this._target = {
         as_number: 4555,
         owner: "OWNER",
-        prefix: "193.0.20.0/21"
+        prefix: "192.168.0.0/21"
     };
 
     this._getUsedSource = function(){
@@ -140,8 +140,10 @@ var DataEmulator = function(){
         source = this._getSource();
         return {
             type: "A",
+            timestamp: parseInt(new Date().getTime()/1000),
             source: this._getSource(),
-            path: this._getPath(source, this._target)
+            path: this._getPath(source, this._target),
+            community: [[1,2], [3,4]]
         };
     };
 
