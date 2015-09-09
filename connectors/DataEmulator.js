@@ -57,7 +57,7 @@ var DataEmulator = function(){
     this._getSource = function(){
         var source;
 
-        if ((new Date()).getTime() % 2 == 0){
+        if (parseInt((Math.random() * 10) + 1) < 2){
             source = this._generateSource();
             this._usedSources[source.as_number] = source;
         } else {
@@ -115,14 +115,14 @@ var DataEmulator = function(){
         var position, usedNodes;
 
         usedNodes = Object.keys(this._usedNodes);
-        position = Math.floor((Math.random() * usedNodes.length) + 1);
+        position = Math.floor((Math.random() * usedNodes.length - 1) + 1);
 
         return this._usedNodes[position];
     };
 
     this._getNode = function(){
         var node;
-        if ((new Date()).getTime() % 2 != 0){
+        if (parseInt((Math.random() * 10) + 1) < 2){
             node = this._generateNode();
             this._usedNodes[node.as_number] = node;
         } else {
@@ -161,7 +161,7 @@ var DataEmulator = function(){
 
         setInterval(function(){
             callback($this._generateItem());
-        }, 20000);
+        }, 5000);
     };
 
 };

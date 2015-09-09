@@ -341,6 +341,7 @@ define(
                                 }));
                         }
                     });
+
             },
 
 
@@ -424,7 +425,7 @@ define(
 
                             if (!$this.pathViews[source.id + "-" + target.id]) {
 
-                                if (!atLeastOne){
+                                if (!atLeastOne) {
                                     this.staticPaths = [];
                                 }
                                 atLeastOne = true;

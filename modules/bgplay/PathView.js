@@ -334,8 +334,6 @@ define([],  function(){
                 this.svgPath.toBack();
                 $(this.svgPath.node).css("cursor", "pointer");
                 this.svgEventManager();
-            } else {
-                console.log("ok");
             }
         },
 
