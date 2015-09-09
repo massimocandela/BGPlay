@@ -19,7 +19,7 @@ var Event = Backbone.Model.extend({
      * @return {Array} An array of {String} errors
      */
     validate:function(attrs){
-        var err=new Array();
+        var err=[];
 
         if(attrs.instant==null)
             err.push("Instant cannot be null!");

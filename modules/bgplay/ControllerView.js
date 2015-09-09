@@ -77,7 +77,7 @@ define(
                     this.destroyMe();
                 },this);
 
-                this.bgplay.on("change:cur_instant",function(){
+                this.bgplay.on("change:cur_instant", function(){
                     if (this.environment.config.controller.keepTrackCurrentInstant==true){
                         var instant = this.bgplay.get("cur_instant");
                         this.environment.params.instant = instant.toString();
@@ -96,7 +96,7 @@ define(
                          }
                          */
                     }
-                },this);
+                }, this);
 
                 this.eventAggregator.trigger("autoStartFunction",
                     {func:
@@ -486,7 +486,7 @@ define(
                 var internalParams, rrcSelected, $this, externalParams;
                 if (this.validateAll()==true){
                     $this = this;
-                    this.prefixes = new Array();
+                    this.prefixes = [];
                     this.dom.find(".bgplayControlPrefixValue input[type=text]").each(function(){
                         $this.prefixes.push($(this).val());
                     });

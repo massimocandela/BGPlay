@@ -119,7 +119,7 @@ define(
                     this.eventAggregator.on(listener, listeners[listener], this);
                 }
 
-                this.bgplay.on('change:cur_instant',function(){
+                this.bgplay.on('change:cur_instant', function(){
                     this.updateControlCanvas();
                     this.scrollSelectionCanvas(this.bgplay.get("cur_instant"));
                     this.updateSelectionCanvas();
@@ -526,12 +526,12 @@ define(
                 timeWarpWidth = this.environment.config.timeline.timeWarpWidth;
                 legendPositionX = 100;
                 legendWidth = 90;
-                uniqueEventTypeLegend = new Array();
+                uniqueEventTypeLegend = [];
                 selectionChartHeight = this.selectionChartHeight;
                 nextEvent = nextFirstStep || this.allEvents.at(0);
                 position = 0;
                 drawnEvents = this.environment.config.timeline.maxSelectionChartEvents;
-                sameTimestampEvent = new Array(); //An array of events with the same timestamp (1 second)
+                sameTimestampEvent = []; //An array of events with the same timestamp (1 second)
 
                 this.manageSelectionChartArrows(); //Draw arrows
 
@@ -558,7 +558,7 @@ define(
                         position=drawSameTimestampEvents(this,position); //Draw this set of events with the same timestamp
                         drawWarp(this.imageRoot, position, timeWarpWidth, this, nextEvent.get("instant").get("timestamp") - sameTimestampEvent[0].get("instant").get("timestamp")); //Draw the temporal warp (arrows)
                         position += timeWarpWidth; //The position of the next event
-                        sameTimestampEvent = new Array(); //Empty this set
+                        sameTimestampEvent = []; //Empty this set
                         drawnEvents--;
                     }
 

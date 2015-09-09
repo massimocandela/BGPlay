@@ -22,8 +22,8 @@ var Node = Backbone.Model.extend({
      * @param {Map} A map of parameters
      */
     initialize:function(){
-        this.attributes.sources = new Array();
-        this.attributes.targets=new Array();
+        this.attributes.sources = [];
+        this.attributes.targets=[];
     },
 
     /**
@@ -58,7 +58,7 @@ var Node = Backbone.Model.extend({
      * @return {Array} An array of {String} errors
      */
     validate:function(attrs){
-        var err=new Array();
+        var err=[];
         if(attrs.id==null)
             err.push("An id is required!");
 

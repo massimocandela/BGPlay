@@ -11,9 +11,9 @@ var DataEmulator = function(){
     this._usedNodes = {};
     this._usedPaths = {};
     this._target = {
-        as_number: 4555,
+        as_number: 3333,
         owner: "OWNER",
-        prefix: "192.168.0.0/21"
+        prefix: "193.0.0.0/21"
     };
 
     this._getUsedSource = function(){
@@ -45,11 +45,12 @@ var DataEmulator = function(){
     };
 
     this._generateSource = function(){
+        var asNumber = this._generateAsNumber();
         return {
-            "as_number": this._generateAsNumber(),
+            "as_number": asNumber,
             "rrc": "00",
-            "id": "00-111.91.233.1",
-            "ip": "111.91.233.1"
+            "id": "00-111.91.233." + asNumber,
+            "ip": "111.91.233." + asNumber
         };
     };
 
@@ -74,7 +75,8 @@ var DataEmulator = function(){
         var numberItems, path;
 
         path = [];
-        numberItems = parseInt((Math.random() * 10) + 2);
+        numberItems = parseInt((Math.random() * 5) + 2);
+        path.push(source);
         for (var i = 0; i < numberItems; i++) {
             path.push(this._getNode());
         }
@@ -141,7 +143,7 @@ var DataEmulator = function(){
         return {
             type: "A",
             timestamp: parseInt(new Date().getTime()/1000),
-            source: this._getSource(),
+            source: source,
             path: this._getPath(source, this._target),
             community: [[1,2], [3,4]]
         };
@@ -152,10 +154,14 @@ var DataEmulator = function(){
         var $this;
 
         $this = this;
-        callback(this._generateItem());
+        //callback(this._generateItem());
+        setTimeout(function(){
+            callback($this._generateItem());
+        }, 1000);
+
         setInterval(function(){
             callback($this._generateItem());
-        }, 3000);
+        }, 20000);
     };
 
 };

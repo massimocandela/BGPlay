@@ -94,7 +94,7 @@ define([],  function(){
          * @method updatePosition
          */
         updatePosition: function(){
-            this.view.translate(this.x-this.oldX, this.y-this.oldY, this);
+            this.view.translate(this.x - this.oldX, this.y - this.oldY, this);
             this.oldX = this.x;
             this.oldY = this.y;
             this.eventAggregator.trigger("nodeMoved", this.model);

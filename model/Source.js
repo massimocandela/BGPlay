@@ -25,7 +25,7 @@ var Source = Backbone.Model.extend({
         this.attributes.cur_events={};
         this.environment=this.attributes.environment;
         this.bgplay=this.environment.bgplay;
-        this.bgplay.on("change:cur_instant",function(){
+        this.bgplay.on("change:cur_instant", function(){
             this.updateState();
         },this);
     },
@@ -38,7 +38,7 @@ var Source = Backbone.Model.extend({
      * @return {Array} An array of {String} errors
      */
     validate:function(attrs){
-        var err=new Array();
+        var err=[];
         if(attrs.id==null)
             err.push("An id is required!");
 
@@ -53,24 +53,24 @@ var Source = Backbone.Model.extend({
      * If the current event is null then this method triggers a "curEventNull" event (pub/sub) containing the previous event.
      * @method updateState
      */
-    updateState:function(){
+    updateState: function(){
         var oldEvent;
-        var instant=this.bgplay.get("cur_instant");
+        var instant = this.bgplay.get("cur_instant");
 
         for (var cur_target in this.get("events")){
 
-            var tree=this.get("events")[cur_target]; //TreeMap for the current target
-            var cur_event_for_this_targets=tree.nearest(instant,false,true);
+            var tree = this.get("events")[cur_target]; //TreeMap for the current target
+            var curEventForThisTarget = tree.nearest(instant, false, true);
 
-            oldEvent=this.get("cur_events")[cur_target];
-            if (cur_event_for_this_targets!=null){
-                if (oldEvent!=cur_event_for_this_targets || tree.compare(cur_event_for_this_targets.get("instant"), instant)==0){
-                    this.trigger('curEventChange',cur_event_for_this_targets);
+            oldEvent = this.get("cur_events")[cur_target];
+            if (curEventForThisTarget != null){
+                if (oldEvent != curEventForThisTarget || tree.compare(curEventForThisTarget.get("instant"), instant) == 0){
+                    this.trigger('curEventChange', curEventForThisTarget);
                 }
             }else{
-                this.trigger('curEventNull',oldEvent);
+                this.trigger('curEventNull', oldEvent);
             }
-            this.get("cur_events")[cur_target]=cur_event_for_this_targets;
+            this.get("cur_events")[cur_target] = curEventForThisTarget;
         }
 
     },

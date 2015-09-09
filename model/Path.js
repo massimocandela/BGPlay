@@ -19,8 +19,8 @@ var Path = Backbone.Model.extend({
      * @param {Map} A map of parameters
      */
     initialize:function(){
-        this.fastSearchNodes={};
-        this.attributes.nodes=new Array();
+        this.fastSearchNodes = {};
+        this.attributes.nodes = [];
     },
 
     /**
@@ -60,7 +60,7 @@ var Path = Backbone.Model.extend({
      * @return {Array} An array of {String} errors
      */
     validate:function(attrs){
-        var err=new Array();
+        var err=[];
 
         if (err.length>0)
             return err;
@@ -72,14 +72,15 @@ var Path = Backbone.Model.extend({
      * @return {String} A string representing this object
      */
     toString:function(){
-        var out="";
-        var nodes=this.attributes.nodes;
-        if (nodes.length>0){
-            for (var n=0;n<nodes.length-1;n++){
-                out+=nodes[n].get("id")+", ";
+        var out = "";
+        var nodes = this.attributes.nodes;
+        if (nodes.length > 0){
+            for (var n=0; n<nodes.length-1; n++){
+                out += nodes[n].get("id") + ", ";
             }
-            out+=nodes[nodes.length-1].get("id");
+            out += nodes[nodes.length-1].get("id");
         }
+
         return out;
     }
 });

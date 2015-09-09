@@ -36,7 +36,7 @@ var Instant = Backbone.Model.extend({
      * @return {Array} An array of {String} errors
      */
     validate:function(attrs){
-        var err=new Array();
+        var err=[];
         if(attrs.id==null)
             err.push("Id cannot be null");
         if(attrs.timestamp==null)

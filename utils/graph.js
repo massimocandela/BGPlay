@@ -155,7 +155,7 @@ net.webrobotics.GraphUtils = function () {
             node.y += element.y;
         }
 
-        node.vectors = new Array();
+        node.vectors = [];
     };
 
     this.absOrientation = function (node1, node2) {
@@ -163,7 +163,9 @@ net.webrobotics.GraphUtils = function () {
     };
 
     this.edgeNodeRepulsion = function(edge, node, limit, maxDistance, n){
-        var angolarCoefficient, perpendicolarCoefficient, q1, q2, px, py, tmpPoint, newPoint1, unitVector, distance, repulsionFactor, force;
+        var angolarCoefficient, perpendicolarCoefficient, q1, q2, px, py, tmpPoint, newPoint1, unitVector, distance,
+            repulsionFactor, force;
+
         if (edge[1].id != node.id && edge[0].id != node.id){
 
             angolarCoefficient =  (edge[1].y - edge[0].y)/(edge[1].x - edge[0].x);
@@ -192,7 +194,7 @@ net.webrobotics.GraphUtils = function () {
 
             }
         }
-    }
+    };
 
     this.roundedPath = function (curveCoefficient, p1, p2, p3) {
         var points = [];

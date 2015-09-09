@@ -93,7 +93,8 @@ function SWrap(environment){
             type: eventType,
             instant: instant,
             community: (event.community) ? event.community.join(",") : null,
-            environment:environment
+            environment: environment,
+            new: true
         });
 
         tmpPath = event.path;
@@ -137,13 +138,13 @@ function SWrap(environment){
                         } else {
                             return; //skip re-announcements
                         }
-                    }else{
+                    } else {
                         shortdescription = "The route " + prevPath.get('announcedPath') + " introduced/removed prepending " + path.get('announcedPath');
                         longdescription = "The route " + prevPath.get('announcedPath') + " introduced/removed prepending " + path.get('announcedPath') + " ..more";
                         subType = "prepending";
                         tmpEvent.attributes.path = path;
                     }
-                }else{
+                } else {
                     shortdescription = "The route " + prevPath.get('announcedPath') + " is changed to " + path.get('announcedPath');
                     longdescription = "The route " + prevPath.get('announcedPath') + " is changed to " + path.get('announcedPath') + " ..more";
                     subType = "pathchange";
@@ -163,12 +164,7 @@ function SWrap(environment){
 
 
     this._createNodes = function(event){
-        var node, source;
-
-        source = bgplay.getNode(event.source.as_number);
-        if (!source){
-            this._createNode(event.source);
-        }
+        var node;
 
         for (var n=0,length=event.path.length; n<length; n++){
             node = bgplay.getNode(event.path[n]["as_number"]);
@@ -181,7 +177,6 @@ function SWrap(environment){
 
 
     this.sampleCallback = function(event){
-
 
         this._createNodes(event);
         this._createSource(event.source);

@@ -68,7 +68,7 @@ define(function(){
         },
 
         graph:{
-            computeNodesPosition:true,
+            computeNodesPosition: true,
             springEmbedderCycles:100,
             paperMinHeight:360,
             whenCoulombRepulsionStarts:0,//12

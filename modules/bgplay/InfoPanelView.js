@@ -80,7 +80,7 @@ define(
                     this.render();
                 },this);
 
-                this.bgplay.on('change:cur_instant',function(){
+                this.bgplay.on('change:cur_instant', function(){
                     this.eventChange();
                 },this);
 
