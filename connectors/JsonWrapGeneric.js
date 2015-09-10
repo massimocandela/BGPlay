@@ -20,7 +20,7 @@ function JsonWrap(environment){
 
         confirm: function(data){
             return (data.events.length + data.initial_state.length > environment.config.safetyMaximumEvents ||
-                data.nodes.length > environment.config.safetyMaximumNodes);
+            data.nodes.length > environment.config.safetyMaximumNodes);
         },
 
         _getConversionList: function(){
@@ -219,28 +219,35 @@ function JsonWrap(environment){
             }
 
             function createInitialState(wrap){
-                var path, event, initialstate, source, tmpPath, target, tmpNode, states, length, uniquePAth, n, length2, i;
-                uniquePAth=[];
+                var path, event, initialstate, source, tmpPath, target, tmpNode, states, length, uniquePath, n, length2, i;
+
+                uniquePath = [];
                 states = wrap.initial_state;
                 length = states.length;
                 for (n=0; n<length; n++){
                     initialstate = states[n];
 
-                    target=bgplay.getTarget(initialstate.target_prefix);
-                    source=bgplay.getSource(initialstate.source_id);
+                    target = bgplay.getTarget(initialstate.target_prefix);
+                    source = bgplay.getSource(initialstate.source_id);
 
-                    if (initialstate.path.length==0){
+                    if (initialstate.path.length == 0){
                         continue;
                     }
 
-                    path=new Path({id:n,announcedPath:initialstate.path.join(" "), target:target, source:source, environment:environment});
-                    uniquePAth[source.id+"-"+target.id]=path;
+                    path = new Path({
+                        id: n,
+                        announcedPath: initialstate.path.join(" "),
+                        target: target,
+                        source: source,
+                        environment: environment
+                    });
+                    uniquePath[source.id + "-" + target.id] = path;
 
-                    tmpPath=initialstate.path;
+                    tmpPath = initialstate.path;
 
-                    tmpNode = bgplay.getNode(tmpPath[tmpPath.length-1]);
+                    tmpNode = bgplay.getNode(tmpPath[tmpPath.length - 1]);
                     tmpNode.addTarget(target); //In this way we can check hijacking
-                    if (!arrayContains(target.get("nodes"),tmpNode)){
+                    if (!arrayContains(target.get("nodes"), tmpNode)){
                         target.addNode(tmpNode);
                     }
 
@@ -250,18 +257,28 @@ function JsonWrap(environment){
                             path.addNode(bgplay.getNode(tmpPath[i]));
                         }
                     }
-                    event=new Event({subType:"initialstate", type:"initialstate", source:source, target:target, path:path, instant:bgplay.get("cur_instant"), environment:environment});
+                    event = new Event({
+                        subType: "initialstate",
+                        type: "initialstate",
+                        source: source,
+                        target: target,
+                        path: path,
+                        instant: bgplay.get("cur_instant"),
+                        environment: environment
+                    });
                     source.addEvent(event);
-                    bgplay.get("allEvents").put(bgplay.get("cur_instant"),event);
+                    bgplay.get("allEvents").put(bgplay.get("cur_instant"), event);
                 }
-                return uniquePAth;
+
+                return uniquePath;
             }
 
-            function createEvents(uniquePAth,wrap){
-                var event_id=1;
-                var events, event, n, i, length2, tmpNode, instant, eventType, currentPath, attributes, shortdescription, source, longdescription, path, target, tmpEvent, prevPath, tmpPath, subType, numNotValidWithdrawal, length;
-                var ignoreReannouncements = (environment.params.ignoreReannouncements || environment.config.ignoreReannouncementsByDefault);
-                var path_start_id = uniquePAth.length;
+            function createEvents(uniquePath, wrap){
+                var eventId = 1;
+                var events, event, n, i, length2, tmpNode, instant, eventType, currentPath, attributes, shortdescription,
+                    source, longdescription, path, target, tmpEvent, prevPath, tmpPath, subType, numNotValidWithdrawal, length;
+                var ignoreReannouncements = environment.params.ignoreReannouncements || environment.config.ignoreReannouncementsByDefault;
+                var pathStartId = uniquePath.length;
 
                 numNotValidWithdrawal = 0;
 
@@ -274,7 +291,7 @@ function JsonWrap(environment){
                     source=bgplay.getSource(attributes.source_id);
                     target=bgplay.getTarget(attributes.target_prefix);
 
-                    prevPath = uniquePAth[source.id+"-"+target.id];
+                    prevPath = uniquePath[source.id+"-"+target.id];
 
                     if (eventType=='W' && prevPath==null){
                         numNotValidWithdrawal++;
@@ -285,10 +302,28 @@ function JsonWrap(environment){
                         continue;
                     }
 
-                    currentPath = (attributes.path)?attributes.path.join(" "):"";
-                    instant = new Instant({id:event_id, timestamp: event.timestamp, environment:environment});
-                    path = new Path({id:n+path_start_id, announcedPath:currentPath, target:target, source:source, environment:environment});//n is a good id (must be integer)
-                    tmpEvent = new Event({source:source, target:target, type:event.type, instant:instant, community:(attributes.community)?attributes.community.join(","):null, environment:environment});
+                    currentPath = (attributes.path) ? attributes.path.join(" ") : "";
+                    instant = new Instant({
+                        id:eventId,
+                        timestamp: event.timestamp,
+                        environment:environment
+                    });
+                    path = new Path({
+                        id: pathStartId,
+                        announcedPath: currentPath,
+                        target: target,
+                        source: source,
+                        environment: environment
+                    });//n is a good id (must be integer)
+                    pathStartId++;
+                    tmpEvent = new Event({
+                        source: source,
+                        target: target,
+                        type: event.type,
+                        instant: instant,
+                        community: (attributes.community) ? attributes.community.join(",") : null,
+                        environment: environment
+                    });
                     tmpPath = attributes.path;
 
                     if (eventType=='W' && prevPath!=null){
@@ -341,14 +376,14 @@ function JsonWrap(environment){
                             }
                         }
                     }
-                    uniquePAth[source.id+"-"+target.id] = tmpEvent.attributes.path;
+                    uniquePath[source.id+"-"+target.id] = tmpEvent.attributes.path;
                     tmpEvent.attributes.shortdescription = shortdescription;
                     tmpEvent.attributes.longdescription = longdescription;
                     tmpEvent.attributes.prevPath = prevPath;
                     tmpEvent.attributes.subType = subType;
                     source.addEvent(tmpEvent);
                     bgplay.get("allEvents").put(instant,tmpEvent);
-                    event_id++;
+                    eventId++;
                 }
 
                 if (numNotValidWithdrawal>0){
@@ -358,12 +393,19 @@ function JsonWrap(environment){
                         environment.cssAlert.alert(numNotValidWithdrawal+"  withdrawals ignored: no referenced path","warning",3000);
                     }
                 }
+
+                return [uniquePath, pathStartId];
             }
 
             createNodes(wrap);
             createSources(wrap);
             createTargets(wrap);
-            createEvents(createInitialState(wrap),wrap);
+            var expose = createEvents(createInitialState(wrap), wrap);
+
+            environment.uniquePath = expose[0];
+            environment.pathStartId = expose[1];
+
+
 
             bgplay.updateState();
 
@@ -373,11 +415,12 @@ function JsonWrap(environment){
 
             dataEmulator.start(function(data){
                 wrap.sampleCallback(data);
-                environment.eventAggregator.trigger("newSample", new Instant({
-                    id: 0,
-                    timestamp: data.timestamp,
-                    environment: environment
-                }));
+                environment.eventAggregator
+                    .trigger("newSample", new Instant({
+                        id: 0,
+                        timestamp: data.timestamp,
+                        environment: environment
+                    }));
 
             });
 

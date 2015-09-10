@@ -12,49 +12,57 @@ function SWrap(environment){
     bgplay = environment.bgplay;
 
     uniquePath = environment.uniquePath || {};
-    incrementalEventId = environment.incrementalEventId || 0;
+    incrementalEventId = environment.pathStartId || 0;
     incrementalPathId = 0;
 
     this._createNode = function(node){
         var asnumber, newnode;
 
         asnumber = node.as_number;
-        newnode = new Node({
-            id: asnumber,
-            asnumber: asnumber,
-            as: asnumber,
-            owner: node.owner,
-            nodeUrl: "https://stat.ripe.net/AS" + asnumber,
-            environment: environment,
-            new: true
-        });
-        bgplay.addNode(newnode);
+
+        if (!bgplay.getNode(asnumber)) {
+            console.log("create node model object");
+            newnode = new Node({
+                id: asnumber,
+                asnumber: asnumber,
+                as: asnumber,
+                owner: node.owner,
+                nodeUrl: "https://stat.ripe.net/AS" + asnumber,
+                environment: environment,
+                new: true
+            });
+            bgplay.addNode(newnode);
+        }
     };
 
     this._createSource = function(source){
         var sourceNode, newsource;
 
-        sourceNode = bgplay.getNode(source.as_number);
-        newsource = new Source({
-            id: source.id,
-            group: sourceNode,
-            environment: environment,
-            new: true
-        });
-        bgplay.addSource(newsource);
-        if (sourceNode != null) {
-            sourceNode.addSource(newsource);
+        if (!bgplay.getSource(source.id)){
+            console.log("creates source model object");
+            sourceNode = bgplay.getNode(source.as_number);
+            newsource = new Source({
+                id: source.id,
+                group: sourceNode,
+                environment: environment,
+                new: true
+            });
+            bgplay.addSource(newsource);
         }
     };
 
 
     this._createTarget = function(target){
         var newtarget;
-        newtarget = new Target({
-            id: target.prefix,
-            environment: environment
-        });
-        bgplay.addTarget(newtarget);
+
+        if (!bgplay.getTarget(target.prefix)){
+            console.log("created target model object");
+            newtarget = new Target({
+                id: target.prefix,
+                environment: environment
+            });
+            bgplay.addTarget(newtarget);
+        }
     };
 
     this._createEvent = function(event){
@@ -164,13 +172,9 @@ function SWrap(environment){
 
 
     this._createNodes = function(event){
-        var node;
 
         for (var n=0,length=event.path.length; n<length; n++){
-            node = bgplay.getNode(event.path[n]["as_number"]);
-            if (!node){
-               this._createNode(event.path[n]);
-            }
+                this._createNode(event.path[n]);
         }
 
     };

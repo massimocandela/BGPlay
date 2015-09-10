@@ -7,8 +7,8 @@
 
 var DataEmulator = function(){
 
-    this._usedSources = {};
-    this._usedNodes = {};
+    this._usedSources = [];
+    this._usedNodes = [];
     this._usedPaths = {};
     this._target = {
         as_number: 3333,
@@ -16,24 +16,26 @@ var DataEmulator = function(){
         prefix: "193.0.0.0/21"
     };
 
-    this._getUsedSource = function(){
-        var position, usedSources;
+    this._getRandomPosition = function(maximum){
+        return Math.floor(Math.random() * maximum);
+    };
 
-        usedSources = Object.keys(this._usedSources);
-        position = Math.floor((Math.random() * usedSources.length) + 1);
+    this._getUsedSource = function(){
+        var position;
+
+        position = this._getRandomPosition(this._usedSources.length);
 
         return this._usedSources[position];
     };
 
     this._getUsedPath = function(source, target){
-        var position, usedPaths, key;
+        var position, key;
 
         key = source.as_number + "-" + target.as_number;
-        if (this._usedPaths[key]){
-            usedPaths = Object.keys(this._usedPaths[key]);
-            position = Math.floor((Math.random() * usedPaths.length) + 1);
+        if (this._usedPaths[key] != null){
+            position = Math.floor((Math.random() * this._usedPaths[key].length) -1);
 
-            return this._usedPaths[usedPaths[position]];
+            return this._usedPaths[key][position];
         } else {
             this._usedPaths[key] = [];
             return null;
@@ -57,14 +59,17 @@ var DataEmulator = function(){
     this._getSource = function(){
         var source;
 
-        if (parseInt((Math.random() * 10) + 1) < 2){
+        if (parseInt((Math.random() * 10) + 1) == 1){
             source = this._generateSource();
-            this._usedSources[source.as_number] = source;
+            this._usedSources.push(source);
         } else {
             source = this._getUsedSource();
             if (!source){
                 source = this._generateSource();
-                this._usedSources[source.as_number] = source;
+                this._usedSources.push(source);
+            } else {
+                console.log("used source");
+
             }
         }
 
@@ -74,8 +79,9 @@ var DataEmulator = function(){
     this._generatePath = function(source, target){
         var numberItems, path;
 
+        console.log("NEW PATH IN");
         path = [];
-        numberItems = parseInt((Math.random() * 5) + 2);
+        numberItems = parseInt((Math.random() * 3) +1);
         path.push(source);
         for (var i = 0; i < numberItems; i++) {
             path.push(this._getNode());
@@ -89,7 +95,7 @@ var DataEmulator = function(){
         var path, key;
 
         key = source.as_number + "-" + target.as_number;
-        if ((new Date()).getTime() % 2 == 0){
+        if (parseInt((Math.random() * 10) + 1) < 2){
             path = this._generatePath(source, target);
             this._usedPaths[key] = this._usedPaths[key] || [];
             this._usedPaths[key].push(path);
@@ -105,6 +111,7 @@ var DataEmulator = function(){
     };
 
     this._generateNode = function(){
+        console.log("generated");
         return {
             owner: "OWNER",
             as_number: this._generateAsNumber()
@@ -112,24 +119,23 @@ var DataEmulator = function(){
     };
 
     this._getUsedNode = function(){
-        var position, usedNodes;
+        var position;
 
-        usedNodes = Object.keys(this._usedNodes);
-        position = Math.floor((Math.random() * usedNodes.length - 1) + 1);
+        position = this._getRandomPosition(this._usedNodes.length);
 
         return this._usedNodes[position];
     };
 
     this._getNode = function(){
         var node;
-        if (parseInt((Math.random() * 10) + 1) < 2){
+        if (parseInt((Math.random() * 10) + 1) < 50){
             node = this._generateNode();
-            this._usedNodes[node.as_number] = node;
+            this._usedNodes.push(node);
         } else {
             node = this._getUsedNode();
             if (!node){
                 node = this._generateNode();
-                this._usedNodes[node.as_number] = node;
+                this._usedNodes.push(node);
             }
         }
 
@@ -137,31 +143,40 @@ var DataEmulator = function(){
     };
 
     this._generateItem = function(){
-        var source;
+        var source, item;
 
         source = this._getSource();
-        return {
+        item = {
             type: "A",
             timestamp: parseInt(new Date().getTime()/1000),
             source: source,
             path: this._getPath(source, this._target),
             community: [[1,2], [3,4]]
         };
+        console.log(item);
+        return item;
     };
 
 
     this.start = function(callback){
         var $this;
 
+        window.start = function(){
+            $this.start(callback);
+        };
         $this = this;
-        //callback(this._generateItem());
         setTimeout(function(){
             callback($this._generateItem());
         }, 1000);
 
-        setInterval(function(){
+        window.tt = setInterval(function(){
             callback($this._generateItem());
-        }, 5000);
+        }, 3000);
     };
+
+    window.stop = function(){
+        clearInterval(window.tt);
+    };
+
 
 };

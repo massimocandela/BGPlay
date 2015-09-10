@@ -211,7 +211,7 @@ define([],  function(){
         },
 
         getLineStrokeStyle: function(){
-            return (this.static==true)?this.environment.config.graph.pathStaticStrokeDasharray:this.environment.config.graph.pathDefaultStrokeDasharray;
+            return (this.static == true) ? this.environment.config.graph.pathStaticStrokeDasharray : this.environment.config.graph.pathDefaultStrokeDasharray;
         },
 
         isEdgeDrawn: function(arcs){ //There is at least a drawn arc for this tree on this edge?
@@ -315,7 +315,7 @@ define([],  function(){
         firstDraw: function(){
             var pathString;
 
-            if (!this.path.view) {
+            if (!this.svgPath) {
                 pathString = this.computePathString(this.path.get("nodes"), true);
 
                 this.svgPath = this.paper
@@ -330,10 +330,32 @@ define([],  function(){
                 this.path.view = this.svgPath;
                 this.paper.graphSet.push(this.svgPath);
                 this.setVisibility();
-
+                this.previousStaticStatus = this.static;
                 this.svgPath.toBack();
                 $(this.svgPath.node).css("cursor", "pointer");
                 this.svgEventManager();
+
+                if (this.static == false){
+                    this.dynamicColor = this.graphView.getPathColor(this);
+                }
+
+            } else {
+
+                if (this.previousStaticStatus != this.status){
+
+                    if (this.static == false && !this.dynamicColor){
+                        this.dynamicColor = this.graphView.getPathColor(this);
+                    }
+
+                    this.svgPath.attr({
+                        stroke: this.dynamicColor || this.graphView.getPathColor(this),
+                        fill: "none",
+                        "stroke-width": this.environment.config.graph.pathWeight,
+                        "stroke-dasharray": this.getLineStrokeStyle()
+                    });
+
+                }
+
             }
         },
 
@@ -435,6 +457,7 @@ define([],  function(){
                 sameEdge = this.graphView.graph.edges.get({vertexStart: orderedNodes[0].view, vertexStop: orderedNodes[1].view});
 
                 myArc = this.getMyArc(sameEdge);
+                //console.log("here1", sameEdge, pruneByWeight, myArc, myArc.beforeHopsLimit, length, n, skipAfterHops);
 
                 if (!prune || sameEdge.length > pruneByWeight) {
                     myArc.beforeHopsLimit = (length - n <= skipAfterHops);
@@ -509,6 +532,10 @@ define([],  function(){
                 orderedNodes = this.graphView.graph.utils.absOrientation(node1, node2);
                 reversed = (orderedNodes[0].id == node2.id);
                 sameEdge = this.graphView.graph.edges.get({vertexStart: orderedNodes[0].view, vertexStop: orderedNodes[1].view});
+                if (!sameEdge){
+                    console.log(node1, node2);
+                    window.stop();
+                }
                 drawnEdge = this.isEdgeDrawn(sameEdge);
 
                 if (forceToBeInFront == true && drawnEdge != false && drawnEdge.key != this.key) { // Hide the old edge
