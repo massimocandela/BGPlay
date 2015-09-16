@@ -552,17 +552,17 @@ define(
                 }
                 this.selectionCanvasDom.css("left", "0"); //Reset canvas position
 
-                while (nextEvent!=null && drawnEvents>0){
+                while (nextEvent != null && drawnEvents>0){
 
-                    if (sameTimestampEvent[0]!=null && sameTimestampEvent[0].get("instant").get("timestamp")!=nextEvent.get("instant").get("timestamp")){ //If the next event isn't in the same second
-                        position=drawSameTimestampEvents(this,position); //Draw this set of events with the same timestamp
+                    if (sameTimestampEvent[0] != null && sameTimestampEvent[0].get("instant").get("timestamp") != nextEvent.get("instant").get("timestamp")){ //If the next event isn't in the same second
+                        position = drawSameTimestampEvents(this, position); //Draw this set of events with the same timestamp
                         drawWarp(this.imageRoot, position, timeWarpWidth, this, nextEvent.get("instant").get("timestamp") - sameTimestampEvent[0].get("instant").get("timestamp")); //Draw the temporal warp (arrows)
                         position += timeWarpWidth; //The position of the next event
                         sameTimestampEvent = []; //Empty this set
                         drawnEvents--;
                     }
 
-                    if (legendPositionX + legendWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event could not fit into it
+                    if (legendPositionX + legendWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event may not fit into it
                         updateCanvasWidth(canvas, this, legendPositionX + legendWidth);
                     }
 
@@ -572,7 +572,7 @@ define(
                     prevEvent = nextEvent;//If the next iteration fails then this is the last treated event
                     nextEvent = this.nextEvent(nextEvent.get("instant"), true);
 
-                    if (position + second2pixel + timeWarpWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event could not fit into it
+                    if (position + second2pixel + timeWarpWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event may not fit into it
                         updateCanvasWidth(canvas, this, second2pixel + timeWarpWidth);
                     }
                 }
@@ -812,7 +812,7 @@ define(
                 ctx = this.contextSelectionCanvas;
 
                 if (this.selectionCanvasCache == null){
-                    this.selectionCanvasCache = ctx.getImageData(0,0, this.selectionChartWidth,this.selectionChartHeight);
+                    this.selectionCanvasCache = ctx.getImageData(0, 0, this.selectionChartWidth, this.selectionChartHeight);
                 }else{
                     ctx.putImageData(this.selectionCanvasCache, 0, 0);
                 }
@@ -822,12 +822,12 @@ define(
 
                 this.drawIntervalOnSelectionCanvas();
 
-                if (eventTmp!=null && this.eventOnSelectionChart.containsValue(eventTmp)){ //The cursor is on an event
-                    ctx.fillStyle=selectedEventColor;
+                if (eventTmp != null && this.eventOnSelectionChart.containsValue(eventTmp)){ //The cursor is on an event
+                    ctx.fillStyle = selectedEventColor;
 
-                    ctx.fillStyle=this.cursorColor;
-                    cursorPosition=eventTmp.drawEventOnselectionCanvasX + (eventTmp.drawEventOnselectionCanvasWidth/2) - this.halfCursorWidth; //Position of the event + half of the width of the event (px) - half cursor size
-                    ctx.fillRect(cursorPosition,0,this.cursorsWidth,this.selectionChartHeight);
+                    ctx.fillStyle = this.cursorColor;
+                    cursorPosition = eventTmp.drawEventOnselectionCanvasX + (eventTmp.drawEventOnselectionCanvasWidth / 2) - this.halfCursorWidth; //Position of the event + half of the width of the event (px) - half cursor size
+                    ctx.fillRect(cursorPosition, 0, this.cursorsWidth, this.selectionChartHeight);
 
                 }else{//The cursor is on a warp
                     eventTmp = this.allEvents.nearest(curInstant,false,true);
@@ -1173,19 +1173,19 @@ define(
                 imageLeft = this.imageRoot + "/leftSlider.png";
                 imageLeft = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABE0lEQVR42mL8//8/AyUAIICYGCgEAAHEIrmFyQBInydTvyFAALGANB/2IM8btjsYzwMEEMgAhjd/sCv49Q9Cs+HxKEAAgQ14i8OAb38hNBczA4M3z3+GrV8YMdQABBDYgNe/sRvwGSrOywqhQYYseI9qCEAA4fVCiRhm2CQI/mfoeY0wBCCAIC74Q1rgIasHCCCIC3B4Iew6xCZebgaGuXIQ1yQ/QvUCQADh9cLXHxDFP9khmv3vYQYiQADhDcRfP6GxAZS3usmIVQ1AAOGNxn9QA5jwhBFAAIEMMPh0n/ECNkkuBYjTv9xnxKXfACCAGLHlRkZGRgaJzYwoEs99/mE1BSCAcCbSF77/GQlpBgGAAAMANPRP5PIcMVgAAAAASUVORK5CYII=";
 
-                imageRight = this.imageRoot+"/rightSlider.png";
+                imageRight = this.imageRoot + "/rightSlider.png";
                 imageRight = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABGUlEQVR42mL8//8/AyUAIICYGCgEAAHEIrmFyQBInydTvyFAALGANB/2IM8btjsYzwMEEMgAhjd/sCv49Q9Cs+HxKEAAgQ14i2aAN89/hq1fGBm+/YXwuZhxGwAQQGADXv9GCCQIQrwDEvsMFedlxW0AQACheKFE9D+GQSDQ85oRpwEAAQRxwR/8gYVPHiCAIC6AOjX5ESPDXLn/cPbnr1AvcOM2ACCAMGLB/x4jw0al/2Cxrz8gTv/JjjuaAQIIIxBBwOomROOvnxD+t9+4XQAQQFijEQb+QQ1gwhMGAAEEMsDg033GC9gkuRQgTv9yH2csGAAEECO23MjIyMggsZkRReK5zz+spgAEEM5E+sL3PyMhzSAAEGAAd81WDRtYSvsAAAAASUVORK5CYII=";
 
                 var $this = this;
 
-                if ($this.selectorLeftImageCache==null){
+                if ($this.selectorLeftImageCache == null){
                     var imgLeft = new Image();
                     imgLeft.onload = function() {
-                        $this.selectorLeftImageCache=imgLeft;
+                        $this.selectorLeftImageCache = imgLeft;
                         var imgRight = new Image();
                         imgRight.onload = function() {
-                            $this.selectorRightImageCache=imgRight;
-                            draw(start,stop);
+                            $this.selectorRightImageCache = imgRight;
+                            draw(start, stop);
                             $this.eventAggregator.trigger("moduleLoaded", $this);
                         };
                         imgRight.src = imageRight;
@@ -1194,10 +1194,10 @@ define(
 
 
                 }else{
-                    draw(start,stop);
+                    draw(start, stop);
                 }
 
-                function draw(start,stop){
+                function draw(start, stop){
                     var positionXL, positionXR, warpWidth, halfWarpWidth, sliderWidth, halfSliderWidth, ctx, darkenDisabledParts, darkened;
 
                     darkenDisabledParts = $this.environment.config.timeline.darkenDisabledTimeline;
@@ -1216,7 +1216,7 @@ define(
 
                     darkened = false;
 
-                    if (start!=null && $this.selectionStart!=$this.selectionFirstStart && start.drawEventOnselectionCanvasX!=null && $this.eventOnSelectionChart.containsValue(start)){
+                    if (start != null && $this.selectionStart != $this.selectionFirstStart && start.drawEventOnselectionCanvasX != null && $this.eventOnSelectionChart.containsValue(start)){
 
                         positionXL = start.drawEventOnselectionCanvasX - halfWarpWidth - halfSliderWidth; //Position of the first event included - the half of the warp - the half of the slider image
 
@@ -1228,14 +1228,14 @@ define(
                             darkened = true;
                             ctx.globalAlpha = 0.3;
                             ctx.fillStyle = $this.environment.config.timeline.fontColor;
-                            ctx.fillRect(0,0,positionXL+halfSliderWidth,$this.selectionChartHeight);
-                            ctx.globalAlpha=1;
+                            ctx.fillRect(0, 0, positionXL+halfSliderWidth, $this.selectionChartHeight);
+                            ctx.globalAlpha = 1;
                         }
 
-                        ctx.drawImage($this.selectorLeftImageCache,positionXL,0);
+                        ctx.drawImage($this.selectorLeftImageCache, positionXL, 0);
                     }
 
-                    if (stop!=null && $this.selectionEnd!=$this.selectionFirstEnd && stop.drawEventOnselectionCanvasX!=null && $this.eventOnSelectionChart.containsValue(stop)){
+                    if (stop != null && $this.selectionEnd != $this.selectionFirstEnd && stop.drawEventOnselectionCanvasX != null && $this.eventOnSelectionChart.containsValue(stop)){
 
                         positionXR = stop.drawEventOnselectionCanvasX + $this.environment.config.timeline.selectionChartSecondToPixels + halfWarpWidth - halfSliderWidth; //Position of the first event included + width of the event + the half of the warp - the half of the slider image
 
@@ -1255,17 +1255,17 @@ define(
                             ctx.globalAlpha = 1;
                         }
 
-                        ctx.drawImage($this.selectorRightImageCache,positionXR,0);
+                        ctx.drawImage($this.selectorRightImageCache, positionXR, 0);
                     }
 
                     if (darkenDisabledParts && !darkened){
-                        if ($this.allEvents.compare($this.eventOnSelectionChart.last().get("instant"),start.get("instant"))==-1){
+                        if ($this.allEvents.compare($this.eventOnSelectionChart.last().get("instant"), start.get("instant")) == -1){
                             ctx.globalAlpha = 0.3;
                             ctx.fillStyle = $this.environment.config.timeline.fontColor;
                             ctx.fillRect(0, 0, $this.selectionChartWidth, $this.selectionChartHeight);
                             ctx.globalAlpha = 1;
                         }else{
-                            if ($this.allEvents.compare(stop.get("instant"),$this.eventOnSelectionChart.first().get("instant"))==-1){
+                            if ($this.allEvents.compare(stop.get("instant"), $this.eventOnSelectionChart.first().get("instant")) == -1){
                                 ctx.globalAlpha = 0.3;
                                 ctx.fillStyle = $this.environment.config.timeline.fontColor;
                                 ctx.fillRect(0, 0, $this.selectionChartWidth, $this.selectionChartHeight);
