@@ -119,7 +119,7 @@ define(
                     this.eventAggregator.on(listener, listeners[listener], this);
                 }
 
-                this.bgplay.on('change:cur_instant', function(){
+                this.bgplay.on('change: cur_instant', function(){
                     this.updateControlCanvas();
                     this.scrollSelectionCanvas(this.bgplay.get("cur_instant"));
                     this.updateSelectionCanvas();
@@ -260,7 +260,7 @@ define(
                 $this = this; //A local copy of this
 
                 curTimestamp = this.bgplay.get("cur_instant").get("timestamp");
-                timeOffset = instant.get("timestamp")-curTimestamp;
+                timeOffset = instant.get("timestamp") - curTimestamp;
 
                 if (timeOffset <= 0){  //backward, fast jump
                     $this.bgplay.setCurInstant(instant,false);
@@ -280,9 +280,10 @@ define(
                 for(var i=1; i<=totalFrames; i++) {
                     (function() {
                         var n = i;
-                        function seekInTime(){  //Remember: this function is "an instance" of a function, all vars are local clones
-                            var newTimestamp= curTimestamp+(fixedStep*n);
-                            if (totalFrames==n){ //When totalFrames==n the cursor has reached the final seek position
+                        function seekInTime(){  //Remember all vars are local clones
+                            var newTimestamp = curTimestamp + (fixedStep * n);
+
+                            if (totalFrames == n){ //When totalFrames==n the cursor has reached the final seek position
                                 /*
                                  * We can't check $this.animation in order to trigger the event because $this.animation is a static
                                  * clone (doesn't change after its allocation) of this.animation.
@@ -295,26 +296,27 @@ define(
                                     if ($this.environment.config.timeline.reloadAnimationWhenItEnds){
                                         $this.eventAggregator.trigger("animationReload");
                                     }else{
-                                        $this.bgplay.setCurInstant($this.selectionEnd,false);
+                                        $this.bgplay.setCurInstant($this.selectionEnd, false);
                                     }
                                 }else{
-                                    $this.bgplay.setCurInstant(instant,false);
+                                    $this.bgplay.setCurInstant(instant, false);
                                 }
+
                             }else{
                                 /*
                                  * When totalFrames!=n the cursor has reached a intermediate position calculated
                                  * by the seek function itself to emulate a fluid animation.
                                  */
-                                $this.bgplay.setCurInstant(new Instant({id:0, timestamp:newTimestamp}), true);//silent=true prevents the propagation of events, there are no BGP updates to be applied
+                                $this.bgplay.setCurInstant(new Instant({id: 0, timestamp: newTimestamp}), true);//silent=true prevents the propagation of events, there are no BGP updates to be applied
                                 $this.updateSelectionCanvas();
-                                $this.updateControlCanvas();//We changed the current instant, now draw the cursor at the new position.
+                                $this.updateControlCanvas(); // We changed the current instant, now draw the cursor at the new position.
                             }
                         }
 
                         /*
                          * Important: if we don't store the pointers to the timers then we can't stop animation in any way
                          */
-                        $this.seekTimers.push(setTimeout(seekInTime, interval*n));
+                        $this.seekTimers.push(setTimeout(seekInTime, interval * n));
                     })();
                 }
             },
@@ -338,7 +340,7 @@ define(
                 // Ok, the animation stops, but the cursor must reach the full scale or rather the endtimestamp
                 var timestampOffsetToEnd = this.selectionEnd.get("timestamp") - this.bgplay.get("cur_instant").get("timestamp"); //In seconds
                 seekTime = Math.ceil(this.logarithmicSeekTime(timestampOffsetToEnd));
-                this.seek(this.selectionEnd,seekTime);
+                this.seek(this.selectionEnd, seekTime);
             },
 
             /**
@@ -365,11 +367,11 @@ define(
                 //Seconds between the current event and the next event on the treeMap
                 timestampOffsetToNextEvent = tmpEvent.get("instant").get("timestamp") - this.bgplay.get("cur_instant").get("timestamp"); //In seconds
 
-                if (timestampOffsetToNextEvent < 2){  //this can be also <5 (equal for humans)
-                    this.seek(tmpEvent.get("instant"), 0); //Move the pointer to the new timestamp in 0 sec
+                if (timestampOffsetToNextEvent < 2){  // this can be also < 5 (equal for humans)
+                    this.seek(tmpEvent.get("instant"), 0); // Move the pointer to the new timestamp in 0 sec
                 }else{
-                    seekTime = Math.ceil(this.logarithmicSeekTime(timestampOffsetToNextEvent)); //Calculate the log of the offset for a faster seek
-                    this.seek(tmpEvent.get("instant"), seekTime); //Move the pointer to the new timestamp in seekTime sec
+                    seekTime = Math.ceil(this.logarithmicSeekTime(timestampOffsetToNextEvent)); // Calculate the log of the offset for a faster seek
+                    this.seek(tmpEvent.get("instant"), seekTime); // Move the pointer to the new timestamp in seekTime sec
                 }
             },
 
@@ -725,17 +727,19 @@ define(
              */
             selectionChartPages: function(){
                 var numberOfPages, n, nop, differentTimestampEvents;
+
                 differentTimestampEvents = [];
                 if (!this.selectionChartPagesList){
                     this.selectionChartPagesList = [];
                     nop = this.environment.config.timeline.maxSelectionChartEvents;
 
                     this.allEvents.forEachKey(function(key){
-                        if (!arrayContains(differentTimestampEvents,key.getTimestamp()))
-                            differentTimestampEvents.push(key.getTimestamp());
+                        var timestamp = key.getTimestamp();
+                        if (!arrayContains(differentTimestampEvents, timestamp))
+                            differentTimestampEvents.push(timestamp);
                     });
 
-                    numberOfPages = Math.ceil(differentTimestampEvents.length/nop);
+                    numberOfPages = Math.ceil(differentTimestampEvents.length / nop);
                     for (n=0; n<numberOfPages; n++){ //This calculates all pages
                         this.selectionChartPagesList[n] = this.allEvents.nearest(new Instant({id: 0, timestamp: differentTimestampEvents[n * nop]}), true);
                     }
@@ -822,17 +826,17 @@ define(
 
                 this.drawIntervalOnSelectionCanvas();
 
-                if (eventTmp != null && this.eventOnSelectionChart.containsValue(eventTmp)){ //The cursor is on an event
+                if (eventTmp != null && this.eventOnSelectionChart.containsValue(eventTmp)){ // The cursor is on an event
                     ctx.fillStyle = selectedEventColor;
 
                     ctx.fillStyle = this.cursorColor;
                     cursorPosition = eventTmp.drawEventOnselectionCanvasX + (eventTmp.drawEventOnselectionCanvasWidth / 2) - this.halfCursorWidth; //Position of the event + half of the width of the event (px) - half cursor size
                     ctx.fillRect(cursorPosition, 0, this.cursorsWidth, this.selectionChartHeight);
 
-                }else{//The cursor is on a warp
+                } else { // The cursor is on a warp
                     eventTmp = this.allEvents.nearest(curInstant,false,true);
                     if (this.eventOnSelectionChart.containsValue(eventTmp)){
-                        cursorPosition=eventTmp.drawEventOnselectionCanvasX + this.halfWarpWidth + this.environment.config.timeline.selectionChartSecondToPixels; //Position of the prev Event + the half of the width of the warp
+                        cursorPosition = eventTmp.drawEventOnselectionCanvasX + this.halfWarpWidth + this.environment.config.timeline.selectionChartSecondToPixels; //Position of the prev Event + the half of the width of the warp
                     }
                     ctx.fillStyle = this.cursorColor;
                     ctx.fillRect(cursorPosition, 0, this.cursorsWidth, this.selectionChartHeight);
@@ -847,7 +851,7 @@ define(
              */
             calculateSelectionChartPage: function(event){
                 for (var n=0; n<this.selectionChartPages().length-1; n++){
-                    if (this.selectionChartPages()[n+1].get("instant").get("timestamp") > event.get("instant").get("timestamp"))
+                    if (this.selectionChartPages()[n + 1].get("instant").get("timestamp") > event.get("instant").get("timestamp"))
                         break;
                 }
                 return n;
@@ -888,9 +892,9 @@ define(
                 sumVisiblePosition = instantVisiblePosition + offsetOfVisibility;
                 subVisiblePosition = instantVisiblePosition - offsetOfVisibility;
 
-                if (sumVisiblePosition <= container.width() &&
-                    subVisiblePosition >= 0)
-                    return null; //Is already visible
+                if (sumVisiblePosition <= container.width() && subVisiblePosition >= 0) { //It is already visible
+                    return null;
+                }
 
                 var newLeft = 0;
                 if (subVisiblePosition < 0) {
@@ -907,7 +911,7 @@ define(
                     newLeft = container.width() - this.selectionChartWidth;
 
                 element.animate(
-                    {left:newLeft},
+                    {left: newLeft},
                     500,
                     function () {
                         //end
@@ -1166,20 +1170,23 @@ define(
              * @method drawIntervalOnSelectionCanvas
              */
             drawIntervalOnSelectionCanvas: function(){
-                var start, stop, imageLeft, imageRight;
+                var start, stop, imageLeft, imageRight, $this;
 
+                $this = this;
                 start = this.allEvents.nearest(this.selectionStart, true, true);
                 stop = this.allEvents.nearest(this.selectionEnd, false, true);
-                imageLeft = this.imageRoot + "/leftSlider.png";
+
+                //imageLeft = this.imageRoot + "/leftSlider.png";
                 imageLeft = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABE0lEQVR42mL8//8/AyUAIICYGCgEAAHEIrmFyQBInydTvyFAALGANB/2IM8btjsYzwMEEMgAhjd/sCv49Q9Cs+HxKEAAgQ14i8OAb38hNBczA4M3z3+GrV8YMdQABBDYgNe/sRvwGSrOywqhQYYseI9qCEAA4fVCiRhm2CQI/mfoeY0wBCCAIC74Q1rgIasHCCCIC3B4Iew6xCZebgaGuXIQ1yQ/QvUCQADh9cLXHxDFP9khmv3vYQYiQADhDcRfP6GxAZS3usmIVQ1AAOGNxn9QA5jwhBFAAIEMMPh0n/ECNkkuBYjTv9xnxKXfACCAGLHlRkZGRgaJzYwoEs99/mE1BSCAcCbSF77/GQlpBgGAAAMANPRP5PIcMVgAAAAASUVORK5CYII=";
 
-                imageRight = this.imageRoot + "/rightSlider.png";
+                //imageRight = this.imageRoot + "/rightSlider.png";
                 imageRight = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABGUlEQVR42mL8//8/AyUAIICYGCgEAAHEIrmFyQBInydTvyFAALGANB/2IM8btjsYzwMEEMgAhjd/sCv49Q9Cs+HxKEAAgQ14i2aAN89/hq1fGBm+/YXwuZhxGwAQQGADXv9GCCQIQrwDEvsMFedlxW0AQACheKFE9D+GQSDQ85oRpwEAAQRxwR/8gYVPHiCAIC6AOjX5ESPDXLn/cPbnr1AvcOM2ACCAMGLB/x4jw0al/2Cxrz8gTv/JjjuaAQIIIxBBwOomROOvnxD+t9+4XQAQQFijEQb+QQ1gwhMGAAEEMsDg033GC9gkuRQgTv9yH2csGAAEECO23MjIyMggsZkRReK5zz+spgAEEM5E+sL3PyMhzSAAEGAAd81WDRtYSvsAAAAASUVORK5CYII=";
 
-                var $this = this;
 
                 if ($this.selectorLeftImageCache == null){
+
                     var imgLeft = new Image();
+                    
                     imgLeft.onload = function() {
                         $this.selectorLeftImageCache = imgLeft;
                         var imgRight = new Image();
@@ -1191,7 +1198,6 @@ define(
                         imgRight.src = imageRight;
                     };
                     imgLeft.src = imageLeft;
-
 
                 }else{
                     draw(start, stop);
