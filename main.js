@@ -70,6 +70,11 @@ var BGPlay = function(domElement){
         environment.eventAggregator = _.extend({}, Backbone.Events);
         environment.dom = thisDom;
 
+        // To initialise properly!!!!!
+        environment.useStreaming = true;
+        environment.streamingOn = true;
+        environment.initialDump = "rest"; // It can be rest, streaming or none
+
         this.advancedInit();
 
         log("Data collected");
@@ -96,15 +101,16 @@ var BGPlay = function(domElement){
         mainView = this.mainView;
 
         var startFunction = function(environment){
-            if (environment.safeState){
-                if (environment.jsonWrap.readJson(data) == true){
-                    log("Objects created");
-                    environment.bgplay.set({inputParams:environment.params, silent:true});
-                    environment.modes.push('consistent');
-                }else{
-                    environment.modes.push('inconsistent');
-                    environment.alert(environment.message.text, environment.message.type);
-                }
+            if (environment.safeState) {
+
+                    if (environment.jsonWrap.readJson(data) == true) {
+                        log("Objects created");
+                        environment.bgplay.set({inputParams: environment.params, silent: true});
+                        environment.modes.push('consistent');
+                    } else {
+                        environment.modes.push('inconsistent');
+                        environment.alert(environment.message.text, environment.message.type);
+                    }
             }else{
                 environment.modes.push('inconsistent');
             }

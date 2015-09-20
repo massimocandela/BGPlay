@@ -145,6 +145,7 @@ var DataEmulator = function(){
             type: "A",
             timestamp: parseInt(new Date().getTime()/1000),
             source: source,
+            target: this._target,
             path: this._getPath(source, this._target),
             community: [[1,2], [3,4]]
         };

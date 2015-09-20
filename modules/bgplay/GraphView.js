@@ -405,10 +405,10 @@ define(
             },
 
             createAllNewPaths: function(){
-                var $this, atLeastOne;
+                var $this, atLeastOne, thereWasOneCompletelyNew;
 
                 $this = this;
-
+                thereWasOneCompletelyNew = false;
                 this.skipAfterHops = 0;
                 atLeastOne = false;
                 this.bgplay.get("sources")
@@ -455,13 +455,13 @@ define(
 
                                     if ($this.uniquePathsCheck[keyForUniquenessCheck] == null) { //In this stage, we want to skip both null and duplicated paths in order to have only unique and valid paths
                                         $this.uniquePathsCheck[keyForUniquenessCheck] = true;
+                                        thereWasOneCompletelyNew = true;
                                         $this.pathViews[keyForStaticCheck].static = ($this.pathViews[keyForStaticCheck].static == null);
                                         $this.graph.addPath(path);
                                     }
 
                                 }
                             });
-                            //}
 
                         });
                     });
@@ -473,6 +473,8 @@ define(
                         }
                     });
                 }
+
+                return thereWasOneCompletelyNew;
             },
 
             checkCycleOneWay: function(path1, path2){
@@ -694,13 +696,14 @@ define(
             },
 
             updateScene: function(){
-                //for (var path in this.pathViews){
-                //    this.pathViews[path].destroyMe();
-                //    delete this.pathViews[path];
-                //}
-                var newNodes = this.createAllNewNodes();
-                this.createAllNewPaths();
-                this.computeSubTrees();
+                var newNodes, newPaths;
+
+                newNodes = this.createAllNewNodes();
+                newPaths = this.createAllNewPaths();
+
+                if (newPaths){
+                    this.computeSubTrees();
+                }
 
                 return newNodes;
             },

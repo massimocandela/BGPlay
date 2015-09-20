@@ -6,23 +6,163 @@
     <script src="IsolarioWebSocket.js"></script>
     <script src="errors.js"></script>
     <script src="jquery-2.0.3.min.js"></script>
-    <script src="utility.js"></script>
     <script src="jquery.gracefulWebSocket.js"></script>
 </head>
 <body>
 
 <script>
 
+    var query = "5.149.136.0/21";
+
     function post_send_app() {
-        ws.check_and_send("2@192.65.131.235@192.65.131.0/24\0");
+//        ws.check_and_send("50@" + query);
+//        ws.check_and_send("2@192.65.131.235@192.65.131.0/24\0");
     }
-    function handle_message(parts) {
-        console.log(parts);
+
+    function getAsPath(asPathElements, ownersArray){
+        var out;
+
+        out = [];
+        for (var n=0,length=asPathElements.length; n<length; n++){
+            out.push({
+                owner: ownersArray[n],
+                as_number: asPathElements[n]
+            });
+        }
+
+        return out;
     }
+
+    cachedSources = {};
+    function getSource(asn, ip, rrc){
+        var sourceId;
+
+        sourceId = rrc + "-" + ip;
+
+        if (!cachedSources[sourceId]){
+            cachedSources[sourceId] =  {
+                "as_number": asn,
+                "rrc": rrc,
+                "id": sourceId,
+                "ip": ip
+            }
+        }
+
+        return cachedSources[sourceId];
+    }
+
+    function getTarget(prefix){
+        return {
+            prefix: prefix
+        }
+    }
+
+    function convertToJson(sample){
+        var type, payload, asPathElements, ownersArray;
+
+        type = sample[1];
+        switch (type) {
+            case "255":
+                asPathElements = sample[4].split(" ").reverse();
+                ownersArray = sample[9].split("|").reverse();
+                payload = {
+                    type: "dump",
+                    timestamp: sample[10],
+                    path: getAsPath(asPathElements, ownersArray),
+                    source: getSource(asPathElements[0], sample[2], "isolario"),
+                    target: getTarget(sample[3]) ,
+                    community: sample[8]
+                };
+                break;
+
+            case "1":
+                asPathElements = sample[4].split(" ").reverse();
+                ownersArray = sample[9].split("|").reverse();
+                payload = {
+                    type: "A",
+                    timestamp: sample[10],
+                    path: getAsPath(asPathElements, ownersArray),
+                    source: getSource(asPathElements[0], sample[2], "isolario"),
+                    target: getTarget(sample[3]) ,
+                    community: sample[8]
+                };
+                break;
+
+            case "2":
+                payload = {
+                    type: "W",
+                    timestamp: sample[4],
+                    source: getSource(null, sample[2], "isolario"),
+                    target: getTarget(sample[3])
+                };
+                break;
+
+            default:
+                return;
+                break;
+        }
+
+        return payload;
+    }
+
+    function endOfDump(){
+        console.log("END_OF_DUMP");
+    }
+
+    function endOfFeedersList(){
+        console.log("END_OF_FEEDERS_LIST");
+        ws.check_and_send("50@" + query);
+        console.log("subscribed to prefix " + query);
+    }
+
+    function handleMessage(sample){
+        var jsonMessage, code;
+
+        code = sample[1];
+
+        switch (code) {
+            case "255": // dump
+                jsonMessage = convertToJson(sample);
+                break;
+
+            case "1": // update
+                jsonMessage = convertToJson(sample);
+                break;
+
+            case "2": // withdrawal
+                jsonMessage = convertToJson(sample);
+                break;
+
+            case "-2": // end of feeders list
+                endOfFeedersList();
+                break;
+
+            case "0": // end of dump
+                endOfDump();
+                break;
+
+            case "-1": // feeders list item
+                //ignore
+                break;
+
+            case "4": // No one knows
+                //ignore
+                break;
+
+            default:
+//                console.log("I don't understand this message", sample);
+        }
+
+
+        if (jsonMessage){
+            console.log(jsonMessage);
+        }
+    }
+
 
     var ws = new IsolarioWebSocket({
         app_url : "ws://146.48.78.3:9999/my_subnet_reachability",
-        handle_message : handle_message,
+        handle_message : handleMessage,
         post_send_app : post_send_app,
         token: "c065bef1aab26bcd2defb12811ac146cc29ef2e26d14257b5d555d4ce7908b8092039b884f7b6aff1f84994288c95fb364d4b34a61ad9e30188bb7d393525275",
     });

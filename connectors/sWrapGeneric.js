@@ -184,7 +184,7 @@ function SWrap(environment){
 
         this._createNodes(event);
         this._createSource(event.source);
-        this._createTarget(event.path[event.path.length - 1]);
+        this._createTarget(event.target);
         finalEvent = this._createEvent(event);
 
         if (finalEvent) {
