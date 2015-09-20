@@ -21,7 +21,6 @@ function SWrap(environment){
         asnumber = node.as_number;
 
         if (!bgplay.getNode(asnumber)) {
-            console.log("create node model object");
             newnode = new Node({
                 id: asnumber,
                 asnumber: asnumber,
@@ -39,7 +38,6 @@ function SWrap(environment){
         var sourceNode, newsource;
 
         if (!bgplay.getSource(source.id)){
-            console.log("creates source model object");
             sourceNode = bgplay.getNode(source.as_number);
             newsource = new Source({
                 id: source.id,
@@ -56,7 +54,6 @@ function SWrap(environment){
         var newtarget;
 
         if (!bgplay.getTarget(target.prefix)){
-            console.log("created target model object");
             newtarget = new Target({
                 id: target.prefix,
                 environment: environment
@@ -114,7 +111,7 @@ function SWrap(environment){
             subType = "withdrawal";
             tmpEvent.attributes.path = null;
 
-        }else if (eventType == 'A' || eventType == 'B'){
+        } else if (eventType == 'A' || eventType == 'B'){
 
             tmpNode = bgplay.getNode(tmpPath[tmpPath.length - 1]["as_number"]);
             tmpNode.addTarget(target);//In this way we can check hijacking
@@ -168,25 +165,41 @@ function SWrap(environment){
         source.addEvent(tmpEvent);
         bgplay.get("allEvents").put(instant, tmpEvent);
         incrementalEventId++;
+
+        return tmpEvent;
     };
 
 
     this._createNodes = function(event){
 
         for (var n=0,length=event.path.length; n<length; n++){
-                this._createNode(event.path[n]);
+            this._createNode(event.path[n]);
         }
 
     };
 
 
     this.sampleCallback = function(event){
+        var finalEvent;
 
         this._createNodes(event);
         this._createSource(event.source);
         this._createTarget(event.path[event.path.length - 1]);
-        this._createEvent(event);
-        //bgplay.updateState();
+        finalEvent = this._createEvent(event);
+
+        if (finalEvent) {
+            window.lastSampleToTrigger = finalEvent.get("instant");
+            if (!window.tt2) {
+                window.tt2 = setTimeout(function () {
+
+                    bgplay.set("endtimestamp", Math.max(bgplay.get("endtimestamp"), window.lastSampleToTrigger.get("timestamp")) + 1);
+
+                    environment.eventAggregator.trigger("newSample", window.lastSampleToTrigger);
+
+                    window.tt2 = false;
+                }, 5000);
+            }
+        }
     };
 
 }

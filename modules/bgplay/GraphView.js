@@ -49,6 +49,7 @@ define(
                 this.pathViews = {};
                 this.dom = this.$el;
                 this.dom.show();
+                this.cacheStaticPath = {};
 
                 this.alreadyScaled = false;
 
@@ -79,23 +80,11 @@ define(
                     if (this.updateScene()){
                         this.graph.computePosition();
                         this.autoScale();
-                    } else {
-                        console.log("computation skipped");
-
                     }
 
                     this.eventAggregator.trigger("firstPathDraw");
                     this.eventAggregator.trigger("updateNodesPosition"); //draw
                     this.pruneGraph();
-
-                    if (this.strUpdateTimer){
-                        clearTimeout(this.strUpdateTimer);
-                    }
-                    this.strUpdateTimer = setTimeout(function(){
-                        $this.bgplay.setCurInstant(instant);
-
-                    }, this.environment.config.graph.strUpdateTimer);
-
 
                 }, this);
 
@@ -338,7 +327,6 @@ define(
                 this.bgplay.get("nodes")
                     .forEach(function(node){
                         if (!node.view){
-                            console.log("created node view");
                             atLeastOne = true;
                             $this.graph
                                 .addNode(new NodeView({
@@ -491,14 +479,13 @@ define(
                 var n, node, iteration, notCommon;
 
                 notCommon = false;
-
-                iteration = path1.length-1;
+                iteration = path1.length - 1;
                 for (n=1; n<=iteration; n++){
-                    node=path1[iteration-n]; //On-fly reverse
+                    node = path1[iteration-n]; //On-fly reverse
 
-                    if (!arrayContains(path2,node)){
-                        notCommon=true;
-                    }else{
+                    if (!arrayContains(path2, node)){
+                        notCommon = true;
+                    } else {
                         if (notCommon){
                             return true; //A common node after a notCommon node
                         }
@@ -664,31 +651,35 @@ define(
                 if (this.staticPaths.length == 0){
                     return;
                 }
-                var n, i, tree, h, path1, path2, inThisTree;
+                var tree, path1, path2, inThisTree, cacheKey;
+                this.subtrees = [];
                 this.subtrees.push([this.staticPaths[0]]); //Initializes the first set (alias tree)
-                this.pathViews[this.staticPaths[0].get("source").id+"-" + this.staticPaths[0].get("target").id].subTreeId = 0;//The id of the subTree is the index of the array
+                this.pathViews[this.staticPaths[0].get("source").id + "-" + this.staticPaths[0].get("target").id].subTreeId = 0;//The id of the subTree is the index of the array
 
-                for (h=1; h<this.staticPaths.length; h++){ //For each static path
+                for (var h=1,lengthh=this.staticPaths.length; h<lengthh; h++){ //For each static path
                     path1 = this.staticPaths[h];
 
                     inThisTree = true;
 
-                    for (n=0; n<this.subtrees.length; n++){ //Tries to insert the current static path in a set
+                    for (var n=0,subTreeLength=this.subtrees.length; n<subTreeLength; n++){ //Tries to insert the current static path in a set
                         inThisTree = true;
-
                         tree = this.subtrees[n];
 
-                        for (i=0; i<tree.length; i++){ //Checks if there is a cycle between the new path and the paths already in the set
+                        for (var i=0,lengthi=tree.length; i<lengthi; i++){ //Checks if there is a cycle between the new path and the paths already in the set
                             path2 = tree[i]; //A path in the set
+                            cacheKey = path1.id + "-" + path2.id;
+                            if (this.cacheStaticPath[cacheKey] == undefined){
+                                this.cacheStaticPath[cacheKey] = this.thereIsCycle(path1, path2);
+                            }
 
-                            if (this.thereIsCycle(path1, path2)){ //There is a cycle between two paths in the same set
+                            if (this.cacheStaticPath[cacheKey]){ //There is a cycle between two paths in the same set
                                 inThisTree = false;
                                 break; //Skip to check the other paths in the same tree
                             }
                         }
 
                         if (inThisTree){ //If no checks generates a negative result then we can put this path in the current set
-                            this.pathViews[path1.get("source").id+"-" + path1.get("target").id].subTreeId = n;//The id of the subTree is the index of the array
+                            this.pathViews[path1.get("source").id + "-" + path1.get("target").id].subTreeId = n;//The id of the subTree is the index of the array
                             this.subtrees[n].push(path1);
                             break; //Don't check in other trees
                         }

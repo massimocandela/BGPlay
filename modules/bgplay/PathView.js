@@ -478,14 +478,21 @@ define([],  function(){
          * @return {String} An SVG path
          */
         computeNormalPathString: function(nodes){
-            var pathString, node;
-            pathString = "";
-            for (var i=0; i<nodes.length; i++){
-                node = nodes[i];
-                pathString += (pathString == "") ? "M" : " L";
-                pathString += (node.view) ? node.view.x + " " + node.view.y : node.x + " " + node.y;
+            var node, pathArray, element;
+
+             pathArray = [];
+            if (nodes.length > 0){
+                node = nodes[0];
+                element = node.view || node;
+                pathArray.push(['M', element.x, element.y]);
             }
-            return pathString;
+            for (var i=1,length=nodes.length; i<length; i++){
+                node = nodes[i];
+                element = node.view || node;
+                pathArray.push(['L', element.x, element.y]);
+            }
+
+            return pathArray;
         },
 
         /**

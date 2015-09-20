@@ -172,11 +172,11 @@ define([
         //Override of some methods
         main.advancedInit = function(){
             main.environment.thisWidget = thisWidget;
-        }
+        };
 
         main.alert = function(msg, type){
             main.environment.dom.append(misc.infoMessage(type,msg));
-        }
+        };
 
         //Initialization of the BGPlay environment
         main.init({

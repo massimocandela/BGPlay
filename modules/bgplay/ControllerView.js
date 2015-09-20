@@ -118,6 +118,10 @@ define(
                     this.stop();
                 },this);
 
+                this.eventAggregator.on("newSample", function(){
+                    this.endtimestampPicker.datetimepicker("setDate", dateToUTC(this.bgplay.get("endtimestamp")));
+                }, this);
+
                 this.eventAggregator.on("animationReload", function(){
                     this.reload();
                 },this);
@@ -180,7 +184,7 @@ define(
              * This method draws this module (eg. inject the DOM and elements).
              * @method render
              */
-            render:function(){
+            render: function(){
                 parseTemplate(this.environment,'controller.html',this,this.el);
                 this.getDomElements();
                 this.dom.show();
@@ -222,7 +226,7 @@ define(
              * This method updates the DOM of the Control Panel without render it again.
              * @method update
              */
-            update:function(){
+            update: function(){
                 if (this.animation==true){
                     this.controlAnimationPrevImage.hide();
                     this.controlAnimationNext.hide();

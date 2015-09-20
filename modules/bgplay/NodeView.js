@@ -94,10 +94,13 @@ define([],  function(){
          * @method updatePosition
          */
         updatePosition: function(){
-            this.view.translate(this.x - this.oldX, this.y - this.oldY, this);
-            this.oldX = this.x;
-            this.oldY = this.y;
-            this.eventAggregator.trigger("nodeMoved", this.model);
+            if (this.oldX != this.x || this.oldY != this.y ) {
+                this.view[0].attr({x: this.x - this.nodeWidth / 2, y: this.y - this.nodeHeight / 2});
+                this.view[1].attr({x: this.x, y: this.y});
+                this.oldX = this.x;
+                this.oldY = this.y;
+                this.eventAggregator.trigger("nodeMoved", this.model);
+            }
         },
 
         /**
@@ -125,11 +128,11 @@ define([],  function(){
             var radiusForRoundedCorners, svgNode, svgText, group;
             radiusForRoundedCorners = 10;
 
-            svgNode = this.paper.rect(this.x-this.nodeWidth/2,this.y-this.nodeHeight/2, this.nodeWidth,this.nodeHeight,radiusForRoundedCorners)
+            svgNode = this.paper.rect(this.x - this.nodeWidth / 2, this.y - this.nodeHeight / 2, this.nodeWidth, this.nodeHeight, radiusForRoundedCorners)
                 .attr({fill: this.getFillColor(), stroke:this.getStrokeColor(),"text-anchor": "middle"});
 
-            svgText = this.paper.text(this.x,this.y, this.getLabel())
-                .attr({'fill':this.getTextFillColor(),'font-family':'Arial','font-size':this.environment.config.graph.nodeTextFontSize,'font-weight':'bold'});
+            svgText = this.paper.text(this.x, this.y, this.getLabel())
+                .attr({'fill': this.getTextFillColor(), 'font-family': 'Arial', 'font-size': this.environment.config.graph.nodeTextFontSize, 'font-weight': 'bold'});
 
             group = this.paper.set();
             group.push(svgNode);

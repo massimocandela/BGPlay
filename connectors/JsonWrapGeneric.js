@@ -415,13 +415,6 @@ function JsonWrap(environment){
 
             dataEmulator.start(function(data){
                 wrap.sampleCallback(data);
-                environment.eventAggregator
-                    .trigger("newSample", new Instant({
-                        id: 0,
-                        timestamp: data.timestamp,
-                        environment: environment
-                    }));
-
             });
 
             return true;

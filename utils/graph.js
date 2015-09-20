@@ -97,7 +97,7 @@ net.webrobotics.GraphUtils = function () {
         if (difference != 0) {
             unitVector = this.unitVector(node1, node2);
             difference = (limit != null && difference > limit) ? limit : difference;
-            force=kSpringFactor*difference;
+            force = kSpringFactor * difference;
             newPoint1 = this.mulVectorForValue(unitVector, force);
             newPoint2 = this.mulVectorForValue(this.inverseVector(unitVector), force);
 
@@ -149,7 +149,8 @@ net.webrobotics.GraphUtils = function () {
 
     this.computeFinalPosition = function (node) {
         var element;
-        for (var n = 0; n < node.vectors.length; n++) {
+
+        for (var n = 0,length=node.vectors.length; n < length; n++) {
             element = node.vectors[n];
             node.x += element.x;
             node.y += element.y;
@@ -191,7 +192,6 @@ net.webrobotics.GraphUtils = function () {
                 unitVector = this.unitVector(tmpPoint, node);
                 newPoint1 = this.mulVectorForValue(unitVector, force);
                 node.vectors.push(newPoint1);
-
             }
         }
     };

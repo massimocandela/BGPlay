@@ -67,9 +67,6 @@ var DataEmulator = function(){
             if (!source){
                 source = this._generateSource();
                 this._usedSources.push(source);
-            } else {
-                console.log("used source");
-
             }
         }
 
@@ -79,7 +76,6 @@ var DataEmulator = function(){
     this._generatePath = function(source, target){
         var numberItems, path;
 
-        console.log("NEW PATH IN");
         path = [];
         numberItems = parseInt((Math.random() * 3) +1);
         path.push(source);
@@ -111,7 +107,6 @@ var DataEmulator = function(){
     };
 
     this._generateNode = function(){
-        console.log("generated");
         return {
             owner: "OWNER",
             as_number: this._generateAsNumber()
@@ -128,7 +123,7 @@ var DataEmulator = function(){
 
     this._getNode = function(){
         var node;
-        if (parseInt((Math.random() * 10) + 1) < 50){
+        if (parseInt((Math.random() * 10) + 1) < 2){
             node = this._generateNode();
             this._usedNodes.push(node);
         } else {
@@ -153,7 +148,6 @@ var DataEmulator = function(){
             path: this._getPath(source, this._target),
             community: [[1,2], [3,4]]
         };
-        console.log(item);
         return item;
     };
 
@@ -171,7 +165,7 @@ var DataEmulator = function(){
 
         window.tt = setInterval(function(){
             callback($this._generateItem());
-        }, 3000);
+        }, 1000);
     };
 
     window.stop = function(){
