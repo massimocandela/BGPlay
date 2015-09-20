@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="IsolarioWebSocket.js"></script>
+    <script src="errors.js"></script>
+    <script src="jquery-2.0.3.min.js"></script>
+    <script src="utility.js"></script>
+    <script src="jquery.gracefulWebSocket.js"></script>
+</head>
+<body>
+
+<script>
+
+    function post_send_app() {
+        ws.check_and_send("2@192.65.131.235@192.65.131.0/24\0");
+    }
+    function handle_message(parts) {
+        console.log(parts);
+    }
+
+    var ws = new IsolarioWebSocket({
+        app_url : "ws://146.48.78.3:9999/my_subnet_reachability",
+        handle_message : handle_message,
+        post_send_app : post_send_app,
+        token: "c065bef1aab26bcd2defb12811ac146cc29ef2e26d14257b5d555d4ce7908b8092039b884f7b6aff1f84994288c95fb364d4b34a61ad9e30188bb7d393525275",
+    });
+
+
+
+
+</script>
+
+</body>
+</html>
