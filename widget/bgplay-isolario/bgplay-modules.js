@@ -21,7 +21,8 @@ define(
             BGPLAY_MODULES_URL + "bgplay/OptionAnimationSpeedView.js",
             BGPLAY_MODULES_URL + "bgplay/OptionRestoreGraph.js",
             BGPLAY_MODULES_URL + "bgplay/OptionGraphDeep.js",
-            BGPLAY_MODULES_URL + "bgplay/OptionLinkWeight.js"
+            BGPLAY_MODULES_URL + "bgplay/OptionLinkWeight.js",
+            BGPLAY_MODULES_URL + "bgplay/AboutBgplayView.js"
 
     ],  function(
 
@@ -37,8 +38,8 @@ define(
         OptionAnimationSpeedView,
         OptionRestoreGraph,
         OptionGraphDeep,
-        OptionLinkWeight
-
+        OptionLinkWeight,
+        AboutBgplayView
         ){
 
         return [
@@ -54,6 +55,7 @@ define(
             {"types":["all"], "modes":["consistent"], "view": OptionAnimationSpeedView},
             {"types":["all"], "modes":["consistent"], "view": OptionGraphDeep},
             {"types":["all"], "modes":["consistent"], "view": OptionLinkWeight},
+            {"types":["all"], "modes":["consistent"], "view": AboutBgplayView},
             {"types":["all"], "modes":["consistent"], "view": OptionRestoreGraph}
         ]
 

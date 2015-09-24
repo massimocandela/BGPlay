@@ -1,6 +1,14 @@
 <img class="bgplayControlPanelDivFlagIco" src="{{imageRoot}}config.png" alt="Open config" title="Open config"/>
 
 <div class="bgplayControlAnimationDiv">
+    {{#environment.updateWithStreaming}}
+    <div class="bgplayControlStreamingOn">
+        <img src="{{imageRoot}}bgplay_streaming_on.png" alt="Streaming off" title="Turn streaming off"/>
+    </div>
+    <div class="bgplayControlStreamingOff">
+        <img src="{{imageRoot}}bgplay_streaming_off.png" alt="Streaming on" title="Turn streaming on"/>
+    </div>
+    {{/environment.updateWithStreaming}}
     <div class="bgplayControlAnimationPrev">
         <img src="{{imageRoot}}play_prev.png" alt="Previous event" title="Previous event"/>
     </div>

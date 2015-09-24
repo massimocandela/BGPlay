@@ -60,7 +60,7 @@ IsolarioWebSocket.prototype.onclose = function(event) {
 
     if (this.pending_error > 0) {
         if (this.onerror_do == undefined && !this.ignore_error) {
-            show_error(this.pending_error, show_home_page);
+            show_error(this.pending_error);
         }
         else if (this.onerror_do.error == this.pending_error)
             this.onerror_do.func();
@@ -72,7 +72,7 @@ IsolarioWebSocket.prototype.onclose = function(event) {
 IsolarioWebSocket.prototype.onerror = function(event){
 
     if (!this.ignore_error)
-        show_error(APP_NOT_AVAILABLE, show_home_page);
+        show_error(APP_NOT_AVAILABLE);
 };
 
 IsolarioWebSocket.prototype.send_app = function() {

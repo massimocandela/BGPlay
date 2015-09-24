@@ -77,14 +77,16 @@ define(
                 },this);
 
                 this.eventAggregator.on("newSample", function(instant){
-                    if (this.updateScene()){
-                        this.graph.computePosition();
-                        this.autoScale();
-                    }
+                    if (this.environment.streamingOn){
+                        if (this.updateScene()){
+                            this.graph.computePosition();
+                            this.autoScale();
+                        }
 
-                    this.eventAggregator.trigger("firstPathDraw");
-                    this.eventAggregator.trigger("updateNodesPosition"); //draw
-                    this.pruneGraph();
+                        this.eventAggregator.trigger("firstPathDraw");
+                        this.eventAggregator.trigger("updateNodesPosition"); //draw
+                        this.pruneGraph();
+                    }
 
                 }, this);
 
@@ -196,6 +198,7 @@ define(
                 this.$el.show();
                 parseTemplate(this.environment, 'graph.html', this, this.el);
                 this.getDomElements();
+                //this.nodeContainer.append('<img class="bgplaywtm" src="' + this.fileRoot + 'modules/html/img/bgplay_watermark.png"/>');
                 return this;
             },
 

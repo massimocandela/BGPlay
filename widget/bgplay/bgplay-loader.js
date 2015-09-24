@@ -193,7 +193,11 @@ define([
         mainView: MainView,
         fileRoot: BGPLAY_PROJECT_URL,
         imageRoot: BGPLAY_IMAGES_URL,
-        templateRoot: BGPLAY_TEMPLATES_URL
+        templateRoot: BGPLAY_TEMPLATES_URL,
+        updateWithStreaming: initialParams.updateWithStreaming,
+        streamingOn: initialParams.streamingOn,
+        streamInitialDump: initialParams.streamInitialDump,
+        skipDump: initialParams.skipDump
     });
 
     main.setDefaultParams(initialParams);

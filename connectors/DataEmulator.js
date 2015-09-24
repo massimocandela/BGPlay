@@ -1,5 +1,5 @@
 /**
- * Author: Max
+ * Author: Massimo Candela
  * Date: 05/09/2015
  * Please refer to LICENSE.txt for information about the license.
  */

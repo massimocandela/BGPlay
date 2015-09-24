@@ -158,9 +158,10 @@ function JsonWrap(environment){
          * @param {Object} A json data object
          */
         readJson:function(wrap){
-            if (wrap.nodes.length==0){
+            if (wrap.nodes.length == 0){
+                console.log("no nodes");
                 if (environment.thisWidget){
-                    environment.message={text: "No information available for these query parameters.", type:"info"};
+                    environment.message = {text: "No information available for these query parameters.", type:"info"};
                     return false;
                 }else{
                     alert('No information available');
@@ -178,6 +179,7 @@ function JsonWrap(environment){
                 endtimestamp: wrap.query_endtime,
                 type:"bgp"
             });
+            window.bgplay = environment.bgplay;
             var bgplay = environment.bgplay;
 
             function createNodes(wrap){
@@ -291,7 +293,7 @@ function JsonWrap(environment){
                     source=bgplay.getSource(attributes.source_id);
                     target=bgplay.getTarget(attributes.target_prefix);
 
-                    prevPath = uniquePath[source.id+"-"+target.id];
+                    prevPath = uniquePath[source.id + "-" + target.id];
 
                     if (eventType=='W' && prevPath==null){
                         numNotValidWithdrawal++;
@@ -409,13 +411,13 @@ function JsonWrap(environment){
 
             bgplay.updateState();
 
-            // TEST
-            var dataEmulator = new DataEmulator(environment);
-            var wrap = new SWrap(environment);
-
-            dataEmulator.start(function(data){
-                wrap.sampleCallback(data);
-            });
+            //// TEST
+            //var dataEmulator = new DataEmulator(environment);
+            //var wrap = new SWrap(environment);
+            //
+            //dataEmulator.start(function(data){
+            //    wrap.sampleCallback(data);
+            //});
 
             return true;
         }

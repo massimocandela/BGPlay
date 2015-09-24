@@ -1,19 +1,23 @@
 /**
- * Copyright 2015 - mcandela
- * Date: 07/09/15
- * Time: 13:21
+ * Author: Massimo Candela
+ * Date: 05/09/2015
+ * Please refer to LICENSE.txt for information about the license.
  */
 
+function StreamingAdapter(environment){
+    var bgplay, uniquePath, incrementalEventId, incrementalPathId, $this, started;
 
-function SWrap(environment){
-    var bgplay, uniquePath, incrementalEventId, incrementalPathId;
-
-
-    bgplay = environment.bgplay;
-
-    uniquePath = environment.uniquePath || {};
-    incrementalEventId = environment.pathStartId || 0;
-    incrementalPathId = 0;
+    $this = this;
+    this.environment = environment;
+    this.init = function(){
+        if (!started){
+            bgplay = $this.environment.bgplay;
+            uniquePath = $this.environment.uniquePath || {};
+            incrementalEventId = $this.environment.pathStartId || 0;
+            incrementalPathId = 0;
+            started = true;
+        }
+    };
 
     this._createNode = function(node){
         var asnumber, newnode;
@@ -49,7 +53,6 @@ function SWrap(environment){
         }
     };
 
-
     this._createTarget = function(target){
         var newtarget;
 
@@ -70,7 +73,7 @@ function SWrap(environment){
 
         eventType = event.type;
         source = bgplay.getSource(event.source.id);
-        target = bgplay.getTarget(event.path[event.path.length - 1].prefix);
+        target = bgplay.getTarget(event.target.prefix);
 
         prevPath = uniquePath[source.id + "-" + target.id];
         pathsNumber = Object.keys(uniquePath).length;
@@ -97,7 +100,7 @@ function SWrap(environment){
             target: target,
             type: eventType,
             instant: instant,
-            community: (event.community) ? event.community.join(",") : null,
+            //community: (event.community) ? event.community.join(",") : null,
             environment: environment,
             new: true
         });
@@ -169,23 +172,24 @@ function SWrap(environment){
         return tmpEvent;
     };
 
-
     this._createNodes = function(event){
 
-        for (var n=0,length=event.path.length; n<length; n++){
-            this._createNode(event.path[n]);
+        if (event.path){
+            for (var n=0,length=event.path.length; n<length; n++){
+                this._createNode(event.path[n]);
+            }
         }
 
     };
 
-
-    this.sampleCallback = function(event){
+    this.addNewEvent = function(event){
         var finalEvent;
 
-        this._createNodes(event);
-        this._createSource(event.source);
-        this._createTarget(event.target);
-        finalEvent = this._createEvent(event);
+        $this.init();
+        $this._createNodes(event);
+        $this._createSource(event.source);
+        $this._createTarget(event.target);
+        finalEvent = $this._createEvent(event);
 
         if (finalEvent) {
             window.lastSampleToTrigger = finalEvent.get("instant");

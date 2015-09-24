@@ -11,6 +11,7 @@ require.config({
         "isolario-facade": BGPLAY_CONNECTORS_URL + "isolario/IsolarioFacade",
         "isolario-socket": BGPLAY_CONNECTORS_URL + "isolario/IsolarioWebSocket",
         "isolario-errors": BGPLAY_CONNECTORS_URL + "isolario/errors",
+        "streaming-adapter": BGPLAY_CONNECTORS_URL + "StreamingAdapter",
 
         "underscore": BGPLAY_LIB_URL + "underscore",
         "backbone": BGPLAY_LIB_URL + "backbone",
@@ -41,6 +42,14 @@ require.config({
     },
 
     shim: {
+        "isolario-socket": {
+            deps: ["isolario-errors", "jquery-socket"]
+        },
+
+        "isolario-facade": {
+            deps: ["isolario-socket"]
+        },
+
         "jquery-ui": {
             exports: "$",
             deps: ['jquery']
@@ -49,14 +58,6 @@ require.config({
         "jquery-socket": {
             exports: "$",
             deps: ['jquery']
-        },
-
-        "isolario-socket": {
-            deps: ["isolario-errors", "jquery-socket"]
-        },
-
-        "isolario-facade": {
-            deps: ["isolario-socket"]
         },
 
         "underscore": {
@@ -112,7 +113,9 @@ require.config({
                 'general',
                 'modules',
                 'model',
-                'MainView'
+                'MainView',
+                'streaming-adapter',
+                'isolario-facade'
             ]
         },
         "xdomainajax":{
@@ -157,7 +160,9 @@ define([
     "wbrGraph",
     "validator",
     "general",
-    "cssAlert"
+    "cssAlert",
+    'streaming-adapter',
+    'isolario-facade'
 
 ], function($, Backbone, Mustache, raphael, config, modules, MainView) {
 
@@ -167,7 +172,7 @@ define([
     loadCss(BGPLAY_STYLESHEETS_URL + 'jquery-ui-191.css');
     loadCss(BGPLAY_STYLESHEETS_URL + 'jquery.ui.datepicker.css');
     loadCss(BGPLAY_STYLESHEETS_URL + 'bgplay.css');
-    instanceName = 'BGPlay';
+    instanceName = 'BGPlayRT';
 
     var main, element, instanceName, instance, initialParams, thisWidget, queryParams;
 
@@ -209,7 +214,11 @@ define([
         mainView: MainView,
         fileRoot: BGPLAY_PROJECT_URL,
         imageRoot: BGPLAY_IMAGES_URL,
-        templateRoot: BGPLAY_TEMPLATES_URL
+        templateRoot: BGPLAY_TEMPLATES_URL,
+        updateWithStreaming: initialParams.updateWithStreaming,
+        streamingOn: initialParams.streamingOn,
+        streamInitialDump: initialParams.streamInitialDump,
+        skipDump: initialParams.skipDump
     });
 
     main.setDefaultParams(initialParams);

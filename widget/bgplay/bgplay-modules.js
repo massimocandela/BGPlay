@@ -9,22 +9,23 @@
 
 define(
     [
-            BGPLAY_MODULES_URL + "bgplay/BgpDataChecksView.js",
-            BGPLAY_MODULES_URL + "bgplay/ControllerQuerySimpleView.js",
-            BGPLAY_MODULES_URL + "bgplay/InfoPanelView.js",
-            BGPLAY_MODULES_URL + "bgplay/GraphView.js",
-            BGPLAY_MODULES_URL + "bgplay/TimelineView.js",
-            BGPLAY_MODULES_URL + "bgplay/ControllerView.js",
-            BGPLAY_MODULES_URL + "bgplay/LegendView.js",
-            BGPLAY_MODULES_URL + "bgplay/NodePositionView.js",
-            BGPLAY_MODULES_URL + "bgplay/OptionPopupView.js",
-            BGPLAY_MODULES_URL + "bgplay/OptionAnimationSpeedView.js",
-            BGPLAY_MODULES_URL + "bgplay/OptionRestoreGraph.js",
-            BGPLAY_MODULES_URL + "bgplay/OptionGraphDeep.js",
-            BGPLAY_MODULES_URL + "bgplay/OptionLinkWeight.js"
+        BGPLAY_MODULES_URL + "bgplay/BgpDataChecksView.js",
+        BGPLAY_MODULES_URL + "bgplay/ControllerQuerySimpleView.js",
+        BGPLAY_MODULES_URL + "bgplay/InfoPanelView.js",
+        BGPLAY_MODULES_URL + "bgplay/GraphView.js",
+        BGPLAY_MODULES_URL + "bgplay/TimelineView.js",
+        BGPLAY_MODULES_URL + "bgplay/ControllerView.js",
+        BGPLAY_MODULES_URL + "bgplay/LegendView.js",
+        BGPLAY_MODULES_URL + "bgplay/NodePositionView.js",
+        BGPLAY_MODULES_URL + "bgplay/OptionPopupView.js",
+        BGPLAY_MODULES_URL + "bgplay/OptionAnimationSpeedView.js",
+        BGPLAY_MODULES_URL + "bgplay/OptionRestoreGraph.js",
+        BGPLAY_MODULES_URL + "bgplay/OptionGraphDeep.js",
+        BGPLAY_MODULES_URL + "bgplay/OptionLinkWeight.js",
+        BGPLAY_MODULES_URL + "bgplay/AboutBgplayView.js"
+
 
     ],  function(
-
         BgpDataChecksView,
         ControllerQuerySimpleView,
         InfoPanelView,
@@ -37,9 +38,10 @@ define(
         OptionAnimationSpeedView,
         OptionRestoreGraph,
         OptionGraphDeep,
-        OptionLinkWeight
+        OptionLinkWeight,
+        AboutBgplayView
 
-        ){
+    ){
 
         return [
             {"types":["bgp"], "modes":["consistent"], "view": BgpDataChecksView}, //look! types and modes are in OR
@@ -54,6 +56,7 @@ define(
             {"types":["all"], "modes":["consistent"], "view": OptionAnimationSpeedView},
             {"types":["all"], "modes":["consistent"], "view": OptionGraphDeep},
             {"types":["all"], "modes":["consistent"], "view": OptionLinkWeight},
+            {"types":["all"], "modes":["consistent"], "view": AboutBgplayView},
             {"types":["all"], "modes":["consistent"], "view": OptionRestoreGraph}
         ]
 

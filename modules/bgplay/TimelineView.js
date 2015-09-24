@@ -89,19 +89,22 @@ define(
                         this.animate();
                     },
 
-                    "newSample": function(instant){
+                    "newSample": function(instant) {
                         var $this = this;
-                        if (this.strUpdateTimer){
-                            clearTimeout(this.strUpdateTimer);
+                        if ($this.environment.streamingOn) {
+                            if (this.strUpdateTimer) {
+                                clearTimeout(this.strUpdateTimer);
+                            }
+
+                            this.strUpdateTimer = setTimeout(function () {
+                                $this.selectionChartPage = $this.calculateSelectionChartPageByTimestamp(instant);
+                                $this.drawControlChart();
+                                $this.drawSelectionChart($this.selectionChartPages(true)[$this.selectionChartPage], true);
+
+                                $this.bgplay.setCurInstant(instant);
+
+                            }, this.environment.config.graph.strUpdateTimer);
                         }
-
-                        this.strUpdateTimer = setTimeout(function(){
-                            $this.selectionChartPage = $this.calculateSelectionChartPageByTimestamp(instant);
-                            $this.drawControlChart();
-                            $this.drawSelectionChart($this.selectionChartPages(true)[$this.selectionChartPage], true);
-                            $this.bgplay.setCurInstant(instant);
-                        }, this.environment.config.graph.strUpdateTimer);
-
                     },
 
                     "animationSpeedChanged": function(value){
@@ -1118,6 +1121,7 @@ define(
              */
             updateSelectedEvent: function(event){
                 event.preventDefault();
+                this.environment.streamingOn = false;
                 if (!this.stopTriggerEvents){
                     event = addOffset(event, null, true);
                     var offsetX, tmpEvent;
