@@ -192,15 +192,15 @@ function StreamingAdapter(environment){
         finalEvent = $this._createEvent(event);
 
         if (finalEvent) {
-            window.lastSampleToTrigger = finalEvent.get("instant");
-            if (!window.tt2) {
-                window.tt2 = setTimeout(function () {
+            $this.lastSampleToTrigger = finalEvent.get("instant");
+            if (!$this.lastSampleTimer) {
+                $this.lastSampleTimer = setTimeout(function () {
 
-                    bgplay.set("endtimestamp", Math.max(bgplay.get("endtimestamp"), window.lastSampleToTrigger.get("timestamp")) + 1);
+                    bgplay.set("endtimestamp", Math.max(bgplay.get("endtimestamp"), $this.lastSampleToTrigger.get("timestamp")) + 1);
 
-                    environment.eventAggregator.trigger("newSample", window.lastSampleToTrigger);
+                    environment.eventAggregator.trigger("newSample", $this.lastSampleToTrigger);
 
-                    window.tt2 = false;
+                    $this.lastSampleTimer = false;
                 }, 5000);
             }
         }
