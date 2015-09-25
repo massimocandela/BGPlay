@@ -256,7 +256,7 @@ var StreamingFacade = function(environment){
             app_url : "ws://146.48.78.3:9999/my_subnet_reachability",
             handle_message : function(data){$this._handleMessage.call($this, data)},
             post_send_app : function(data){$this._postConnection.call($this, data)},
-            token: "c065bef1aab26bcd2defb12811ac146cc29ef2e26d14257b5d555d4ce7908b8092039b884f7b6aff1f84994288c95fb364d4b34a61ad9e30188bb7d393525275"
+            token: environment.defaultParams.authenticationToken
         });
     };
 
