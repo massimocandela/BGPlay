@@ -16,7 +16,7 @@ all copies or substantial portions of the Software
 and in other third-party pages like social media
 
 3) The page in which the tool is embedded must contain a link "About BGPlay" at the bottom
-of the tool pointing to the page http://bgplayjs.com/?section=bgplay
+of the tool (already there in the new versions) pointing to the page http://bgplayjs.com/?section=bgplay
 
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
