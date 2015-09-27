@@ -72,7 +72,8 @@ define(
                 this.ignoreReannouncements = this.environment.params.ignoreReannouncements;
                 this.releasedPlayButton = true;
                 this.environment.dynamicParams.push('instant');
-
+                this.startAnimationInstant = new Instant({id: 0, timestamp: this.bgplay.get("starttimestamp")});
+                this.stopAnimationInstant = new Instant({id: 0, timestamp: this.bgplay.get("endtimestamp")});
                 this.eventAggregator.on("destroyAll", function(){
                     this.destroyMe();
                 },this);

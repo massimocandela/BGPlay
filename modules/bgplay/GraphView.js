@@ -79,8 +79,12 @@ define(
                 this.eventAggregator.on("newSample", function(instant){
                     if (this.environment.streamingOn){
                         if (this.updateScene()){
-                            this.graph.computePosition();
-                            this.autoScale();
+                            if (this.environment.config.graph.computeNodesPosition == true && this.environment.params.nodesPosition == null){
+                                this.graph.computePosition();
+                                this.autoScale();
+                            } else if (this.environment.params.nodesPosition){
+                                this.eventAggregator.trigger("applyNodePosition");
+                            }
                         }
 
                         this.eventAggregator.trigger("firstPathDraw");
@@ -401,7 +405,7 @@ define(
                     });
 
                 $.each(this.pathViews, function(key, element){
-                    if (element.static == true){
+                    if (element.static == true && element.path){
                         $this.staticPaths.push(element.path);
                     }
                 });
@@ -471,7 +475,7 @@ define(
 
                 if (atLeastOne){
                     $.each(this.pathViews, function(key, element){
-                        if (element.static == true){
+                        if (element.static == true && element.path){
                             $this.staticPaths.push(element.path);
                         }
                     });

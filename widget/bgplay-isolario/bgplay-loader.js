@@ -23,8 +23,8 @@ require.config({
         "raphael-pan": BGPLAY_LIB_URL + "raphael-pan",
         "model": BGPLAY_WIDGET_URL + "bgplayjs-common-model",
 
-        "config": BGPLAY_WIDGET_URL + "bgplay/bgplay-config",
-        "modules": BGPLAY_WIDGET_URL + "bgplay/bgplay-modules",
+        "config": BGPLAY_WIDGET_URL + "bgplay-isolario/bgplay-config",
+        "modules": BGPLAY_WIDGET_URL + "bgplay-isolario/bgplay-modules",
 
 
         "TreeMap": BGPLAY_LIB_URL + "TreeMap",

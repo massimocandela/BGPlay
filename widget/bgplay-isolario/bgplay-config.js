@@ -1,9 +1,5 @@
 /*
- * BGPlay.js
- * Copyright (c) 2013 Massimo Candela, Giuseppe Di Battista, Claudio Squarcella, Roma Tre University and RIPE NCC
- * http://www.bgplayjs.com
- *
- * See the file LICENSE.txt for copying permission.
+ * Massimo Candela for isolario.it (CNR)
  */
 
 
@@ -119,8 +115,9 @@ define(function(){
             nodeColor:"white",
             targetColor:"red",
             sourceColor:"white",
-
-            nodeTextFontSize:'11px'//A css valid value (don't omit the unit of measurement)
+            nodeTextFontSize:'11px', //A css valid value (don't omit the unit of measurement)
+            hideDefaultRoutes: true,
+            strUpdateTimer: 1000 // Minimum interval between two consecutive sample updates
         },
 
         fullScreen:{

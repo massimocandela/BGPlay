@@ -30,13 +30,13 @@ define(
              * @param {Map} A map of parameters
              */
             initialize:function(){
-                this.environment=this.options.environment;
-                this.bgplay=this.environment.bgplay;
-                this.fileRoot=this.environment.fileRoot;
-                this.eventAggregator=this.environment.eventAggregator;
+                this.environment = this.options.environment;
+                this.bgplay = this.environment.bgplay;
+                this.fileRoot = this.environment.fileRoot;
+                this.eventAggregator = this.environment.eventAggregator;
 
                 this.environment.optionalParams.push('nodesPosition');
-                this.positions="";
+                this.positions = "";
                 this.eventAggregator.on("destroyAll", function(){
                     this.destroyMe();
                 },this);
@@ -48,9 +48,13 @@ define(
                     if (this.popup.is(':visible')){
                         this.getNodesPositions();
                     }
-                },this);
+                }, this);
 
-                if (this.environment.params.nodesPosition!=null){
+                this.eventAggregator.on("applyNodePosition", function(){
+                    this.apply();
+                }, this);
+
+                if (this.environment.params.nodesPosition != null){
                     this.environment.config.graph.computeNodesPosition = false;
                     this.environment.params.preventNewQueries = true;
                     this.textArea.val(this.environment.params.nodesPosition);
@@ -133,17 +137,25 @@ define(
                 newPositions = JSON.parse(this.textArea.val());
                 this.bgplay.get("nodes").forEach(function(node){
                     position = newPositions[node.id];
-                    if (position!=null){
+                    if (position != null){
                         var x = (position.x - node.view.x);
                         var y = (position.y - node.view.y);
 
                         if (x != 0 || y != 0){ //Something changed
-                            node.view.view.translate(x, y);
+                            //node.view.view.translate(x, y);
+                            //node.oldX = node.view.x;
+                            //node.oldY = node.view.y;
+                            //node.view.x += x;
+                            //node.view.y += y;
+
                             node.oldX = node.view.x;
                             node.oldY = node.view.y;
-                            node.view.x += x;
-                            node.view.y += y;
-                            $this.eventAggregator.trigger("nodeMoved", node);
+                            node.view.x = x;
+                            node.view.y = y;
+
+                            node.view.updatePosition();
+
+                            //$this.eventAggregator.trigger("nodeMoved", node);
                         }
                     }
                 });

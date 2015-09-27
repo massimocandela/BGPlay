@@ -6,7 +6,7 @@
 
 
 var StreamingFacade = function(environment){
-    var cachedSources, socket, $this, cache, dump;
+    var cachedSources, socket, $this, cache, dump, endOfDumpTimer;
 
     //options = {
     //    onEvent: function,
@@ -77,32 +77,41 @@ var StreamingFacade = function(environment){
     this._convertToJson = function(sample){
         var type, payload, asPathElements, ownersArray;
 
+        if (!endOfDumpTimer){
+            endOfDumpTimer = setTimeout(this._endOfDump, 15000); // Force end of dump
+        }
         type = sample[1];
         switch (type) {
             case "255":
                 asPathElements = sample[4].split(" ");
                 ownersArray = sample[9].split("|");
-                payload = {
-                    type: "dump",
-                    timestamp: parseInt(sample[10]),
-                    path: this._getAsPath(asPathElements, ownersArray),
-                    source: this._getSource(asPathElements[0], sample[2], "isolario"),
-                    target: this._getTarget(sample[3]) ,
-                    community: sample[8]
-                };
+
+                if (environment.config.graph.hideDefaultRoutes && asPathElements.length > 1){ // default route
+                    payload = {
+                        type: "dump",
+                        timestamp: parseInt(sample[10]),
+                        path: this._getAsPath(asPathElements, ownersArray),
+                        source: this._getSource(asPathElements[0], sample[2], "isolario"),
+                        target: this._getTarget(sample[3]) ,
+                        community: sample[8]
+                    };
+                }
                 break;
 
             case "1":
                 asPathElements = sample[4].split(" ");
                 ownersArray = sample[9].split("|");
-                payload = {
-                    type: "A",
-                    timestamp: parseInt(sample[10]),
-                    path: this._getAsPath(asPathElements, ownersArray),
-                    source: this._getSource(asPathElements[0], sample[2], "isolario"),
-                    target: this._getTarget(sample[3]) ,
-                    community: sample[8]
-                };
+
+                if (environment.config.graph.hideDefaultRoutes && asPathElements.length > 1){ // default route
+                    payload = {
+                        type: "A",
+                        timestamp: parseInt(sample[10]),
+                        path: this._getAsPath(asPathElements, ownersArray),
+                        source: this._getSource(asPathElements[0], sample[2], "isolario"),
+                        target: this._getTarget(sample[3]) ,
+                        community: sample[8]
+                    };
+                }
                 break;
 
             case "2":
@@ -123,6 +132,9 @@ var StreamingFacade = function(environment){
     };
 
     this._endOfDump = function(){
+        if (endOfDumpTimer){
+            clearTimeout(endOfDumpTimer);
+        }
         if ($this.options.onDump){
             $this.options.onDump($this.dump);
         }
@@ -170,8 +182,8 @@ var StreamingFacade = function(environment){
                 break;
 
 
-            default:
-                console.log("I don't understand this message", sample);
+            //default:
+            //console.log("I don't understand this message", sample);
         }
 
 
@@ -244,7 +256,6 @@ var StreamingFacade = function(environment){
                     break;
                 }
             }
-
         }
 
     };
@@ -261,7 +272,27 @@ var StreamingFacade = function(environment){
     };
 
     this.subscribe = function(query){
-        socket.check_and_send("50@" + query.targets);
+        var type;
+
+        switch (environment.defaultParams.prefixMatch){
+            case 1:
+                type = 32;
+                break;
+
+            case 0:
+                type = 50;
+                break;
+
+            case -1:
+                throw "prefix match type not available";
+                break;
+
+            default:
+                type = environment.defaultParams.prefixMatch;
+                break;
+
+        }
+        socket.check_and_send(type + "@" + query.targets);
     }
 
 

@@ -1,9 +1,5 @@
 /*
- * BGPlay.js
- * Copyright (c) 2013 Massimo Candela, Giuseppe Di Battista, Claudio Squarcella, Roma Tre University and RIPE NCC
- * http://www.bgplayjs.com
- *
- * See the file LICENSE.txt for copying permission.
+ * Massimo Candela for isolario.it (CNR)
  */
 
 
