@@ -14,6 +14,8 @@ The modular architecture of this project allowed the creation of some others too
 
 You can embed this tool in your service for free, or share instances/screenshots, but please **use a proper acknowledgment** as described [here](http://bgplayjs.com/?section=bgplay#copyright).
 
+Shortcuts:
+----------
 ***Do you want to use your data in BGPlay?*** Go [here](http://bgplay.massimocandela.com)
 
 ***Real-time version of BGPlay based on WebSocket?*** Go [here](http://bgplay.massimocandela.com)
