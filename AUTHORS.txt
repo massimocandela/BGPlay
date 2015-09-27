@@ -1,8 +1,8 @@
 AUTHORS
 
-Massimo Candela <candela@dia.uniroma3.it>
+Massimo Candela <massimocandela@webrobotics.net>
 Roma Tre University
-http://www.dia.uniroma3.it/~candela
+http://massimocandela.com
 
 Giuseppe Di Battista <gdb@dia.uniroma3.it>
 Roma Tre University
