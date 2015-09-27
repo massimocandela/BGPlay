@@ -12,13 +12,17 @@ Today the tool still maintained by [Massimo Candela](http://massimocandela.com) 
 The project is ***open source, see LICENSE.txt*** for more information.
 The modular architecture of this project allowed the creation of some others tools based on it, e.g. TPlay (now renamed Radian).
 
-You can embed this tool in your service for free, or share instances/screenshots, but please **use a proper acknowledgment** as described [here](http://bgplayjs.com/?section=bgplay#copyright).
+You can embed this tool in your service for free, or share instances/screenshots, but please **use a proper acknowledgment** as described [here](http://bgplay.massimocandela.com#copyright).
 
 Shortcuts:
 ----------
-***Do you want to use your data in BGPlay?*** Go [here](http://bgplay.massimocandela.com)
+***Do you want to use your data in BGPlay?*** Go [here](http://bgplay.massimocandela.com#yourdata)
 
-***Real-time version of BGPlay based on WebSocket?*** Go [here](http://bgplay.massimocandela.com)
+***Real-time version of BGPlay based on WebSocket?*** Go [here](http://bgplay.massimocandela.com#realtime)
 
 ***Documentation?* Other info?** Go [here](http://bgplay.massimocandela.com)
+
+***Some of my network-related recent projects?*** Go [here](http://projects.massimocandela.com)
+
+
 
