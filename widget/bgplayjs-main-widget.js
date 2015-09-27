@@ -3,6 +3,8 @@
  * Copyright (c) 2013 Massimo Candela, Giuseppe Di Battista, Claudio Squarcella, Roma Tre University and RIPE NCC
  * http://www.bgplayjs.com
  *
+ * Go to http://bgplay.massimocandela.com for latest updates.
+ *
  * See the file LICENSE.txt for copying permission.
  */
 

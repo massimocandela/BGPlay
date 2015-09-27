@@ -29,6 +29,6 @@ Examples:
 ---------
 See 'run_bgplay.html' for the classic BGPlay and the 'run_bgplay_realtime.html' for the real-time version.
 
-***Follow us on Twitter: [@BGPlayJS](https://twitter.com/bgplayjs)***
+***Follow BGPlay on Twitter: [@BGPlayJS](https://twitter.com/bgplayjs)***
 
 
