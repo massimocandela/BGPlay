@@ -1,4 +1,4 @@
-addTemplateContent('aboutBgplay.html', '<div class="left">BGPlay.js provides a graphical and intuitive representation of the inter-domain routing and its evolution over time.<br>' +
+addTemplateContent('aboutBgplay.html', '<div class="left popup">BGPlay.js provides a graphical and intuitive representation of the inter-domain routing and its evolution over time.<br>' +
     'It has been developed as a part of the Master’s thesis of <a title="Massimo Candela" href="http://massimocandela.com/">Massimo Candela</a> at the ' +
     '<a href="http://www.dia.uniroma3.it/~compunet/">Computer Network Research Group of Roma Tre University</a> (Italy) ' +
     'in collaboration with <a href="https://www.ripe.net">RIPE NCC</a>. ' +
