@@ -23,7 +23,7 @@ Shortcuts:
 
 ***Documentation?* Other info?** Go [here](http://bgplay.massimocandela.com)
 
-***Some of my network-related recent projects?*** Go [here](http://projects.massimocandela.com)
+***Some of my network-related recent projects?*** Go [here](http://massimocandela.com/#somerecentprojects)
 
 Examples:
 ---------
