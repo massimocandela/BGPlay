@@ -33,6 +33,8 @@ BGPLAY_LOADERS = {
     "BGPlay3D": "loaders/bgplay3D-loader"
 };
 
+document.write('<script src="' + BGPLAY_PROJECT_URL + 'lib/require.js"></script>');
+
 function getBGPlayInstance(instance){
     return BGPLAY_INSTANCES[instance].shift();
 }
@@ -47,14 +49,16 @@ function BGPlayWidget(instance, domId, initialParams, queryParams){
     }
     BGPLAY_INSTANCES[instance].push({domId: domId, initialParams: initialParams, queryParams: queryParams});
 
-    document.write('<script data-main="' + BGPLAY_PROJECT_URL + loader +'" src="' + BGPLAY_PROJECT_URL + 'lib/require.js"></script>');
+    require([BGPLAY_PROJECT_URL + loader + ".js"], function(starter){
+        starter();
+    });
 }
 
 /*
-//Workaround for not CORS enabled web server
-function addTemplateContent(name, template){
-    window.templateCache = window.templateCache || {};
-    window.templateCache[name] = template;
-}
+ //Workaround for not CORS enabled web server
+ function addTemplateContent(name, template){
+ window.templateCache = window.templateCache || {};
+ window.templateCache[name] = template;
+ }
 
-*/
+ */
