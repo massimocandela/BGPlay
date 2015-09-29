@@ -770,9 +770,11 @@ define([],  function(){
 
             for (i=1; i<nodes.length; i++){
                 incrementalPath.push(nodes[i]);
-                this.svgPath.animate((Raphael.animation({
-                    "stroke-width": pathBold,
-                    path: this.computePathString(incrementalPath, false)})).delay(delay*(i-1)));
+                if (this.svgPath){
+                    this.svgPath.animate((Raphael.animation({
+                        "stroke-width": pathBold,
+                        path: this.computePathString(incrementalPath, false)})).delay(delay*(i-1)));
+                }
             }
 
             setTimeout(function(){

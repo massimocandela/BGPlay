@@ -151,7 +151,7 @@ var StreamingFacade = function(environment){
         switch (code) {
             case "255": // dump
                 jsonMessage = this._convertToJson(sample);
-                if (!dump){
+                if (!dump && jsonMessage){
                     jsonMessage.type = "A";
                 }
                 break;
