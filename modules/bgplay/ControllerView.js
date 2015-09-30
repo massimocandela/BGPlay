@@ -27,6 +27,8 @@ define(
                 return {
                     "click .bgplayControlAnimationStart":"toggle",
                     "click .bgplayControlAnimationPause":"toggle",
+                    "click .bgplayControlStreamingOn": "toggleStreaming",
+                    "click .bgplayControlStreamingOff": "toggleStreaming",
                     "click .bgplayControlAnimationRepeat":"repeat",
                     "click .bgplayControlAnimationStop":"stopButton",
                     "click .bgplayControlAnimationPrev":"previousEvent",
@@ -58,26 +60,25 @@ define(
                 this.animation=false;
                 this.allEvents=this.bgplay.get("allEvents");
 
-                this.prefixes=stringToArray(this.environment.params.targets);
-                this.selectedRrcs=stringToArray(this.environment.params.selectedRrcs);
+                this.prefixes = stringToArray(this.environment.params.targets);
+                this.selectedRrcs = stringToArray(this.environment.params.selectedRrcs);
 
-                this.selectableRrcs=this.environment.config.selectableRrcs;
-                this.possibleRrcs=removeSubArray(this.environment.config.possibleRrcs,this.selectedRrcs);
+                this.selectableRrcs = this.environment.config.selectableRrcs;
+                this.possibleRrcs = removeSubArray(this.environment.config.possibleRrcs, this.selectedRrcs);
 
-                this.slideOpened=false;
+                this.slideOpened = false;
                 this.showResourceController = this.environment.params.showResourceController;
 
                 this.ignoreReannouncements = this.environment.params.ignoreReannouncements;
-                this.releasedPlayButton=true;
+                this.releasedPlayButton = true;
                 this.environment.dynamicParams.push('instant');
-                this.startAnimationInstant=new Instant({id:0, timestamp:this.bgplay.get("starttimestamp")});
-                this.stopAnimationInstant=new Instant({id:0, timestamp:this.bgplay.get("endtimestamp")});
-
+                this.startAnimationInstant = new Instant({id: 0, timestamp: this.bgplay.get("starttimestamp")});
+                this.stopAnimationInstant = new Instant({id: 0, timestamp: this.bgplay.get("endtimestamp")});
                 this.eventAggregator.on("destroyAll", function(){
                     this.destroyMe();
                 },this);
 
-                this.bgplay.on("change:cur_instant",function(){
+                this.bgplay.on("change:cur_instant", function(){
                     if (this.environment.config.controller.keepTrackCurrentInstant==true){
                         var instant = this.bgplay.get("cur_instant");
                         this.environment.params.instant = instant.toString();
@@ -96,27 +97,36 @@ define(
                          }
                          */
                     }
-                },this);
+                }, this);
 
                 this.eventAggregator.trigger("autoStartFunction",
                     {func:
-                                  function(){
-                                      var initialInstant, id, timestamp;
-                                      initialInstant = this.environment.params.instant || getUrlParam("instant");
-                                      if (initialInstant != null && initialInstant!="" && this.environment.instances==1){
-                                          initialInstant = initialInstant.split(',');
-                                          id = initialInstant[0];
-                                          timestamp = initialInstant[1];
-                                          if (id!=null && timestamp!=null && id == parseInt(id) && timestamp == parseInt(timestamp)){
-                                              this.bgplay.set({"cur_instant":new Instant({id:id, timestamp:timestamp})});
-                                          }
-                                      }
-                                  }
+                        function(){
+                            var initialInstant, id, timestamp;
+                            initialInstant = this.environment.params.instant || getUrlParam("instant");
+                            if (initialInstant != null && initialInstant!="" && this.environment.instances==1){
+                                initialInstant = initialInstant.split(',');
+                                id = initialInstant[0];
+                                timestamp = initialInstant[1];
+                                if (id!=null && timestamp!=null && id == parseInt(id) && timestamp == parseInt(timestamp)){
+                                    this.bgplay.set({"cur_instant":new Instant({id:id, timestamp:timestamp})});
+                                }
+                            }
+                        }
                         , context:this});
 
                 this.eventAggregator.on("animationEnd", function(){
                     this.stop();
                 },this);
+
+                this.eventAggregator.on("newSample", function(){
+                    if ($this.environment.streamingOn) {
+                        this.endtimestampPicker.datetimepicker("setDate", dateToUTC(this.bgplay.get("endtimestamp")));
+                        this.controlStreamingOnIcon.delay(100).fadeTo(100, 0.5).delay(1000).fadeTo(100, 1);
+                        this.startAnimationInstant = new Instant({id: 0, timestamp: this.bgplay.get("starttimestamp")});
+                        this.stopAnimationInstant = new Instant({id: 0, timestamp: this.bgplay.get("endtimestamp")});
+                    }
+                }, this);
 
                 this.eventAggregator.on("animationReload", function(){
                     this.reload();
@@ -136,7 +146,7 @@ define(
                 },this);
 
                 this.eventAggregator.on("newSelectionEnd", function(value){
-                    this.stopAnimationInstant=value;
+                    this.stopAnimationInstant = value;
                 },this);
 
                 var $this = this;
@@ -146,9 +156,9 @@ define(
                         $this.update();
                     }
                 }).keyup(function(evt){
-                        $this.repeatLastEvent = false;
-                        $this.update();
-                    });
+                    $this.repeatLastEvent = false;
+                    $this.update();
+                });
 
                 this.render();
                 log("Controller view loaded.");
@@ -174,13 +184,17 @@ define(
                 this.controlPanelDivFlagIco = this.dom.find('.bgplayControlPanelDivFlagIco');
                 this.controlPanelDivComplete = this.dom.find('.bgplayControlPanelDivComplete');
                 this.suppressReannounce = this.dom.find('.bgplaySuppressReannounce');
+
+                // Streaming icons
+                this.controlStreamingOnIcon = this.dom.find('.bgplayControlStreamingOn');
+                this.controlStreamingOffIcon = this.dom.find('.bgplayControlStreamingOff');
             },
 
             /**
              * This method draws this module (eg. inject the DOM and elements).
              * @method render
              */
-            render:function(){
+            render: function(){
                 parseTemplate(this.environment,'controller.html',this,this.el);
                 this.getDomElements();
                 this.dom.show();
@@ -222,7 +236,7 @@ define(
              * This method updates the DOM of the Control Panel without render it again.
              * @method update
              */
-            update:function(){
+            update: function(){
                 if (this.animation==true){
                     this.controlAnimationPrevImage.hide();
                     this.controlAnimationNext.hide();
@@ -247,30 +261,58 @@ define(
                     this.controlAnimationPrevImage.show();
                     this.controlAnimationNext.show();
                 }
+
+                if (this.environment.streamingOn){
+                    this.controlStreamingOnIcon.show();
+                    this.controlStreamingOffIcon.hide();
+                } else {
+                    this.controlStreamingOnIcon.hide();
+                    this.controlStreamingOffIcon.show();
+                }
             },
 
             /**
              * If this method is invoked during an animation then the animation pauses otherwise the animation starts.
              * @method toggle
              */
-            toggle:function(){
+            toggle: function(){
+                this.environment.streamingOn = false;
                 if (!this.releasedPlayButton){
                     return;
                 }
 
                 this.closeFlag();
                 if (this.bgplay.get("cur_instant").get("timestamp") < this.stopAnimationInstant.get("timestamp")){
-                    this.animation=!this.animation;
-                    this.update();
+                    this.animation =! this.animation;
                     this.eventAggregator.trigger("animate", this.animation);
                 }
+                this.update();
+
             },
+
+            /**
+             * This method turn off and on the streaming graph update
+             * @method toggle
+             */
+            toggleStreaming: function(){
+                this.closeFlag(); // Close panel and stop animation
+                if (this.animation){
+                    this.animation = false;
+                    this.eventAggregator.trigger("animate", this.animation);
+                }
+
+                this.environment.streamingOn = !this.environment.streamingOn;
+
+                this.update(); // Update icons status
+
+            },
+
 
             /**
              * This method reloads the animation.
              * @method reload
              */
-            reload:function(){
+            reload: function(){
                 this.bgplay.setCurInstant(this.startAnimationInstant);
                 this.eventAggregator.trigger("checkPathPosition");
             },
@@ -314,9 +356,14 @@ define(
              */
             previousEvent:function(){
                 var prevInstant, prevEvent, instant;
+                if (this.environment.streamingOn){
+                    this.environment.streamingOn = false;
+                    this.update();
+                }
+
                 instant = this.bgplay.get("cur_instant");
                 prevEvent = this.allEvents.nearest(instant,false,false);
-                if (prevEvent!=null){
+                if (prevEvent != null){
                     prevInstant = prevEvent.get("instant");
                     if (!this.environment.config.controller.disableNotSelectedInstants || this.allEvents.compare(prevInstant,this.startAnimationInstant)>=0){
                         this.bgplay.setCurInstant(prevInstant);
@@ -332,11 +379,17 @@ define(
              */
             nextEvent:function(){
                 var nextInstant, nextEvent, instant;
+
+                if (this.environment.streamingOn){
+                    this.environment.streamingOn = false;
+                    this.update();
+                }
                 instant = this.bgplay.get("cur_instant");
                 nextEvent = this.allEvents.nearest(instant,true,false);
-                if (nextEvent!=null){
+                if (nextEvent != null){
                     nextInstant = nextEvent.get("instant");
-                    if (!this.environment.config.controller.disableNotSelectedInstants || this.allEvents.compare(nextInstant,this.stopAnimationInstant)<=0){
+                    if (!this.environment.config.controller.disableNotSelectedInstants || this.allEvents.compare(nextInstant, this.stopAnimationInstant) <= 0){
+
                         this.bgplay.setCurInstant(nextInstant);
                     }
                 }
@@ -347,10 +400,10 @@ define(
              * @method validateIp
              * @return {Boolean} True if the given IP is valid
              */
-            validateIp:function(){
+            validateIp: function(){
                 var out, val, $this;
-                out=true;
-                $this=this;
+                out = true;
+                $this = this;
                 this.dom.find("input[name=bgplayControlPrefixValues]").each(function(){
                     val=$(this).val();
                     if (! (validateIpv4and6Prefix(val) || validateIpv4and6Address(val) || validateAS(val))){
@@ -358,6 +411,7 @@ define(
                         out=false;
                     }
                 });
+                
                 return out;
             },
 
@@ -486,7 +540,7 @@ define(
                 var internalParams, rrcSelected, $this, externalParams;
                 if (this.validateAll()==true){
                     $this = this;
-                    this.prefixes = new Array();
+                    this.prefixes = [];
                     this.dom.find(".bgplayControlPrefixValue input[type=text]").each(function(){
                         $this.prefixes.push($(this).val());
                     });

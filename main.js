@@ -3,6 +3,8 @@
  * Copyright (c) 2013 Massimo Candela, Giuseppe Di Battista, Claudio Squarcella, Roma Tre University and RIPE NCC
  * http://www.bgplayjs.com
  *
+ * Go to http://bgplay.massimocandela.com for latest updates.
+ *
  * See the file LICENSE.txt for copying permission.
  */
 
@@ -45,7 +47,7 @@ var BGPlay = function(domElement){
 
 
     this.init = function(initParams){
-        var environment, jsonWrap, thisDom, internalDivClass;
+        var environment, jsonWrap, thisDom;
 
         this.initParams = initParams;
         this.width = initParams.width;
@@ -56,7 +58,6 @@ var BGPlay = function(domElement){
 
         thisDom = this.dom;
         environment = {};
-        this.environment = environment;
         environment.main = this;
         environment.alert = this.alert;
         environment.safeState = true;
@@ -69,7 +70,12 @@ var BGPlay = function(domElement){
         environment.domHeight = this.height;
         environment.eventAggregator = _.extend({}, Backbone.Events);
         environment.dom = thisDom;
+        environment.updateWithStreaming = initParams.updateWithStreaming;
+        environment.streamingOn = initParams.streamingOn;
+        environment.streamInitialDump = initParams.streamInitialDump;
+        environment.skipDump = initParams.skipDump;
 
+        this.environment = environment;
         this.advancedInit();
 
         log("Data collected");
@@ -78,6 +84,11 @@ var BGPlay = function(domElement){
 
         window.instances = (window.instances) ? (window.instances + 1) : 1;
         environment.instances = window.instances;
+
+        if (environment.updateWithStreaming){
+            this.streamingFacade = new StreamingFacade(environment);
+            this.streamingAdapter = new StreamingAdapter(environment);
+        }
 
         jsonWrap = new JsonWrap(environment);
         environment.jsonWrap = jsonWrap;
@@ -96,19 +107,21 @@ var BGPlay = function(domElement){
         mainView = this.mainView;
 
         var startFunction = function(environment){
-            if (environment.safeState){
-                if (environment.jsonWrap.readJson(data) == true){
-                    log("Objects created");
-                    environment.bgplay.set({inputParams:environment.params, silent:true});
-                    environment.modes.push('consistent');
-                }else{
-                    environment.modes.push('inconsistent');
-                    environment.alert(environment.message.text, environment.message.type);
-                }
-            }else{
-                environment.modes.push('inconsistent');
-            }
 
+            if (!environment.skipDump) { // skip the dump, everything is going to arrive via streaming
+                if (environment.safeState) {
+                    if (environment.jsonWrap.readJson(data)) {
+                        log("Objects created");
+                        environment.bgplay.set({inputParams: environment.params, silent: true});
+                        environment.modes.push('consistent');
+                    } else {
+                        environment.modes.push('inconsistent');
+                        environment.alert(environment.message.text, environment.message.type);
+                    }
+                } else {
+                    environment.modes.push('inconsistent');
+                }
+            }
             (new mainView({el:environment.bgplayDom, environment:environment})).loadViews();
         };
 
@@ -118,7 +131,7 @@ var BGPlay = function(domElement){
             if(environment.bgplayDom.css("margin-top") === "-10px"){
                 clearInterval(cssListener);
 
-                if (environment.jsonWrap.confirm(data)){
+                if (!environment.skipDump && environment.jsonWrap.confirm(data)){
 
                     environment.dom.css("min-height", "100px");
                     environment.cssAlert.confirm("This query includes more nodes/events than normal. Rendering this graph may cause your browser to become temporarily unresponsive. Do you wish to continue?", function(){
@@ -145,44 +158,72 @@ var BGPlay = function(domElement){
 
     };
 
-    this.retrieveData = function(){ //Init first
-        var $this, params, url, run;
+    this._retrieveData = function(params, callback){
+        var run, url, $this;
 
         $this = this;
-        params = this.environment.jsonWrap.getParams();
+        run = callback;
+        if (!this.environment.skipDump && !this.environment.streamInitialDump){
 
-        url = this.environment.jsonWrap.getJsonUrl(params);
-        run = this.run;
+            url = this.environment.jsonWrap.getJsonUrl(params);
+            $.getJSON(
+                url + "&callback=?",
+                {},
+                function(json){
+                    run.call($this, json.data);
+                    if ($this.environment.updateWithStreaming && !$this.streamingAdapter){
+                        $this.streamingAdapter = new StreamingAdapter(environment);
+                    }
+                }
+            );
 
-        $.getJSON(
-            url+"&callback=?",
-            {},
-            function(json){
-                run.call($this, json.data);
-            }
-        );
+        } else if (!this.environment.skipDump && this.environment.streamInitialDump){
+            this.streamingConnected = true;
+            this.streamingFacade.connect({
+                onEvent: function(data){
+                    if ($this.environment.updateWithStreaming){
+                        $this.streamingAdapter.addNewEvent(data);
+                    }
+
+                },
+                onDump: function(data){
+                    run.call($this, data);
+                },
+                onConnect: function(){
+                    $this.streamingFacade.subscribe(params);
+                }
+            });
+
+        }
+
+        if (this.environment.updateWithStreaming && !this.streamingConnected){
+            this.streamingFacade.connect({
+                onEvent: $this.streamingAdapter.addNewEvent,
+                onConnect: function(){
+                    $this.streamingFacade.subscribe(params);
+                }
+            });
+        }
+
     };
 
-    this.update = function(){ //Init first
-        var $this, params, url, run;
+    this.retrieveData = function(){ //Init first
+        var params;
+
+        params = this.environment.jsonWrap.getParams();
+
+        this._retrieveData(params, this.run);
+    };
+
+
+    this.update = function(){
+        var params;
 
         this.environment.eventAggregator.trigger("destroyAll");
         this.initDom();
 
-        $this = this;
-
         params = this.environment.params;
-        url = this.environment.jsonWrap.getJsonUrl(params);
 
-        run = this.run;
-
-        $.getJSON(
-            url+"&callback=?",
-            {},
-            function(json){
-                run.call($this, json.data);
-            }
-        );
-
+        this._retrieveData(params, this.run);
     }
 };

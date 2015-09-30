@@ -9,8 +9,15 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+1) The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software
+
+2) The tool must be referred with the name BGPlay, both in the page in which is embedded
+and in other third-party pages like social media
+
+3) The page in which the tool is embedded must contain a link "About BGPlay" at the bottom
+of the tool (already there in the new versions) pointing to the page http://bgplayjs.com/?section=bgplay
+
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

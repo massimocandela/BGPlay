@@ -247,7 +247,7 @@
 }
 
 .bgplayControlPrefixDiv input[type=text]{
-    width:270px; /*320px for ipv6 prefix*/
+    width:260px; /*320px for ipv6 prefix*/
     margin-bottom:5px;
     float:left;
 }
@@ -498,6 +498,7 @@
     float:left;
     text-align:center;
 }
+
 
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { background:transparent;margin-bottom: 8px; font-size:12px;}

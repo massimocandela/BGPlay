@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>bgplay.js</title>
+    <script src="widget/bgplayjs-main-widget.js"></script>
+</head>
+<body>
+<div id="bgplay"></div>
+<script>
+    BGPlayWidget(
+            'BGPlayRT', // Version type
+            'bgplay', // DOM element ID
+            {
+                width: 1100,
+                height: 800,
+                updateWithStreaming: true, // Enable the streaming functions
+                streamInitialDump: true, // Get the initial dump from the streaming (or from the REST API)
+                streamingOn: true, // Streaming updates enabled by default
+                streamingServerUrl: "ws://[IP:PORT]/my_subnet_reachability",
+                //authenticationToken: "002cf306682129f68b1dc806a550d1",
+                prefixMatch: 1 // -1 = less specific, 0 = exact match, 1 = more specific
+            }, {
+                "resource": "193.0.0.0/21",
+                "unix_timestamps": "TRUE"
+            }
+    );
+</script>
+</body>
+</html>

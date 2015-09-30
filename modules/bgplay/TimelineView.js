@@ -14,17 +14,17 @@
 define(
     [
         //Template
-            BGPLAY_TEMPLATES_NOCORS_URL + "timeline.html.js"
+        BGPLAY_TEMPLATES_NOCORS_URL + "timeline.html.js"
 
     ],  function(){
 
         var TimelineView = Backbone.View.extend({
             events:function(){
                 return {
-                    "click .bgplayTimelineControlCanvas":"updateCursorPosition",
-                    "click .bgplayTimelineSelectionCanvas":"updateSelectedEvent",
-                    "click .bgplayTimelineSelectionNext":"nextSelectionChart",
-                    "click .bgplayTimelineSelectionPrev":"prevSelectionChart"
+                    "click .bgplayTimelineControlCanvas": "updateCursorPosition",
+                    "click .bgplayTimelineSelectionCanvas": "updateSelectedEvent",
+                    "click .bgplayTimelineSelectionNext": "nextSelectionChart",
+                    "click .bgplayTimelineSelectionPrev": "prevSelectionChart"
                 }
             },
 
@@ -33,7 +33,7 @@ define(
              * @method initialize
              * @param {Map} A map of parameters
              */
-            initialize:function(){
+            initialize: function(){
                 this.environment = this.options.environment;
                 this.bgplay = this.environment.bgplay;
                 this.fileRoot = this.environment.fileRoot;
@@ -50,7 +50,7 @@ define(
                 this.offsetOfVisibilityOnSelectionTimeline = this.environment.config.timeline.offsetOfVisibilityOnSelectionTimeline;
                 this.eventOnSelectionChart = new net.webrobotics.TreeMap(comparator,{allowDuplicateKeys:false,suppressDuplicateKeyAlerts:true});
 
-                if (this.environment.domWidth<480){
+                if (this.environment.domWidth < 480){
                     this.$el.hide();
                 }
 
@@ -64,14 +64,14 @@ define(
                 this.seekTimers = [];
                 this.selectedIntervalCursorColor = this.environment.config.timeline.selectedIntervalCursorColor;
                 this.animation = false; //No animation at initialization
-                this.selectionStart = new Instant({id:0,timestamp:this.bgplay.get("starttimestamp")});
-                this.selectionEnd = new Instant({id:0,timestamp:this.bgplay.get("endtimestamp")});
+                this.selectionStart = new Instant({id: 0, timestamp: this.bgplay.get("starttimestamp")});
+                this.selectionEnd = new Instant({id: 0, timestamp: this.bgplay.get("endtimestamp")});
                 this.selectionFirstStart = this.selectionStart;
                 this.selectionFirstEnd = this.selectionEnd;
                 this.animationSpeed = 1;
                 this.globalTimeOffset = this.bgplay.get("endtimestamp") - this.bgplay.get("starttimestamp");
 
-                this.graphAnimationsOngoing=0;
+                this.graphAnimationsOngoing = 0;
 
                 this.eventsManager();
 
@@ -87,6 +87,24 @@ define(
                         this.stopAnimation();
                         this.animation = start;
                         this.animate();
+                    },
+
+                    "newSample": function(instant) {
+                        var $this = this;
+                        if ($this.environment.streamingOn) {
+                            if (this.strUpdateTimer) {
+                                clearTimeout(this.strUpdateTimer);
+                            }
+
+                            this.strUpdateTimer = setTimeout(function () {
+                                $this.selectionChartPage = $this.calculateSelectionChartPageByTimestamp(instant);
+                                $this.drawControlChart();
+                                $this.drawSelectionChart($this.selectionChartPages(true)[$this.selectionChartPage], true);
+
+                                $this.bgplay.setCurInstant(instant);
+
+                            }, this.environment.config.graph.strUpdateTimer);
+                        }
                     },
 
                     "animationSpeedChanged": function(value){
@@ -119,7 +137,7 @@ define(
                     this.eventAggregator.on(listener, listeners[listener], this);
                 }
 
-                this.bgplay.on('change:cur_instant',function(){
+                this.bgplay.on('change:cur_instant', function(){
                     this.updateControlCanvas();
                     this.scrollSelectionCanvas(this.bgplay.get("cur_instant"));
                     this.updateSelectionCanvas();
@@ -416,10 +434,6 @@ define(
                  */
             },
 
-            /**
-             * This method draws the Control Timeline
-             * @method drawControlChart
-             */
             drawControlChart: function(){
                 var fontColor, peakColor, rulerColor, fontStyle, lineColor, lineWidth, rulerNotchWidth, timeOffset, pointY,
                     unit2time, numberOfIntervals, canvas, ctx, rulerUnitHeight, infoCanvasHeight, peak, eventHeight,
@@ -435,13 +449,21 @@ define(
                 lineColor = this.environment.config.timeline.lineColor; //"blue";
                 lineWidth = this.environment.config.timeline.lineWidth; //0.6;
                 rulerNotchWidth = this.environment.config.timeline.rulerNotchWidth; //0.8;
-                timeOffset = this.globalTimeOffset;
+                timeOffset = this.bgplay.get("endtimestamp") - this.bgplay.get("starttimestamp");
                 this.globalCursorTimeOffset = this.controlChartWidth / this.globalTimeOffset;
                 unit2time = timeOffset / (this.controlChartWidth / this.unit2pixel); //Number of seconds represented by a unit on the ruler
                 numberOfIntervals = Math.ceil(timeOffset / unit2time); //Number of intervals needed to represent the timeOffset
                 canvas = this.controlCanvasDom[0];
-                ctx = canvas.getContext('2d');
-                this.contextControlCanvas = ctx;
+
+                if (this.contextControlCanvas) {
+                    this.contextControlCanvas.clearRect(0, 0, canvas.width, canvas.height);
+                    this.selectionEnd = new Instant({id: 0, timestamp: this.bgplay.get("endtimestamp")});
+                } else {
+                    this.contextControlCanvas = canvas.getContext('2d');
+                }
+
+                ctx = this.contextControlCanvas;
+
                 rulerUnitHeight = this.environment.config.timeline.controlChartRulerUnitHeight;
                 infoCanvasHeight = this.environment.config.timeline.infoCanvasHeight; //13;
                 peak = 0;
@@ -469,8 +491,8 @@ define(
                     npixel2time = n * unit2time;
                     //In the same for we can calculate the number event peak
                     numEvent = this.getNumberOfEventsBetween(
-                            this.bgplay.get("starttimestamp") + npixel2time,
-                            this.bgplay.get("starttimestamp") + npixel2time + unit2time
+                        this.bgplay.get("starttimestamp") + npixel2time,
+                        this.bgplay.get("starttimestamp") + npixel2time + unit2time
                     );
 
                     if (numEvent > peak){
@@ -490,8 +512,8 @@ define(
                     npixel2time = n * unit2time;
                     var pointX = ntime2pixel;
                     var numOfEvents = this.getNumberOfEventsBetween(
-                            this.bgplay.get("starttimestamp") + npixel2time,
-                            this.bgplay.get("starttimestamp") + npixel2time + unit2time
+                        this.bgplay.get("starttimestamp") + npixel2time,
+                        this.bgplay.get("starttimestamp") + npixel2time + unit2time
                     );
                     pointY = Math.abs((eventHeight * numOfEvents) - (this.controlChartHeight - rulerUnitHeight - 2));
                     ctx.lineTo(pointX, pointY);
@@ -516,7 +538,7 @@ define(
              * This method draws the Selection Timeline
              * @method drawSelectionChart
              */
-            drawSelectionChart: function(nextFirstStep){
+            drawSelectionChart: function(nextFirstStep, keepPosition){
                 var canvas, ctx, prevEvent, fontStyle, second2pixel, lineHeight, timeWarpWidth, legendPositionX, legendWidth,
                     uniqueEventTypeLegend, selectionChartHeight, nextEvent, position, drawnEvents, sameTimestampEvent;
 
@@ -526,12 +548,12 @@ define(
                 timeWarpWidth = this.environment.config.timeline.timeWarpWidth;
                 legendPositionX = 100;
                 legendWidth = 90;
-                uniqueEventTypeLegend = new Array();
+                uniqueEventTypeLegend = [];
                 selectionChartHeight = this.selectionChartHeight;
                 nextEvent = nextFirstStep || this.allEvents.at(0);
                 position = 0;
                 drawnEvents = this.environment.config.timeline.maxSelectionChartEvents;
-                sameTimestampEvent = new Array(); //An array of events with the same timestamp (1 second)
+                sameTimestampEvent = []; //An array of events with the same timestamp (1 second)
 
                 this.manageSelectionChartArrows(); //Draw arrows
 
@@ -543,26 +565,29 @@ define(
                 if (this.contextSelectionCanvas == null){
                     ctx = canvas.getContext('2d');
                     this.contextSelectionCanvas = ctx;
-                }else{
+                } else {
                     ctx = this.contextSelectionCanvas;
                     ctx.save();
                     ctx.setTransform(1, 0, 0, 1, 0, 0);
                     ctx.clearRect(0, 0, this.selectionChartWidth, this.selectionChartHeight);
                     ctx.restore();
                 }
-                this.selectionCanvasDom.css("left", "0"); //Reset canvas position
 
-                while (nextEvent!=null && drawnEvents>0){
+                if (!keepPosition) {
+                    this.selectionCanvasDom.css("left", "0"); //Reset canvas position
+                }
 
-                    if (sameTimestampEvent[0]!=null && sameTimestampEvent[0].get("instant").get("timestamp")!=nextEvent.get("instant").get("timestamp")){ //If the next event isn't in the same second
-                        position=drawSameTimestampEvents(this,position); //Draw this set of events with the same timestamp
+                while (nextEvent != null && drawnEvents > 0){
+
+                    if (sameTimestampEvent[0] != null && sameTimestampEvent[0].get("instant").get("timestamp") != nextEvent.get("instant").get("timestamp")){ //If the next event isn't in the same second
+                        position = drawSameTimestampEvents(this, position); //Draw this set of events with the same timestamp
                         drawWarp(this.imageRoot, position, timeWarpWidth, this, nextEvent.get("instant").get("timestamp") - sameTimestampEvent[0].get("instant").get("timestamp")); //Draw the temporal warp (arrows)
                         position += timeWarpWidth; //The position of the next event
-                        sameTimestampEvent = new Array(); //Empty this set
+                        sameTimestampEvent = []; //Empty this set
                         drawnEvents--;
                     }
 
-                    if (legendPositionX + legendWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event could not fit into it
+                    if (legendPositionX + legendWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event may not fit into it
                         updateCanvasWidth(canvas, this, legendPositionX + legendWidth);
                     }
 
@@ -572,13 +597,14 @@ define(
                     prevEvent = nextEvent;//If the next iteration fails then this is the last treated event
                     nextEvent = this.nextEvent(nextEvent.get("instant"), true);
 
-                    if (position + second2pixel + timeWarpWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event could not fit into it
+                    if (position + second2pixel + timeWarpWidth > this.selectionChartWidth){ //Enlarge the canvas or the next event may not fit into it
                         updateCanvasWidth(canvas, this, second2pixel + timeWarpWidth);
                     }
                 }
 
-                if (drawnEvents > 0)
+                if (drawnEvents > 0) {
                     position = drawSameTimestampEvents(this, position);
+                }
 
                 if (nextEvent == null){//prevEvent is the last one event of the whole analyzed period
                     var finalInterval = this.bgplay.get("endtimestamp") - prevEvent.get("instant").get("timestamp");
@@ -723,10 +749,10 @@ define(
              * @method selectionChartPages
              * @return {Array} Array of events
              */
-            selectionChartPages: function(){
+            selectionChartPages: function(force){
                 var numberOfPages, n, nop, differentTimestampEvents;
                 differentTimestampEvents = [];
-                if (!this.selectionChartPagesList){
+                if (force || !this.selectionChartPagesList){
                     this.selectionChartPagesList = [];
                     nop = this.environment.config.timeline.maxSelectionChartEvents;
 
@@ -812,7 +838,7 @@ define(
                 ctx = this.contextSelectionCanvas;
 
                 if (this.selectionCanvasCache == null){
-                    this.selectionCanvasCache = ctx.getImageData(0,0, this.selectionChartWidth,this.selectionChartHeight);
+                    this.selectionCanvasCache = ctx.getImageData(0, 0, this.selectionChartWidth, this.selectionChartHeight);
                 }else{
                     ctx.putImageData(this.selectionCanvasCache, 0, 0);
                 }
@@ -822,15 +848,15 @@ define(
 
                 this.drawIntervalOnSelectionCanvas();
 
-                if (eventTmp!=null && this.eventOnSelectionChart.containsValue(eventTmp)){ //The cursor is on an event
-                    ctx.fillStyle=selectedEventColor;
+                if (eventTmp != null && this.eventOnSelectionChart.containsValue(eventTmp)){ //The cursor is on an event
+                    ctx.fillStyle = selectedEventColor;
 
-                    ctx.fillStyle=this.cursorColor;
-                    cursorPosition=eventTmp.drawEventOnselectionCanvasX + (eventTmp.drawEventOnselectionCanvasWidth/2) - this.halfCursorWidth; //Position of the event + half of the width of the event (px) - half cursor size
-                    ctx.fillRect(cursorPosition,0,this.cursorsWidth,this.selectionChartHeight);
+                    ctx.fillStyle = this.cursorColor;
+                    cursorPosition = eventTmp.drawEventOnselectionCanvasX + (eventTmp.drawEventOnselectionCanvasWidth / 2) - this.halfCursorWidth; //Position of the event + half of the width of the event (px) - half cursor size
+                    ctx.fillRect(cursorPosition, 0, this.cursorsWidth, this.selectionChartHeight);
 
                 }else{//The cursor is on a warp
-                    eventTmp = this.allEvents.nearest(curInstant,false,true);
+                    eventTmp = this.allEvents.nearest(curInstant, false, true);
                     if (this.eventOnSelectionChart.containsValue(eventTmp)){
                         cursorPosition=eventTmp.drawEventOnselectionCanvasX + this.halfWarpWidth + this.environment.config.timeline.selectionChartSecondToPixels; //Position of the prev Event + the half of the width of the warp
                     }
@@ -846,8 +872,24 @@ define(
              * @return {Integer} The number of the current page
              */
             calculateSelectionChartPage: function(event){
-                for (var n=0; n<this.selectionChartPages().length-1; n++){
-                    if (this.selectionChartPages()[n+1].get("instant").get("timestamp") > event.get("instant").get("timestamp"))
+                var pages = this.selectionChartPages();
+                for (var n= 0,length=pages.length; n<length-1; n++){
+                    if (pages[n + 1].get("instant").get("timestamp") > event.get("instant").get("timestamp"))
+                        break;
+                }
+                return n;
+            },
+
+            /**
+             * This method returns the page of the given event.
+             * @method calculateSelectionChartPage
+             * @param {Object} An instance of Instant
+             * @return {Integer} The number of the current page
+             */
+            calculateSelectionChartPageByTimestamp: function(instant){
+                var pages = this.selectionChartPages();
+                for (var n= 0,length=pages.length; n<length-1; n++){
+                    if (pages[n + 1].get("instant").get("timestamp") > instant.get("timestamp"))
                         break;
                 }
                 return n;
@@ -888,9 +930,9 @@ define(
                 sumVisiblePosition = instantVisiblePosition + offsetOfVisibility;
                 subVisiblePosition = instantVisiblePosition - offsetOfVisibility;
 
-                if (sumVisiblePosition <= container.width() &&
-                    subVisiblePosition >= 0)
+                if (sumVisiblePosition <= container.width() && subVisiblePosition >= 0){
                     return null; //Is already visible
+                }
 
                 var newLeft = 0;
                 if (subVisiblePosition < 0) {
@@ -900,14 +942,16 @@ define(
                 }
 
                 //Check position
-                if (newLeft > 0)
+                if (newLeft > 0){
                     newLeft = 0;
+                }
 
-                if (newLeft + this.selectionChartWidth < container.width())
+                if (newLeft + this.selectionChartWidth < container.width()){
                     newLeft = container.width() - this.selectionChartWidth;
+                }
 
                 element.animate(
-                    {left:newLeft},
+                    {left: newLeft},
                     500,
                     function () {
                         //end
@@ -936,7 +980,7 @@ define(
                     function updateSelectionCanvasAntiFlood(){
                         var pixel2time, newTimestampLeft, newTimestampRight, numEvents, changedLeft, changedRight;
 
-                        pixel2time = $this.globalTimeOffset / $this.controlChartWidth;
+                        pixel2time = ($this.bgplay.get("endtimestamp") - $this.bgplay.get("starttimestamp")) / $this.controlChartWidth;
                         newTimestampLeft = Math.round($this.sliderLeftPosition * pixel2time) + $this.bgplay.get("starttimestamp");
                         newTimestampRight = Math.round($this.sliderRightPosition * pixel2time) + $this.bgplay.get("starttimestamp");
 
@@ -1064,7 +1108,7 @@ define(
                     event = addOffset(event, null, true);
                     offsetX = event.offsetX;
                     if (this.environment.config.timeline.disableNotSelectedInstants==false || this.sliderLeftPosition<offsetX && offsetX<this.sliderRightPosition){
-                        newTimestamp = Math.round(offsetX*(this.globalTimeOffset/this.controlChartWidth)) + this.bgplay.get("starttimestamp");
+                        newTimestamp = Math.round(offsetX*((this.bgplay.get("endtimestamp") - this.bgplay.get("starttimestamp"))/this.controlChartWidth)) + this.bgplay.get("starttimestamp");
                         instant = new Instant({id: 0, timestamp: newTimestamp});
                         this.bgplay.setCurInstant(instant, false);
                     }
@@ -1077,17 +1121,18 @@ define(
              */
             updateSelectedEvent: function(event){
                 event.preventDefault();
+                this.environment.streamingOn = false;
                 if (!this.stopTriggerEvents){
                     event = addOffset(event, null, true);
-                    var offsetX, tmpEvent
+                    var offsetX, tmpEvent;
                     offsetX = event.offsetX;
                     tmpEvent = this.eventOnSelectionChart.nearest(offsetX, false, true);
 
-                    if (this.environment.config.timeline.disableNotSelectedInstants==false ||
-                        (tmpEvent.get("instant").get("timestamp")>=this.selectionStart.get("timestamp") &&
-                            tmpEvent.get("instant").get("timestamp")<=this.selectionEnd.get("timestamp"))){ //If the selected event is in the selected interval
+                    if (this.environment.config.timeline.disableNotSelectedInstants == false ||
+                        (tmpEvent.get("instant").get("timestamp") >= this.selectionStart.get("timestamp") &&
+                        tmpEvent.get("instant").get("timestamp") <= this.selectionEnd.get("timestamp"))){ //If the selected event is in the selected interval
 
-                        if (tmpEvent!=null && offsetX<tmpEvent.drawEventOnselectionCanvasX+tmpEvent.drawEventOnselectionCanvasWidth){
+                        if (tmpEvent != null && offsetX < tmpEvent.drawEventOnselectionCanvasX + tmpEvent.drawEventOnselectionCanvasWidth){
                             this.stopAnimation();
                             this.eventAggregator.trigger("animationEnd");
                             this.bgplay.setCurInstant(tmpEvent.get("instant"));
@@ -1151,7 +1196,7 @@ define(
                 this.sliderRightPosition = xRight + halfSliderRight;
 
                 if (this.environment.config.timeline.showSelectionInformation){
-                    pixel2time = this.globalTimeOffset/this.controlChartWidth;
+                    pixel2time = (this.bgplay.get("endtimestamp") - this.bgplay.get("starttimestamp"))/this.controlChartWidth;
                     newTimestampLeft = Math.round(this.sliderLeftPosition * pixel2time) + this.bgplay.get("starttimestamp");
                     newTimestampRight = Math.round(this.sliderRightPosition * pixel2time) + this.bgplay.get("starttimestamp");
 
@@ -1173,19 +1218,19 @@ define(
                 imageLeft = this.imageRoot + "/leftSlider.png";
                 imageLeft = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABE0lEQVR42mL8//8/AyUAIICYGCgEAAHEIrmFyQBInydTvyFAALGANB/2IM8btjsYzwMEEMgAhjd/sCv49Q9Cs+HxKEAAgQ14i8OAb38hNBczA4M3z3+GrV8YMdQABBDYgNe/sRvwGSrOywqhQYYseI9qCEAA4fVCiRhm2CQI/mfoeY0wBCCAIC74Q1rgIasHCCCIC3B4Iew6xCZebgaGuXIQ1yQ/QvUCQADh9cLXHxDFP9khmv3vYQYiQADhDcRfP6GxAZS3usmIVQ1AAOGNxn9QA5jwhBFAAIEMMPh0n/ECNkkuBYjTv9xnxKXfACCAGLHlRkZGRgaJzYwoEs99/mE1BSCAcCbSF77/GQlpBgGAAAMANPRP5PIcMVgAAAAASUVORK5CYII=";
 
-                imageRight = this.imageRoot+"/rightSlider.png";
+                imageRight = this.imageRoot + "/rightSlider.png";
                 imageRight = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAABGUlEQVR42mL8//8/AyUAIICYGCgEAAHEIrmFyQBInydTvyFAALGANB/2IM8btjsYzwMEEMgAhjd/sCv49Q9Cs+HxKEAAgQ14i2aAN89/hq1fGBm+/YXwuZhxGwAQQGADXv9GCCQIQrwDEvsMFedlxW0AQACheKFE9D+GQSDQ85oRpwEAAQRxwR/8gYVPHiCAIC6AOjX5ESPDXLn/cPbnr1AvcOM2ACCAMGLB/x4jw0al/2Cxrz8gTv/JjjuaAQIIIxBBwOomROOvnxD+t9+4XQAQQFijEQb+QQ1gwhMGAAEEMsDg033GC9gkuRQgTv9yH2csGAAEECO23MjIyMggsZkRReK5zz+spgAEEM5E+sL3PyMhzSAAEGAAd81WDRtYSvsAAAAASUVORK5CYII=";
 
                 var $this = this;
 
-                if ($this.selectorLeftImageCache==null){
+                if ($this.selectorLeftImageCache == null){
                     var imgLeft = new Image();
                     imgLeft.onload = function() {
-                        $this.selectorLeftImageCache=imgLeft;
+                        $this.selectorLeftImageCache = imgLeft;
                         var imgRight = new Image();
                         imgRight.onload = function() {
-                            $this.selectorRightImageCache=imgRight;
-                            draw(start,stop);
+                            $this.selectorRightImageCache = imgRight;
+                            draw(start, stop);
                             $this.eventAggregator.trigger("moduleLoaded", $this);
                         };
                         imgRight.src = imageRight;
@@ -1194,10 +1239,10 @@ define(
 
 
                 }else{
-                    draw(start,stop);
+                    draw(start, stop);
                 }
 
-                function draw(start,stop){
+                function draw(start, stop){
                     var positionXL, positionXR, warpWidth, halfWarpWidth, sliderWidth, halfSliderWidth, ctx, darkenDisabledParts, darkened;
 
                     darkenDisabledParts = $this.environment.config.timeline.darkenDisabledTimeline;
@@ -1216,7 +1261,7 @@ define(
 
                     darkened = false;
 
-                    if (start!=null && $this.selectionStart!=$this.selectionFirstStart && start.drawEventOnselectionCanvasX!=null && $this.eventOnSelectionChart.containsValue(start)){
+                    if (start != null && $this.selectionStart != $this.selectionFirstStart && start.drawEventOnselectionCanvasX != null && $this.eventOnSelectionChart.containsValue(start)){
 
                         positionXL = start.drawEventOnselectionCanvasX - halfWarpWidth - halfSliderWidth; //Position of the first event included - the half of the warp - the half of the slider image
 
@@ -1228,14 +1273,14 @@ define(
                             darkened = true;
                             ctx.globalAlpha = 0.3;
                             ctx.fillStyle = $this.environment.config.timeline.fontColor;
-                            ctx.fillRect(0,0,positionXL+halfSliderWidth,$this.selectionChartHeight);
-                            ctx.globalAlpha=1;
+                            ctx.fillRect(0, 0, positionXL+halfSliderWidth, $this.selectionChartHeight);
+                            ctx.globalAlpha = 1;
                         }
 
-                        ctx.drawImage($this.selectorLeftImageCache,positionXL,0);
+                        ctx.drawImage($this.selectorLeftImageCache, positionXL, 0);
                     }
 
-                    if (stop!=null && $this.selectionEnd!=$this.selectionFirstEnd && stop.drawEventOnselectionCanvasX!=null && $this.eventOnSelectionChart.containsValue(stop)){
+                    if (stop != null && $this.selectionEnd != $this.selectionFirstEnd && stop.drawEventOnselectionCanvasX != null && $this.eventOnSelectionChart.containsValue(stop)){
 
                         positionXR = stop.drawEventOnselectionCanvasX + $this.environment.config.timeline.selectionChartSecondToPixels + halfWarpWidth - halfSliderWidth; //Position of the first event included + width of the event + the half of the warp - the half of the slider image
 
@@ -1255,17 +1300,17 @@ define(
                             ctx.globalAlpha = 1;
                         }
 
-                        ctx.drawImage($this.selectorRightImageCache,positionXR,0);
+                        ctx.drawImage($this.selectorRightImageCache, positionXR, 0);
                     }
 
                     if (darkenDisabledParts && !darkened){
-                        if ($this.allEvents.compare($this.eventOnSelectionChart.last().get("instant"),start.get("instant"))==-1){
+                        if ($this.allEvents.compare($this.eventOnSelectionChart.last().get("instant"), start.get("instant")) == -1){
                             ctx.globalAlpha = 0.3;
                             ctx.fillStyle = $this.environment.config.timeline.fontColor;
                             ctx.fillRect(0, 0, $this.selectionChartWidth, $this.selectionChartHeight);
                             ctx.globalAlpha = 1;
                         }else{
-                            if ($this.allEvents.compare(stop.get("instant"),$this.eventOnSelectionChart.first().get("instant"))==-1){
+                            if ($this.allEvents.compare(stop.get("instant"), $this.eventOnSelectionChart.first().get("instant")) == -1){
                                 ctx.globalAlpha = 0.3;
                                 ctx.fillStyle = $this.environment.config.timeline.fontColor;
                                 ctx.fillRect(0, 0, $this.selectionChartWidth, $this.selectionChartHeight);
@@ -1293,8 +1338,8 @@ define(
 
                 container = this.timelineSelectionDiv;
 
-                leftArrow = $this.allEvents.nearest($this.selectionStart,true);
-                rightArrow = $this.allEvents.nearest($this.selectionEnd,false);
+                leftArrow = $this.allEvents.nearest($this.selectionStart, true);
+                rightArrow = $this.allEvents.nearest($this.selectionEnd, false);
                 canvasElementLeft = $this.selectionCanvasDom.position().left;
 
                 leftIsVisible = false;

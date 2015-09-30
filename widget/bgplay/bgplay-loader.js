@@ -144,63 +144,72 @@ define([
     "cssAlert"
 
 ], function($, Backbone, Mustache, raphael, config, modules, MainView) {
+    console.log("once");
 
-    debugMode = getUrlParam("debug")=="true";// false to prevent console logs
+
+    var main, element, instanceName, instance, initialParams, thisWidget, queryParams;
+
+    debugMode = getUrlParam("debug") == "true";// false to prevent console logs
 
     window.Mustache = Mustache;
     loadCss(BGPLAY_STYLESHEETS_URL + 'jquery-ui-191.css');
     loadCss(BGPLAY_STYLESHEETS_URL + 'jquery.ui.datepicker.css');
     loadCss(BGPLAY_STYLESHEETS_URL + 'bgplay.css');
-    instanceName = 'BGPlay';
 
-    var main, element, instanceName, instance, initialParams, thisWidget, queryParams;
+    var BgplayStart = function() {
+        instanceName = 'BGPlay';
 
-    instance = getBGPlayInstance(instanceName);
+        instance = getBGPlayInstance(instanceName);
 
-    element = $('#'+instance.domId);
-    initialParams = instance.initialParams;
-    queryParams = instance.queryParams;
+        element = $('#' + instance.domId);
+        initialParams = instance.initialParams;
+        queryParams = instance.queryParams;
 
-    thisWidget = {
-        get_params: function(){
-            return queryParams;
-        },
-        set_params: function(params){
-            queryParams = params;
-        }
+        thisWidget = {
+            get_params: function () {
+                return queryParams;
+            },
+            set_params: function (params) {
+                queryParams = params;
+            }
+        };
+
+        main = new BGPlay(element);
+
+        //Override of some methods
+        main.advancedInit = function () {
+            main.environment.thisWidget = thisWidget;
+        };
+
+
+        main.alert = function (msg, type) {
+            alert(msg);
+            //main.environment.dom.append(misc.infoMessage(type,msg));
+        };
+
+
+        //Initialization of the BGPlay environment
+        main.init({
+            width: initialParams.width,
+            height: initialParams.height,
+            config: config,
+            modules: modules,
+            mainView: MainView,
+            fileRoot: BGPLAY_PROJECT_URL,
+            imageRoot: BGPLAY_IMAGES_URL,
+            templateRoot: BGPLAY_TEMPLATES_URL,
+            updateWithStreaming: initialParams.updateWithStreaming,
+            streamingOn: initialParams.streamingOn,
+            streamInitialDump: initialParams.streamInitialDump,
+            skipDump: initialParams.skipDump
+        });
+
+        main.setDefaultParams(initialParams);
+
+        main.retrieveData();
+
     };
 
-    main = new BGPlay(element);
-
-    //Override of some methods
-    main.advancedInit = function(){
-        main.environment.thisWidget = thisWidget;
-    };
-
-
-    main.alert = function(msg, type){
-        alert(msg);
-        //main.environment.dom.append(misc.infoMessage(type,msg));
-    };
-
-
-    //Initialization of the BGPlay environment
-    main.init({
-        width: initialParams.width,
-        height: initialParams.height,
-        config: config,
-        modules: modules,
-        mainView: MainView,
-        fileRoot: BGPLAY_PROJECT_URL,
-        imageRoot: BGPLAY_IMAGES_URL,
-        templateRoot: BGPLAY_TEMPLATES_URL
-    });
-
-    main.setDefaultParams(initialParams);
-
-    main.retrieveData();
-
-
-    return this;
+    return BgplayStart;
 });
 

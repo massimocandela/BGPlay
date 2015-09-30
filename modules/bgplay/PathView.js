@@ -13,7 +13,6 @@
 
 define([],  function(){
 
-
     var PathView = Backbone.View.extend({
 
         /**
@@ -67,7 +66,7 @@ define([],  function(){
                 },
 
                 "nodeSelected": function(nodeView){
-                    if (this.svgPath != null && this.visible && this.path!=null && this.path.contains(nodeView.model)){
+                    if (this.svgPath != null && this.visible && this.path != null && this.path.contains(nodeView.model)){
 
                         if (this.subTreeId != null){
                             this.inFront();
@@ -84,7 +83,7 @@ define([],  function(){
                         var nodes, n, contained, tmpNode;
                         nodes = this.path.get("nodes");
                         contained = false;
-                        for (n = nodes.length-1; n>=0; n--){
+                        for (n=nodes.length-1; n>=0; n--){
                             tmpNode = nodes[n];
                             if (!contained){
                                 contained = (node.id == tmpNode.id);
@@ -123,8 +122,8 @@ define([],  function(){
             },this);
 
             this.source.on('curEventChange', function(event){ // This event occurs when a new event has been applied
-                if (event.get("target")==this.target){ //Each PathView is a subscriber of its source.
-                    this.visible=true;
+                if (event.get("target") == this.target){ //Each PathView is a subscriber of its source.
+                    this.visible = true;
                     this.setVisibility();
 
                     // IMPORTANT!!! It is very important to apply first the precedent event of the current event.
@@ -185,8 +184,8 @@ define([],  function(){
         },
 
         removeMyArcs: function(){
-            for (var n=0;n<this.drawnArcs.length;n++){
-                this.drawnArcs[n].drawn=false;
+            for (var n=0,length=this.drawnArcs.length; n<length; n++){
+                this.drawnArcs[n].drawn = false;
             }
         },
 
@@ -211,11 +210,11 @@ define([],  function(){
         },
 
         getLineStrokeStyle: function(){
-            return (this.static==true)?this.environment.config.graph.pathStaticStrokeDasharray:this.environment.config.graph.pathDefaultStrokeDasharray;
+            return (this.static == true) ? this.environment.config.graph.pathStaticStrokeDasharray : this.environment.config.graph.pathDefaultStrokeDasharray;
         },
 
         isEdgeDrawn: function(arcs){ //There is at least a drawn arc for this tree on this edge?
-            for (var n= 0; n<arcs.length; n++){
+            for (var n= 0,length=arcs.length; n<length; n++){
                 if (arcs[n].drawn==true && arcs[n].subTreeId==this.subTreeId)
                     return arcs[n];
             }
@@ -224,6 +223,7 @@ define([],  function(){
 
         getMyArc: function(arcs){
             var myArc, length;
+
             length = arcs.length;
             for (var n=length; n--;){
                 if (arcs[n].key == this.key){
@@ -301,10 +301,12 @@ define([],  function(){
          * @method setVisibility
          */
         setVisibility: function(){
-            if (this.visible != true){
-                this.svgPath.hide();
-            }else{
-                this.svgPath.show();
+            if (this.svgPath){
+                if (this.visible != true){
+                    this.svgPath.hide();
+                }else{
+                    this.svgPath.show();
+                }
             }
         },
 
@@ -315,24 +317,67 @@ define([],  function(){
         firstDraw: function(){
             var pathString;
 
-            pathString = this.computePathString(this.path.get("nodes"), true);
+            if (this.path) {
+                if (!this.svgPath) {
+                    pathString = this.computePathString(this.path.get("nodes"), true);
 
-            this.svgPath = this.paper.path(pathString)
-                .attr({stroke:this.graphView.getPathColor(this), fill:"none",
-                    "stroke-width":this.environment.config.graph.pathWeight,
-                    "stroke-dasharray":this.getLineStrokeStyle()});
+                    this.svgPath = this.paper
+                        .path(pathString)
+                        .attr({
+                            stroke: this.graphView.getPathColor(this),
+                            fill: "none",
+                            "stroke-width": this.environment.config.graph.pathWeight,
+                            "stroke-dasharray": this.getLineStrokeStyle()
+                        });
 
-            this.path.view = this.svgPath;
-            this.paper.graphSet.push(this.svgPath);
-            this.setVisibility();
+                    this.path.view = this.svgPath;
+                    this.paper.graphSet.push(this.svgPath);
+                    this.setVisibility();
+                    this.previousStaticStatus = this.static;
+                    this.svgPath.toBack();
+                    $(this.svgPath.node).css("cursor", "pointer");
+                    this.svgEventManager();
 
-            this.svgPath.toBack();
-            $(this.svgPath.node).css("cursor","pointer");
-            this.svgEventManager();
+                    if (this.static == false) {
+                        this.dynamicColor = this.graphView.getPathColor(this);
+                    }
+
+                } else {
+
+                    if (this.previousStaticStatus != this.status) {
+
+                        if (this.static == false && !this.dynamicColor) {
+
+                            var nodes = this.path.get("nodes");
+                            for (var n=0,length=nodes.length-1; n<length; n++) {
+
+                                var sameEdge = this.graphView.graph.edges.get({
+                                    vertexStart: nodes[n].view,
+                                    vertexStop: nodes[n+1].view
+                                });
+
+                                if (sameEdge) {
+                                    var myArc = this.getMyArc(sameEdge);
+                                    myArc.drawn = false;
+                                }
+
+                            }
+                            this.dynamicColor = this.graphView.getPathColor(this);
+                        }
+
+                        this.svgPath.attr({
+                            stroke: this.dynamicColor || this.graphView.getPathColor(this),
+                            fill: "none",
+                            "stroke-width": this.environment.config.graph.pathWeight,
+                            "stroke-dasharray": this.getLineStrokeStyle()
+                        });
+                    }
+                }
+            }
         },
 
         inFront: function(){
-            if (this.path != null){
+            if (this.path && this.svgPath){
                 var nodes = this.path.get("nodes");
                 this.svgPath.attr({ "path": this.computeStaticPathString(nodes, true, false) });
             }
@@ -449,14 +494,21 @@ define([],  function(){
          * @return {String} An SVG path
          */
         computeNormalPathString: function(nodes){
-            var pathString, node;
-            pathString = "";
-            for (var i=0; i<nodes.length; i++){
-                node = nodes[i];
-                pathString += (pathString == "") ? "M" : " L";
-                pathString += (node.view) ? node.view.x + " " + node.view.y : node.x + " " + node.y;
+            var node, pathArray, element;
+
+            pathArray = [];
+            if (nodes.length > 0){
+                node = nodes[0];
+                element = node.view || node;
+                pathArray.push(['M', element.x, element.y]);
             }
-            return pathString;
+            for (var i=1,length=nodes.length; i<length; i++){
+                node = nodes[i];
+                element = node.view || node;
+                pathArray.push(['L', element.x, element.y]);
+            }
+
+            return pathArray;
         },
 
         /**
@@ -505,7 +557,7 @@ define([],  function(){
                 sameEdge = this.graphView.graph.edges.get({vertexStart: orderedNodes[0].view, vertexStop: orderedNodes[1].view});
                 drawnEdge = this.isEdgeDrawn(sameEdge);
 
-                if (forceToBeInFront == true && drawnEdge != false && drawnEdge.key != this.key) { // Hide the old edge
+                if (forceToBeInFront && drawnEdge != false && drawnEdge.key != this.key) { // Hide the old edge
 
                     drawnEdge_old = drawnEdge;
                     drawnEdge = this.getMyArc(sameEdge);
@@ -718,9 +770,11 @@ define([],  function(){
 
             for (i=1; i<nodes.length; i++){
                 incrementalPath.push(nodes[i]);
-                this.svgPath.animate((Raphael.animation({
-                    "stroke-width": pathBold,
-                    path: this.computePathString(incrementalPath, false)})).delay(delay*(i-1)));
+                if (this.svgPath){
+                    this.svgPath.animate((Raphael.animation({
+                        "stroke-width": pathBold,
+                        path: this.computePathString(incrementalPath, false)})).delay(delay*(i-1)));
+                }
             }
 
             setTimeout(function(){
@@ -784,7 +838,7 @@ define([],  function(){
             lastChange = this.bgplay.get("starttimestamp");
             pathChangesInvolvingThisPath.forEach(function(event){
                 if (event.get("subType") == "pathchange"){
-                    percentage = ((event.get('instant').get('timestamp')-lastChange)/totalTime)*100;
+                    percentage = ((event.get('instant').get('timestamp') - lastChange) / totalTime) * 100;
                     if (percentage >= 1){
                         lastChange = event.get('instant').get('timestamp');
                         $this.statistics += percentage.roundTo(2)+"%: " + event.get("path").toString()+" | ";

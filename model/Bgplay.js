@@ -19,7 +19,7 @@ var Bgplay = Backbone.Model.extend({
             "sources": new Sources(),
             "targets": new Targets(),
             "clusters": new net.webrobotics.TreeMap(comparator,{allowDuplicateKeys:false,suppressDuplicateKeyAlerts:true}),
-            "realPrefixes":[],
+            "realPrefixes": [],
             "type":"bgp",//this is a default value, it must be set with an appropriate value
             "cur_instant":null,//This var is extremely important
             "nodes":new net.webrobotics.TreeMap(
@@ -52,11 +52,11 @@ var Bgplay = Backbone.Model.extend({
      * @param {Boolean} If true a "change" event will be triggered
      *
      */
-    setCurInstant:function(instant,silent){
+    setCurInstant: function(instant, silent){
         if (silent){
             this.attributes.cur_instant = instant;
         }else{
-            this.set({cur_instant:instant});
+            this.set({cur_instant: instant});
         }
     },
 
@@ -141,13 +141,13 @@ var Bgplay = Backbone.Model.extend({
      * @param {String} An ID for a target
      * @return {Object} The target with that ID
      */
-    getTarget:function(id){
+    getTarget: function(id){
         return this.get("targets").get(id);
     },
 
-    getPrefixes:function(){
-        var realPrefixes=this.get("realPrefixes");
-        if (realPrefixes.length==0){
+    getPrefixes: function(){
+        var realPrefixes = this.get("realPrefixes");
+        if (realPrefixes.length == 0){
             this.get("targets").forEach(function(target){
                 realPrefixes.push(target);
             });
@@ -164,7 +164,7 @@ var Bgplay = Backbone.Model.extend({
      * @return {Array} An array of {String} errors
      */
     validate:function(attrs){
-        var err=new Array();
+        var err = [];
         if(!attrs.starttimestamp)
             err.push("starttimestamp cannot be null!");
         if(!attrs.endtimestamp)

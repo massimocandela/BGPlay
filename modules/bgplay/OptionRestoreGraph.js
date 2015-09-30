@@ -52,8 +52,13 @@ define(
              * @method render
              */
             render: function(){
-                parseTemplate(this.environment,'optionRestoreGraph.html',this,this.dom,"prepend");
-                this.button = this.dom.find('.restorePositionButton');
+                this.footerDiv = this.environment.dom.find('.bgplayjsButtonsDiv');
+                this.button = $('<a class="button" href="javascript:void(0);">layout</a>');
+                this.popup = $('<div class="json_nodes popup"><h3>Json of the positions of the nodes</h3></div>');
+                parseTemplate(this.environment,'aboutBgplay.html',this,this.popup,"append");
+                this.popup.hide();
+
+
                 return this;
             },
 

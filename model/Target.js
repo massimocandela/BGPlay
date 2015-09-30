@@ -32,7 +32,7 @@ var Target = Backbone.Model.extend({
      * @return {Array} An array of {String} errors
      */
     validate:function(attrs){
-        var err=new Array();
+        var err=[];
         if(attrs.id==null)
             err.push("An id is required!");
 

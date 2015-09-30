@@ -332,7 +332,7 @@ define(
                 var internalParams, rrcSelected, $this, externalParams;
                 if (this.validateAll()==true){
                     $this = this;
-                    this.prefixes = new Array();
+                    this.prefixes = [];
                     this.dom.find(".bgplayControlPrefixValue input[type=text]").each(function(){
                         $this.prefixes.push($(this).val());
                     });

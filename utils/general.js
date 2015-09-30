@@ -226,8 +226,8 @@ Backbone.View.prototype.destroyMe=function(){
     }
 
     try{
-        //delete this.$el;
-        //delete this.el;
+        delete this.$el;
+        delete this.el;
     }catch(e){
     }
 }
