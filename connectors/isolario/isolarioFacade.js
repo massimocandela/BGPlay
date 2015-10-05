@@ -86,7 +86,7 @@ var StreamingFacade = function(environment){
                 asPathElements = sample[4].split(" ");
                 ownersArray = sample[9].split("|");
 
-                if (environment.config.graph.hideDefaultRoutes && asPathElements.length > 1){ // default route
+                if (environment.config.graph.hideDefaultRoutes && asPathElements.length > 1 && sample[3] != "0.0.0.0/0"){ // default route
                     payload = {
                         type: "dump",
                         timestamp: parseInt(sample[10]),
@@ -102,7 +102,7 @@ var StreamingFacade = function(environment){
                 asPathElements = sample[4].split(" ");
                 ownersArray = sample[9].split("|");
 
-                if (environment.config.graph.hideDefaultRoutes && asPathElements.length > 1){ // default route
+                if (environment.config.graph.hideDefaultRoutes && asPathElements.length > 1 && sample[3] != "0.0.0.0/0"){ // default route
                     payload = {
                         type: "A",
                         timestamp: parseInt(sample[10]),
@@ -135,9 +135,13 @@ var StreamingFacade = function(environment){
         if (endOfDumpTimer){
             clearTimeout(endOfDumpTimer);
         }
-        if ($this.options.onDump){
+        if ($this.options.onDump && $this.dump && $this.dump.initial_state.length > 0){
             $this.options.onDump($this.dump);
+        } else {
+            alert("No one of our feeders is able to see this prefix.");
         }
+
+        dump = false;
     };
 
     this._endOfFeedersList = function(){
@@ -170,7 +174,6 @@ var StreamingFacade = function(environment){
 
             case "4": // end of dump
                 this._endOfDump();
-                dump = false;
                 break;
 
             case "-1": // feeders list item
