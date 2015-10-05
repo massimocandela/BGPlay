@@ -40,17 +40,18 @@ function getBGPlayInstance(instance){
 }
 
 function BGPlayWidget(instance, domId, initialParams, queryParams){
-    var loader;
+    var loader, newInstance;
 
     loader = BGPLAY_LOADERS[instance];
 
     if (BGPLAY_INSTANCES[instance] == null){
         BGPLAY_INSTANCES[instance] = [];
     }
-    BGPLAY_INSTANCES[instance].push({domId: domId, initialParams: initialParams, queryParams: queryParams});
+    newInstance = {domId: domId, initialParams: initialParams, queryParams: queryParams};
+    BGPLAY_INSTANCES[instance].push(newInstance);
 
     require([BGPLAY_PROJECT_URL + loader + ".js"], function(starter){
-        starter();
+        newInstance["shell"] = starter();
     });
 }
 

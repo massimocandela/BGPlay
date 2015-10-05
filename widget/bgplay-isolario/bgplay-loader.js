@@ -225,6 +225,8 @@ define([
         main.setDefaultParams(initialParams);
 
         main.retrieveData();
+
+        this.destroy = main.destroy;
     };
 
     return BgplayStart;
