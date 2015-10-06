@@ -225,5 +225,9 @@ var BGPlay = function(domElement){
         params = this.environment.params;
 
         this._retrieveData(params, this.run);
-    }
+    };
+
+    this.destroy = function(){
+        this.environment.eventAggregator.trigger("destroyAll");
+    };
 };

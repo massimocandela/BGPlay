@@ -168,7 +168,7 @@ define(
                 this.createAllPaths();
                 this.computeSubTrees();
 
-                if (this.environment.config.graph.computeNodesPosition == true && this.environment.params.nodesPosition == null){
+                if (this.environment.config.graph.computeNodesPosition == true && !this.environment.params.nodesPosition){
                     this.graph.computePosition();
 
                     this.autoScale();
