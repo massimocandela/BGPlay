@@ -214,9 +214,9 @@ define(
                 event.preventDefault();
                 this.paper.touchEnabled =! this.paper.touchEnabled;
                 if (this.paper.touchEnabled == true){
-                    this.touchGraphEvents.attr('src', this.fileRoot+'lib/img/bgplay/touch_icon_enabled.png');
+                    this.touchGraphEvents.attr('src', this.fileRoot + 'modules/html/img/touch_icon_enabled.png');
                 }else{
-                    this.touchGraphEvents.attr('src', this.fileRoot+'lib/img/bgplay/touch_icon_disabled.png');
+                    this.touchGraphEvents.attr('src', this.fileRoot  +'modules/html/img/touch_icon_disabled.png');
                 }
             },
 
