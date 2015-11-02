@@ -37,22 +37,35 @@ addTemplateContent('controller.html', '<img class="bgplayControlPanelDivFlagIco"
 '        <input class="bgplayEndtimestampPicker" type="text"/>'+
 '    </div>'+
 ''+
+
 '    {{#selectableRrcs}}'+
 '    <div class="bgplayControlRRCDiv">'+
 '        <label style="float:left; clear:both; width:100%;">Route Collectors: </label>'+
-'        {{#selectedRrcs}}'+
+'        {{#selectableRrcsObj}}'+
 '        <div class="bgplayRrcsSelect">'+
-'            <label>{{.}}</label><input name="bgplayRrcSelect" type="checkbox" value="{{.}}" checked="checked"/></label>'+
+'            <input name="bgplayRrcSelect" type="checkbox" value="{{id}}" {{#selected}}checked="checked"{{/selected}}/><label>{{label}}</label>'+
 '        </div>'+
-'        {{/selectedRrcs}}'+
+'        {{/selectableRrcsObj}}'+
 ''+
-'        {{#possibleRrcs}}'+
-'        <div class="bgplayRrcsSelect">'+
-'            <label>{{.}}</label><input name="bgplayRrcSelect" type="checkbox" value="{{.}}"/>'+
-'        </div>'+
-'        {{/possibleRrcs}}'+
 '    </div>'+
 '    {{/selectableRrcs}}'+
+
+//'    {{#selectableRrcs}}'+
+//'    <div class="bgplayControlRRCDiv">'+
+//'        <label style="float:left; clear:both; width:100%;">Route Collectors: </label>'+
+//'        {{#selectedRrcs}}'+
+//'        <div class="bgplayRrcsSelect">'+
+//'            <label>{{.}}</label><input name="bgplayRrcSelect" type="checkbox" value="{{.}}" checked="checked"/></label>'+
+//'        </div>'+
+//'        {{/selectedRrcs}}'+
+//''+
+//'        {{#possibleRrcs}}'+
+//'        <div class="bgplayRrcsSelect">'+
+//'            <label>{{.}}</label><input name="bgplayRrcSelect" type="checkbox" value="{{.}}"/>'+
+//'        </div>'+
+//'        {{/possibleRrcs}}'+
+//'    </div>'+
+//'    {{/selectableRrcs}}'+
 ''+
 '    {{#showResourceController}}'+
 '    <div>'+

@@ -144,9 +144,6 @@ define([
     "cssAlert"
 
 ], function($, Backbone, Mustache, raphael, config, modules, MainView) {
-    console.log("once");
-
-
     var main, element, instanceName, instance, initialParams, thisWidget, queryParams;
 
     debugMode = getUrlParam("debug") == "true";// false to prevent console logs

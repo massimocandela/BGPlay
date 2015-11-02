@@ -50,21 +50,34 @@ define(
              * @param {Map} A map of parameters
              */
             initialize:function(){
-                this.environment=this.options.environment;
-                this.bgplay=this.environment.bgplay;
-                this.fileRoot=this.environment.fileRoot;
+                this.environment = this.options.environment;
+                this.bgplay = this.environment.bgplay;
+                this.fileRoot = this.environment.fileRoot;
                 this.imageRoot = this.environment.imageRoot;
-                this.eventAggregator=this.environment.eventAggregator;
+                this.eventAggregator= this.environment.eventAggregator;
 
 
-                this.animation=false;
-                this.allEvents=this.bgplay.get("allEvents");
+                this.animation = false;
+                this.allEvents = this.bgplay.get("allEvents");
 
                 this.prefixes = stringToArray(this.environment.params.targets);
                 this.selectedRrcs = stringToArray(this.environment.params.selectedRrcs);
 
                 this.selectableRrcs = this.environment.config.selectableRrcs;
+                this.selectableRrcsObj = [];
+
+                for (var rrcIndex = 0; rrcIndex < this.environment.config.possibleRrcs.length; rrcIndex++){
+                    var rrcId = this.environment.config.possibleRrcs[rrcIndex];
+
+                    this.selectableRrcsObj.push({
+                        id: rrcId,
+                        label: "" + rrcId + " " + this.environment.config.rrcLocations[rrcIndex],
+                        selected: (arrayContains(this.selectedRrcs, rrcId))
+                    });
+                }
                 this.possibleRrcs = removeSubArray(this.environment.config.possibleRrcs, this.selectedRrcs);
+
+
 
                 this.slideOpened = false;
                 this.showResourceController = this.environment.params.showResourceController;
@@ -411,7 +424,7 @@ define(
                         out=false;
                     }
                 });
-                
+
                 return out;
             },
 
@@ -478,7 +491,7 @@ define(
             openFlag:function(){
                 if (this.slideOpened==false){
                     var $this=this;
-                    this.dom.animate({height:'+=340'}, 600, function() {
+                    this.dom.animate({height:'+=380'}, 600, function() {
                         $this.dom.animate({width:'+=150'},300,function(){
                             $this.controlPanelDivComplete.show();
                             $this.controlPanelDivFlagIco.attr('src', $this.imageRoot + 'closeSlide.png');
@@ -493,7 +506,7 @@ define(
                 if (this.slideOpened==true){
                     var $this=this;
                     this.controlPanelDivComplete.hide();
-                    this.dom.animate({height:'-=340'}, 600, function() {
+                    this.dom.animate({height:'-=380'}, 600, function() {
                         $this.dom.animate({width:'-=150'},300,function(){
                             $this.controlPanelDivFlagIco.attr('src', $this.imageRoot + 'config.png');
                         });

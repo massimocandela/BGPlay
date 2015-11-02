@@ -26,7 +26,7 @@
 .bgplayjs label{
     font-size:12px;
     font-weight:bold;
-    text-shadow: #6374AB 2px 1px 2px;
+    text-shadow: #6374AB 1px 1px 1px;
 }
 
 .bgplayjs .bgplayMainDiv{
@@ -357,9 +357,13 @@
 }
 
 .bgplayjs .bgplayRrcsSelect{
-    width:60px;
     height:25px;
     float:left;
+}
+
+.bgplayjs .bgplayRrcsSelect label{
+    font-weight: normal;
+    text-shadow: none;
 }
 
 .bgplayjs .bgplaySuppressReannounceDiv{
