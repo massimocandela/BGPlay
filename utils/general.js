@@ -149,7 +149,7 @@ Number.prototype.roundTo = roundTo;
 
 var dateToString=function(timestamp){ //This is an indirection, may be useful in the future to manipulate dates
     return dateToUTC(timestamp).format("yyyy-mm-dd HH:MM:ss");
-}
+};
 
 function dateToUTC(timestamp){
     var date = new Date(timestamp*1000);
@@ -168,7 +168,7 @@ var isInternetExplorer=function(){
         }
     }
     return version;
-}
+};
 
 function isMobileBrowser(){
     if (window.isMobile==null){
@@ -230,7 +230,7 @@ Backbone.View.prototype.destroyMe=function(){
         delete this.el;
     }catch(e){
     }
-}
+};
 
 function areMapsEquals(map1, map2, excludedKey){
     for (var key in map1) {

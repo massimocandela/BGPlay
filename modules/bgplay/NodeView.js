@@ -215,9 +215,22 @@ define([],  function(){
          * @method loadSvgEvents
          */
         loadSvgEvents: function(){
-            if (!isMobileBrowser()){
-                var $this;
-                $this = this;
+            var $this;
+
+            $this = this;
+
+            if ($this.graphView.isMobile){ // Only for mobile
+
+                $($this.view[0].node)
+                    .add($this.view[1].node)
+                    .on("touchstart", function(event) {
+                        if ($($(event.target).context.parentNode).hasClass('bgplayNodeContainer') == false){
+                            $this.eventAggregator.trigger("nodeTapped", $this);
+                        }
+                    });
+
+            } else { // Only for desktop
+
                 $this.clicks=0;
 
                 $(this.view[1].node).mouseenter(function(evt){
@@ -274,18 +287,20 @@ define([],  function(){
                     $this.select();
                 }
 
-                $(this.view[0].node).add(this.view[1].node).mousedown(function(event) {
-                    if ($($(event.target).context.parentNode).hasClass('bgplayNodeContainer')==false){
-                        $this.clicks++;
-                        setTimeout(removeClicks,$this.environment.config.doubleClickTimeInterval);
-                        if($this.clicks>1){
-                            removeClicks();
-                            doubleClick(event);
-                        }else{
-                            singleClick(event);
+                $(this.view[0].node)
+                    .add(this.view[1].node)
+                    .mousedown(function(event) {
+                        if ($($(event.target).context.parentNode).hasClass('bgplayNodeContainer') == false){
+                            $this.clicks++;
+                            setTimeout(removeClicks,$this.environment.config.doubleClickTimeInterval);
+                            if($this.clicks > 1){
+                                removeClicks();
+                                doubleClick(event);
+                            }else{
+                                singleClick(event);
+                            }
                         }
-                    }
-                });
+                    });
 
 
                 this.paper.node.mouseleave(function(event){

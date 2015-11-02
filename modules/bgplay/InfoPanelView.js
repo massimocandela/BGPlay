@@ -52,11 +52,11 @@ define(
                     this.destroyMe();
                 },this);
 
-                this.eventAggregator.on('nodeSelected',function(nodeView){
+                this.eventAggregator.on('nodeSelected nodeTapped',function(nodeView){
                     if (!this.preventNextEvent){
-                        this.node=nodeView.model;
+                        this.node = nodeView.model;
                         this.collectorPeers = this.node.get("sources");
-                        this.isASource = (this.collectorPeers.length>0);
+                        this.isASource = (this.collectorPeers.length > 0);
                         this.render();
                     }
                 },this);
