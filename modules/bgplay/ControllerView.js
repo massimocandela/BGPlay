@@ -77,8 +77,6 @@ define(
                 }
                 this.possibleRrcs = removeSubArray(this.environment.config.possibleRrcs, this.selectedRrcs);
 
-
-
                 this.slideOpened = false;
                 this.showResourceController = this.environment.params.showResourceController;
 
@@ -212,8 +210,9 @@ define(
                 this.getDomElements();
                 this.dom.show();
                 this.update();
-                if (this.controlPrefixDiv.length>0)
-                    this.controlPrefixDiv.tinyscrollbar({axis:'y'});
+                if (this.controlPrefixDiv.length > 0) {
+                    this.controlPrefixDiv.tinyscrollbar({axis: 'y'});
+                }
 
                 this.starttimestampPicker.datetimepicker({
                     changeMonth: true,
@@ -402,7 +401,6 @@ define(
                 if (nextEvent != null){
                     nextInstant = nextEvent.get("instant");
                     if (!this.environment.config.controller.disableNotSelectedInstants || this.allEvents.compare(nextInstant, this.stopAnimationInstant) <= 0){
-
                         this.bgplay.setCurInstant(nextInstant);
                     }
                 }
@@ -504,7 +502,7 @@ define(
             },
             closeFlag:function(){
                 if (this.slideOpened==true){
-                    var $this=this;
+                    var $this = this;
                     this.controlPanelDivComplete.hide();
                     this.dom.animate({height:'-=380'}, 600, function() {
                         $this.dom.animate({width:'-=150'},300,function(){

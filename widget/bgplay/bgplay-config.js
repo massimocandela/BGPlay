@@ -138,7 +138,9 @@ define(function(){
             nodeColor:"white",
             targetColor:"red",
             sourceColor:"white",
-            nodeTextFontSize:'11px', //A css valid value (don't omit the unit of measurement)
+
+            nodeTextFontSize:'11px',//A css valid value (don't omit the unit of measurement)
+
             hideDefaultRoutes: true,
             strUpdateTimer: 1000 // Minimum interval between two consecutive sample updates
         },

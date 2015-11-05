@@ -52,6 +52,7 @@ define(
                 this.selectedRrcs=stringToArray(this.environment.params.selectedRrcs);
 
                 this.selectableRrcs=this.environment.config.selectableRrcs;
+
                 this.possibleRrcs=removeSubArray(this.environment.config.possibleRrcs,this.selectedRrcs);
 
                 this.slideOpened=false;

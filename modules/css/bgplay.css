@@ -82,7 +82,6 @@
 
 .bgplayjs .bgplayGraphDiv{
     margin: 0px 3px 0px 0px;
-
     height:100%;
     padding:5px;
     border:1px solid #C0C0C0;
@@ -523,7 +522,6 @@
     width: 100%;
     text-align: right;
 }
-
 .bgplayLegendDiv > div{
     margin:auto;
     width:540px;
