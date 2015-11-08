@@ -26,7 +26,9 @@ define(
         var GraphView = Backbone.View.extend({
             events:function(){
                 return {
-                    "touchstart .touchGraphEvents":"activateTouch"
+                    "touchstart .touchGraphEvents": "activateTouch",
+                    "click .zoom-in": "zoomIn",
+                    "click .zoom-out": "zoomOut"
                 }
             },
 
@@ -218,6 +220,16 @@ define(
                 }else{
                     this.touchGraphEvents.attr('src', this.fileRoot  +'modules/html/img/touch_icon_disabled.png');
                 }
+            },
+
+            zoomIn: function(event){
+                event.preventDefault();
+                this.paperPan.fixedZoom(0.7);
+            },
+
+            zoomOut: function(event){
+                event.preventDefault();
+                this.paperPan.fixedZoom(-0.3);
             },
 
 

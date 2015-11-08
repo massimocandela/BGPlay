@@ -26,7 +26,7 @@
 .bgplayjs label{
     font-size:12px;
     font-weight:bold;
-    text-shadow: #6374AB 2px 1px 2px;
+    text-shadow: #6374AB 1px 1px 1px;
 }
 
 .bgplayjs .bgplayMainDiv{
@@ -99,6 +99,27 @@
     width:100%;
     height:100%;
     cursor:move;
+    background: url(../html/img/bgplay_watermark.png) no-repeat 5px 5px;
+}
+
+.bgplayjs .bgplayGraphDiv .zoom-controller{
+    position: absolute;
+    right: 5px;
+    border: 1px solid #C0C0C0;
+    background: #f1f1f1;
+    border-radius: 4px;
+    width: 26px;
+    font-size: 16px;
+    box-shadow: 1px 1px 1px #C0C0C0;
+    z-index: 100;
+}
+
+.bgplayjs .bgplayGraphDiv .zoom-in{
+    top: 10px;
+}
+
+.bgplayjs .bgplayGraphDiv .zoom-out{
+    top: 36px;
 }
 
 .bgplayjs .bgplayTimelineDiv{
@@ -118,6 +139,7 @@
     height:65px;
     overflow:hidden;
 }
+
 .bgplayjs .bgplayTimelineControlCanvas{
     cursor:pointer;
     margin:auto;
@@ -150,12 +172,23 @@
     height:32px;
     float:left;
 }
+.bgplayjs .bgplayControlStreamingOn{
+    width:32px;
+    height:32px;
+    float:left;
+}
+.bgplayjs .bgplayControlStreamingOff{
+    width:32px;
+    height:32px;
+    float:left;
+}
+
 
 .bgplayjs .bgplayControlAnimationDiv{
     width:88%;
-    margin-left:10px;
-    margin-top:2px;
-    height:40px;
+    margin-left: 10px;
+    margin-top: 2px;
+    height: 40px;
 }
 
 .bgplayControlAnimationDiv img{
@@ -261,7 +294,7 @@
 .bgplayjs .bgplayControllerDiv{
     position:absolute;
     clear:both;
-    width:170px;
+    width:190px;
     height:36px;
     right:-2px;
     /*z-index:100;*/
@@ -279,7 +312,7 @@
 
 .bgplayjs .bgplayControlPanelDivFlagIco{
     position:absolute;
-    right:15px;
+    right:10px;
     top:2px;
     cursor:pointer;
 }
@@ -306,6 +339,22 @@
     background:url(../html/img/discard.png) no-repeat;
 }
 
+.bgplayjs .bgplayjsButtonsDiv .button{
+    margin: 5px;
+}
+
+.bgplayjs .bgplayjsButtonsDiv .popup{
+    border-radius: 7px;
+    border: 1px solid #C0C0C0;
+    padding: 10px;
+    background: #FFFFFF;
+}
+
+.bgplayjs .bgplayjsButtonsDiv .left{
+    text-align: left;
+    margin: 5px;
+}
+
 .bgplayjs .bgplayControlPanelDivComplete{
     display:none;
     /*z-index:102;*/
@@ -329,9 +378,15 @@
 }
 
 .bgplayjs .bgplayRrcsSelect{
-    width:60px;
     height:25px;
     float:left;
+}
+
+.bgplayjs .bgplayRrcsSelect label{
+    font-weight: normal;
+    text-shadow: none;
+    margin-left: 5px;
+    margin-right: 10px;
 }
 
 .bgplayjs .bgplaySuppressReannounceDiv{
@@ -478,9 +533,9 @@
 }
 
 .json_nodes textarea{
-    width:95%;
-    height:120px;
-    margin:auto;
+    width: 95%;
+    height: 120px;
+    margin: auto;
 }
 
 .json_nodes input[type=button]{
@@ -488,6 +543,10 @@
     float:right;
 }
 
+.json_nodes .nodePositionButtons{
+    width: 100%;
+    text-align: right;
+}
 .bgplayLegendDiv > div{
     margin:auto;
     width:540px;

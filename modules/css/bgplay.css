@@ -90,6 +90,27 @@
     position:relative;
 }
 
+
+.bgplayjs .bgplayGraphDiv .zoom-controller{
+    position: absolute;
+    right: 5px;
+    border: 1px solid #C0C0C0;
+    background: #f1f1f1;
+    border-radius: 4px;
+    width: 26px;
+    font-size: 16px;
+    box-shadow: 1px 1px 1px #C0C0C0;
+    z-index: 100;
+}
+
+.bgplayjs .bgplayGraphDiv .zoom-in{
+    top: 10px;
+}
+
+.bgplayjs .bgplayGraphDiv .zoom-out{
+    top: 36px;
+}
+
 .bgplayjs .bgplayCenterDiv{
 }
 
