@@ -28,22 +28,22 @@ function JsonWrap(environment){
          * @param {Map} A Map of parameters valid outside the environment
          * @return {Map} A Map of parameters valid inside the environment
          */
-        getParams:function(data){
+        getParams: function(data){
             var out, params;
-            out ={};
+            out = {};
             params = environment.thisWidget.get_params();
 
-            if (params.unix_timestamps=="TRUE" || params.unix_timestamps=="true"){  //toUpperCase fails when unix_timestamps is null
-                out={
-                    starttimestamp:params.starttime || data.query_starttime,
-                    endtimestamp:params.endtime || data.query_endtime,
-                    targets:(typeof data.resource === 'string')? data.resource : arrayToString(data.resource),
-                    showResourceController:params.showResourceController=="true",
-                    selectedRrcs:((params.rrcs!=null)?params.rrcs:arrayToString(environment.config.selectedRrcs)),
-                    ignoreReannouncements:(params.ignoreReannouncements=="true"),
-                    instant:params.instant,
-                    preventNewQueries:params.preventNewQueries,
-                    nodesPosition:params.nodesPosition,
+            if (params.unix_timestamps == "TRUE" || params.unix_timestamps == "true"){  //toUpperCase fails when unix_timestamps is null
+                out = {
+                    starttimestamp: params.starttime || data.query_starttime,
+                    endtimestamp: params.endtime || data.query_endtime,
+                    targets: (typeof data.resource === 'string')? data.resource : arrayToString(data.resource),
+                    showResourceController:params.showResourceController == "true",
+                    selectedRrcs:((params.rrcs!=null) ? params.rrcs : arrayToString(environment.config.selectedRrcs)),
+                    ignoreReannouncements: ((typeof params.ignoreReannouncements != "undefined") ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault),
+                    instant: params.instant,
+                    preventNewQueries: params.preventNewQueries,
+                    nodesPosition: params.nodesPosition,
                     type:"bgp"
                 };
             }else{
@@ -57,21 +57,21 @@ function JsonWrap(environment){
          * @param {Map} A Map of parameters valid inside the environment
          * @return {Map} A Map of parameters valid outside the environment
          */
-        setParams:function(params){
+        setParams: function(params){
             var out = environment.thisWidget.get_params();
 
-            out.unix_timestamps="TRUE";
+            out.unix_timestamps = "TRUE";
 
-            if (params.starttimestamp!=null) out.starttime=""+params.starttimestamp;
-            if (params.endtimestamp!=null) out.endtime=""+params.endtimestamp;
-            if (params.targets!=null) out.resource=""+params.targets;
-            if (params.showResourceController!=null) out.showResourceController=""+params.showResourceController;
-            if (params.selectedRrcs!=null) out.rrcs=""+params.selectedRrcs;
-            if (params.ignoreReannouncements!=null)out.ignoreReannouncements=""+(params.ignoreReannouncements==true);
-            out.instant=""+params.instant;
-            if (params.preventNewQueries!=null)out.preventNewQueries=""+params.preventNewQueries;
-            if (params.nodesPosition!=null)out.nodesPosition=""+params.nodesPosition;
-            out.type="bgp";
+            if (params.starttimestamp != null) out.starttime = "" + params.starttimestamp;
+            if (params.endtimestamp != null) out.endtime = "" + params.endtimestamp;
+            if (params.targets != null) out.resource = "" + params.targets;
+            if (params.showResourceController != null) out.showResourceController = "" + params.showResourceController;
+            if (params.selectedRrcs != null) out.rrcs = "" + params.selectedRrcs;
+            if (params.ignoreReannouncements != null) out.ignoreReannouncements = "" + (params.ignoreReannouncements == true);
+            out.instant = "" + params.instant;
+            if (params.preventNewQueries != null) out.preventNewQueries = "" + params.preventNewQueries;
+            if (params.nodesPosition != null) out.nodesPosition = "" + params.nodesPosition;
+            out.type = "bgp";
 
             environment.thisWidget.set_params(out);
             return out;
@@ -197,7 +197,7 @@ function JsonWrap(environment){
             function createEvents(uniquePAth,wrap){
                 var event_id=1;
                 var events, event, n, i, length2, tmpNode, instant, eventType, currentPath, attributes, shortdescription, source, longdescription, path, target, tmpEvent, prevPath, tmpPath, subType, numNotValidWithdrawal, length;
-                var ignoreReannouncements = (environment.params.ignoreReannouncements || environment.config.ignoreReannouncementsByDefault);
+                var ignoreReannouncements = environment.params.ignoreReannouncements;
                 var path_start_id = uniquePAth.length;
 
                 numNotValidWithdrawal = 0;

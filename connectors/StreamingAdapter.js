@@ -69,7 +69,7 @@ function StreamingAdapter(environment){
         var ignoreReannouncements, eventType, source, target, prevPath, currentPath, instant, path, pathsNumber,
             tmpEvent, tmpPath, shortdescription, longdescription, subType, tmpNode, length2, i;
 
-        ignoreReannouncements = (environment.params.ignoreReannouncements || environment.config.ignoreReannouncementsByDefault);
+        ignoreReannouncements = environment.params.ignoreReannouncements;
 
         eventType = event.type;
         source = bgplay.getSource(event.source.id);

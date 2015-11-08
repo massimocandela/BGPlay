@@ -34,7 +34,7 @@ define(function(){
             15: "Sao Paulo",
             16: "Miami"
         },
-        ignoreReannouncementsByDefault:true,
+        ignoreReannouncementsByDefault: true,
         cumulativeAnimations:true,
         doubleClickTimeInterval:400,
 

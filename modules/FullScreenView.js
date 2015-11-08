@@ -48,7 +48,7 @@ var FullScreenView=Backbone.View.extend({
         uriContent = setUrlParam("starttime",this.environment.params.starttimestamp,false, uriContent);
         uriContent = setUrlParam("endtime",this.environment.params.endtimestamp,false, uriContent);
         uriContent = setUrlParam("resource",this.environment.params.targets,false, uriContent);
-        uriContent = setUrlParam("ignoreReannouncements",this.environment.params.ignoreReannouncements,false, uriContent);
+        uriContent = setUrlParam("ignoreReannouncements", this.environment.params.ignoreReannouncements, false, uriContent);
         uriContent = setUrlParam("instant",instant.get("id")+','+instant.get("timestamp"),false, uriContent);
         uriContent = setUrlParam("selectedRrcs",this.environment.params.selectedRrcs,false, uriContent);
 
