@@ -71,7 +71,7 @@ define(
 
                     this.selectableRrcsObj.push({
                         id: rrcId,
-                        label: "" + rrcId + " " + this.environment.config.rrcLocations[rrcIndex],
+                        label: "" + rrcId + " " + this.environment.config.rrcLocations[rrcId],
                         selected: (arrayContains(this.selectedRrcs, rrcId))
                     });
                 }

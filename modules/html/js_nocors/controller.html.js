@@ -46,26 +46,8 @@ addTemplateContent('controller.html', '<img class="bgplayControlPanelDivFlagIco"
 '            <input name="bgplayRrcSelect" type="checkbox" value="{{id}}" {{#selected}}checked="checked"{{/selected}}/><label>{{label}}</label>'+
 '        </div>'+
 '        {{/selectableRrcsObj}}'+
-''+
 '    </div>'+
 '    {{/selectableRrcs}}'+
-
-//'    {{#selectableRrcs}}'+
-//'    <div class="bgplayControlRRCDiv">'+
-//'        <label style="float:left; clear:both; width:100%;">Route Collectors: </label>'+
-//'        {{#selectedRrcs}}'+
-//'        <div class="bgplayRrcsSelect">'+
-//'            <label>{{.}}</label><input name="bgplayRrcSelect" type="checkbox" value="{{.}}" checked="checked"/></label>'+
-//'        </div>'+
-//'        {{/selectedRrcs}}'+
-//''+
-//'        {{#possibleRrcs}}'+
-//'        <div class="bgplayRrcsSelect">'+
-//'            <label>{{.}}</label><input name="bgplayRrcSelect" type="checkbox" value="{{.}}"/>'+
-//'        </div>'+
-//'        {{/possibleRrcs}}'+
-//'    </div>'+
-//'    {{/selectableRrcs}}'+
 ''+
 '    {{#showResourceController}}'+
 '    <div>'+
@@ -93,13 +75,7 @@ addTemplateContent('controller.html', '<img class="bgplayControlPanelDivFlagIco"
 '    {{/showResourceController}}'+
 ''+
 '    <div class="bgplaySuppressReannounceDiv">'+
-'        {{^ignoreReannouncements}}'+
-'        <label for="bgplaySuppressReannounce">Ignore re-announcements</label><input class="bgplaySuppressReannounce" type="checkbox"/>'+
-'        {{/ignoreReannouncements}}'+
-''+
-'        {{#ignoreReannouncements}}'+
-'        <label for="bgplaySuppressReannounce">Ignore re-announcements</label><input class="bgplaySuppressReannounce" type="checkbox" checked="checked"/>'+
-'        {{/ignoreReannouncements}}'+
+    '   <label for="bgplaySuppressReannounce">Ignore re-announcements</label><input class="bgplaySuppressReannounce" type="checkbox" {{#ignoreReannouncements}}checked="checked"{{/ignoreReannouncements}}/>'+
 '    </div>'+
 ''+
 '    <input type="button" class="bgplayControlApplyButton"/>'+
