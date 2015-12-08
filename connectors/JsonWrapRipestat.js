@@ -20,7 +20,7 @@ function JsonWrap(environment){
 
         confirm: function(data){
             return (data.events.length + data.initial_state.length > environment.config.safetyMaximumEvents ||
-                data.nodes.length > environment.config.safetyMaximumNodes);
+            data.nodes.length > environment.config.safetyMaximumNodes);
         },
 
         /**
@@ -29,18 +29,46 @@ function JsonWrap(environment){
          * @return {Map} A Map of parameters valid inside the environment
          */
         getParams: function(data){
-            var out, params;
+            var out, params, selectRRCset;
+
             out = {};
             params = environment.thisWidget.get_params();
 
+            selectRRCset = function(resources, currentValue){
+                var value, thereIsAS;
+
+                if (currentValue){
+                    value = currentValue;
+                } else {
+                    if (typeof resources == "string"){
+                        thereIsAS = !isNaN(resources.replace(/AS/g, ""));
+                    } else {
+                        for (var n=0,length=resources.length; n<length;n++){
+                            thereIsAS = !isNaN(resources[n].replace(/AS/g, ""));
+                            if (thereIsAS){
+                                break;
+                            }
+                        }
+                    }
+                    if (thereIsAS){ // it is an  AS
+                        value = environment.config.selectedRrcsAS;
+                    } else {
+                        value = environment.config.selectedRrcsPrefix;
+                    }
+                }
+
+                return arrayToString(value);
+            };
+
             if (params.unix_timestamps == "TRUE" || params.unix_timestamps == "true"){  //toUpperCase fails when unix_timestamps is null
+
                 out = {
                     starttimestamp: params.starttime || data.query_starttime,
                     endtimestamp: params.endtime || data.query_endtime,
-                    targets: (typeof data.resource === 'string')? data.resource : arrayToString(data.resource),
                     showResourceController:params.showResourceController == "true",
-                    selectedRrcs:((params.rrcs!=null) ? params.rrcs : arrayToString(environment.config.selectedRrcs)),
-                    ignoreReannouncements: ((typeof params.ignoreReannouncements != "undefined") ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault),
+                    targets: (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource),
+                    selectedRrcs: selectRRCset(data.resource, params.rrcs),
+                    ignoreReannouncements: (params.hasOwnProperty("ignoreReannouncements")) ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault,
                     instant: params.instant,
                     preventNewQueries: params.preventNewQueries,
                     nodesPosition: params.nodesPosition,

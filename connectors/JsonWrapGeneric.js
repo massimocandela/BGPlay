@@ -79,25 +79,51 @@ function JsonWrap(environment){
          * @return {Map} A Map of parameters valid inside the environment
          */
         getParams:function(data){
-            var out, params, internalParams;
+            var out, params, internalParams, selectRRCset;
             out = {};
 
             params = this.externalParams || environment.thisWidget.get_params();
-
             internalParams = environment.params || {};
+
+            selectRRCset = function(resources, currentValue){
+                var value, thereIsAS;
+
+                if (currentValue){
+                    value = currentValue;
+                } else {
+                    if (typeof resources == "string"){
+                        thereIsAS = !isNaN(resources.replace(/AS/g, ""));
+                    } else {
+                        for (var n=0,length=resources.length; n<length;n++){
+                            thereIsAS = !isNaN(resources[n].replace(/AS/g, ""));
+                            if (thereIsAS){
+                                break;
+                            }
+                        }
+                    }
+                    if (thereIsAS){ // it is an  AS
+                        value = environment.config.selectedRrcsAS;
+                    } else {
+                        value = environment.config.selectedRrcsPrefix;
+                    }
+                }
+
+                return arrayToString(value);
+            };
 
             if (!data){
                 out = this._fromExternalToInternal(params, internalParams);
             }else{
 
                 if (params.unix_timestamps=="TRUE" || params.unix_timestamps=="true"){  //toUpperCase fails when unix_timestamps is null
+
                     out = {
                         starttimestamp: params.starttime || data.query_starttime,
                         endtimestamp: params.endtime || data.query_endtime,
-                        targets: (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource),
                         showResourceController: params.showResourceController,
-                        selectedRrcs:((params.rrcs!=null) ? params.rrcs:arrayToString(environment.config.selectedRrcs)),
-                        ignoreReannouncements: (typeof params.ignoreReannouncements == "undefined") ? environment.config.ignoreReannouncementsByDefault : (params.ignoreReannouncements == "true"),
+                        targets: (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource),
+                        selectedRrcs: selectRRCset(data.resource, params.rrcs),
+                        ignoreReannouncements: (params.hasOwnProperty("ignoreReannouncements")) ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault,
                         instant:params.instant,
                         preventNewQueries: params.preventNewQueries,
                         nodesPosition: params.nodesPosition,
