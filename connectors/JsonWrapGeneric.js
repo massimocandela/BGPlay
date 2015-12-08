@@ -19,6 +19,7 @@ function JsonWrap(environment){
         },
 
         confirm: function(data){
+            console.log(data.events.length + data.initial_state.length, data.nodes.length);
             return (data.events.length + data.initial_state.length > environment.config.safetyMaximumEvents ||
             data.nodes.length > environment.config.safetyMaximumNodes);
         },
@@ -33,18 +34,19 @@ function JsonWrap(environment){
         },
 
         _fromExternalToInternal: function(external, internal){
-            var out, conversionList;
+            var out, conversionList, keyUsed;
 
             out = internal || {};
-
+            keyUsed = {};
             conversionList = this._getConversionList();
 
             for (var key in conversionList){
                 out[key] = external[conversionList[key]];
+                keyUsed[conversionList[key]] = true;
             }
 
             for (var key in external){
-                if (!out[key]){
+                if (!keyUsed[key]){
                     out[key] = external[key];
                 }
             }
@@ -80,6 +82,7 @@ function JsonWrap(environment){
          */
         getParams:function(data){
             var out, params, internalParams, selectRRCset;
+
             out = {};
 
             params = this.externalParams || environment.thisWidget.get_params();
@@ -88,7 +91,7 @@ function JsonWrap(environment){
             selectRRCset = function(resources, currentValue){
                 var value, thereIsAS;
 
-                if (currentValue){
+                if (currentValue && currentValue.length > 1){
                     value = currentValue;
                 } else {
                     if (typeof resources == "string"){
@@ -101,38 +104,39 @@ function JsonWrap(environment){
                             }
                         }
                     }
-                    if (thereIsAS){ // it is an  AS
-                        value = environment.config.selectedRrcsAS;
-                    } else {
-                        value = environment.config.selectedRrcsPrefix;
-                    }
+
+                    value = (thereIsAS) ? environment.config.selectedRrcsAS : environment.config.selectedRrcsPrefix;
                 }
 
-                return arrayToString(value);
+                return (typeof value == "string") ? value : arrayToString(value);
             };
 
             if (!data){
                 out = this._fromExternalToInternal(params, internalParams);
             }else{
 
-                if (params.unix_timestamps=="TRUE" || params.unix_timestamps=="true"){  //toUpperCase fails when unix_timestamps is null
+                if (params.unix_timestamps == "TRUE" || params.unix_timestamps == "true"){  //toUpperCase fails when unix_timestamps is null
 
                     out = {
                         starttimestamp: params.starttime || data.query_starttime,
                         endtimestamp: params.endtime || data.query_endtime,
                         showResourceController: params.showResourceController,
                         targets: (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource),
-                        selectedRrcs: selectRRCset(data.resource, params.rrcs),
+                        selectedRrcs: selectRRCset(data.resource || params.resource, params.rrcs),
                         ignoreReannouncements: (params.hasOwnProperty("ignoreReannouncements")) ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault,
-                        instant:params.instant,
+                        instant: params.instant,
                         preventNewQueries: params.preventNewQueries,
                         nodesPosition: params.nodesPosition,
                         type: "bgp"
                     };
+
                 }else{
                     alert('Unix timestamps needed!');
                 }
             }
+
+            console.log(JSON.stringify(out));
+
             return out;
         },
 
@@ -168,12 +172,14 @@ function JsonWrap(environment){
          * @return {String} An URL
          */
         getJsonUrl:function(params){
+
+            console.log(params.selectedRrcs);
             var datasource = "https://stat.ripe.net/data/bgplay/data.json";
             return datasource + "?" +
-                "unix_timestamps=TRUE&" +
-                "type=bgp&" +
-                "resource=" + params.targets + "&" +
-                ((params.selectedRrcs != null)? "rrc=" + params.selectedRrcs : "") +
+                "unix_timestamps=TRUE" +
+                "&type=bgp" +
+                "&resource=" + params.targets +
+                ((params.selectedRrcs != null)? "&rrc=" + params.selectedRrcs : "") +
                 ((params.endtimestamp != null)? "&endtime=" + params.endtimestamp : "") +
                 ((params.starttimestamp != null)? "&starttime=" + params.starttimestamp : "");
 
