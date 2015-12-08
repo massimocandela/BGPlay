@@ -29,7 +29,7 @@ function JsonWrap(environment){
          * @return {Map} A Map of parameters valid inside the environment
          */
         getParams: function(data){
-            var out, params, selectRRCset;
+            var out, params, selectRRCset, targets;
 
             out = {};
             params = environment.thisWidget.get_params();
@@ -37,7 +37,7 @@ function JsonWrap(environment){
             selectRRCset = function(resources, currentValue){
                 var value, thereIsAS;
 
-                if (currentValue){
+                if (currentValue && currentValue.length > 1){
                     value = currentValue;
                 } else {
                     if (typeof resources == "string"){
@@ -50,33 +50,38 @@ function JsonWrap(environment){
                             }
                         }
                     }
-                    if (thereIsAS){ // it is an  AS
-                        value = environment.config.selectedRrcsAS;
-                    } else {
-                        value = environment.config.selectedRrcsPrefix;
-                    }
+
+                    value = (thereIsAS) ? environment.config.selectedRrcsAS : environment.config.selectedRrcsPrefix;
                 }
 
-                return arrayToString(value);
+                return (typeof value == "string") ? value : arrayToString(value);
             };
 
             if (params.unix_timestamps == "TRUE" || params.unix_timestamps == "true"){  //toUpperCase fails when unix_timestamps is null
+
+                if (data){
+                    targets = (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource);
+                } else {
+                    targets = params.resource;
+                }
 
                 out = {
                     starttimestamp: params.starttime || data.query_starttime,
                     endtimestamp: params.endtime || data.query_endtime,
                     showResourceController:params.showResourceController == "true",
-                    targets: (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource),
-                    selectedRrcs: selectRRCset(data.resource, params.rrcs),
+                    targets: targets,
+                    selectedRrcs: selectRRCset(targets, params.rrcs),
                     ignoreReannouncements: (params.hasOwnProperty("ignoreReannouncements")) ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault,
                     instant: params.instant,
                     preventNewQueries: params.preventNewQueries,
                     nodesPosition: params.nodesPosition,
-                    type:"bgp"
+                    type: "bgp"
                 };
+
             }else{
                 alert('Unix timestamps needed!');
             }
+
             return out;
         },
 
@@ -111,10 +116,13 @@ function JsonWrap(environment){
          * @param {Map} A Map of parameters valid inside the environment
          * @return {String} An URL
          */
-        getJsonUrl:function(params){
-            return datasource+"?unix_timestamps=TRUE&type=bgp&resource=["+params.targets+"]&rrc="+params.selectedRrcs
-                + ((params.endtimestamp!=null)? "&endtime="+params.endtimestamp : "")
-                + ((params.starttimestamp!=null)? "&starttime="+params.starttimestamp : "");
+        getJsonUrl: function(params){
+            return datasource+"?unix_timestamps=TRUE" +
+                "&type=bgp" +
+                "&resource=[" + params.targets + "]" +
+                "&rrcs=" + params.selectedRrcs
+                + ((params.endtimestamp != null) ? "&endtime=" + params.endtimestamp : "")
+                + ((params.starttimestamp != null) ? "&starttime=" + params.starttimestamp : "");
 
         },
 

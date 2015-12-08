@@ -19,18 +19,18 @@ function JsonWrap(environment){
         },
 
         confirm: function(data){
-            console.log(data.events.length + data.initial_state.length, data.nodes.length);
-            return (data.events.length + data.initial_state.length > environment.config.safetyMaximumEvents ||
-            data.nodes.length > environment.config.safetyMaximumNodes);
+
+            return (data.events.length + data.initial_state.length > environment.config.safetyMaximumEvents || data.nodes.length > environment.config.safetyMaximumNodes);
         },
 
         _getConversionList: function(){
-            var conversionList = {
-                starttimestamp : "starttime",
-                endtimestamp : "endtime",
-                targets : "resource"
+
+            return conversionList = {
+                starttimestamp: "starttime",
+                endtimestamp: "endtime",
+                targets: "resource",
+                selectedRrcs: "rrcs"
             };
-            return conversionList;
         },
 
         _fromExternalToInternal: function(external, internal){
@@ -113,6 +113,7 @@ function JsonWrap(environment){
 
             if (!data){
                 out = this._fromExternalToInternal(params, internalParams);
+                out.selectedRrcs = selectRRCset(out.targets, params.rrcs);
             }else{
 
                 if (params.unix_timestamps == "TRUE" || params.unix_timestamps == "true"){  //toUpperCase fails when unix_timestamps is null
@@ -121,8 +122,8 @@ function JsonWrap(environment){
                         starttimestamp: params.starttime || data.query_starttime,
                         endtimestamp: params.endtime || data.query_endtime,
                         showResourceController: params.showResourceController,
-                        targets: (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource),
-                        selectedRrcs: selectRRCset(data.resource || params.resource, params.rrcs),
+                        targets: ((typeof data.resource === 'string') ? data.resource : arrayToString(data.resource)),
+                        selectedRrcs: ((params.rrcs != null) ? params.rrcs : selectRRCset(data.resource, params.rrcs)),
                         ignoreReannouncements: (params.hasOwnProperty("ignoreReannouncements")) ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault,
                         instant: params.instant,
                         preventNewQueries: params.preventNewQueries,
@@ -134,8 +135,6 @@ function JsonWrap(environment){
                     alert('Unix timestamps needed!');
                 }
             }
-
-            console.log(JSON.stringify(out));
 
             return out;
         },
@@ -173,13 +172,12 @@ function JsonWrap(environment){
          */
         getJsonUrl:function(params){
 
-            console.log(params.selectedRrcs);
             var datasource = "https://stat.ripe.net/data/bgplay/data.json";
             return datasource + "?" +
                 "unix_timestamps=TRUE" +
                 "&type=bgp" +
                 "&resource=" + params.targets +
-                ((params.selectedRrcs != null)? "&rrc=" + params.selectedRrcs : "") +
+                ((params.selectedRrcs != null)? "&rrcs=" + params.selectedRrcs : "") +
                 ((params.endtimestamp != null)? "&endtime=" + params.endtimestamp : "") +
                 ((params.starttimestamp != null)? "&starttime=" + params.starttimestamp : "");
 
