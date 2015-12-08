@@ -101,6 +101,7 @@
     font-size: 16px;
     box-shadow: 1px 1px 1px #C0C0C0;
     z-index: 100;
+    cursor: pointer;
 }
 
 .bgplayjs .bgplayGraphDiv .zoom-in{
@@ -384,6 +385,7 @@
 .bgplayjs .bgplayRrcsSelect label{
     font-weight: normal;
     text-shadow: none;
+    margin-right: 10px;
 }
 
 .bgplayjs .bgplaySuppressReannounceDiv{
