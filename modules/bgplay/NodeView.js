@@ -64,17 +64,42 @@ define([],  function(){
 
                 "nodeSelected": function(node){
                     if (node == this){
-                        this.highlight(true);
+                        clearTimeout(this.blinkingTimeout);
+                        this.blink();
                     }
                 },
 
                 "nodeReleased": function(node){
                     if (node == this){
+                        clearTimeout(this.blinkingTimeout);
                         this.highlight(false);
                     }
                 }
 
             }
+        },
+
+        blink: function(){
+            var $this = this;
+
+            this.highlight(true);
+
+            this.blinkingTimeout = setTimeout(function(){
+                $this.highlight(false);
+            }, 500);
+
+            this.blinkingTimeout = setTimeout(function(){
+                $this.highlight(true);
+            }, 1000);
+
+            this.blinkingTimeout = setTimeout(function(){
+                $this.highlight(false);
+            }, 1500);
+
+            this.blinkingTimeout = setTimeout(function(){
+                $this.highlight(true);
+            }, 2000);
+
         },
 
         eventsManager: function(){

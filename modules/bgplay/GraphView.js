@@ -28,7 +28,8 @@ define(
                 return {
                     "touchstart .touchGraphEvents": "activateTouch",
                     "click .zoom-in": "zoomIn",
-                    "click .zoom-out": "zoomOut"
+                    "click .zoom-out": "zoomOut",
+                    "change .searchNode": "search"
                 }
             },
 
@@ -37,7 +38,7 @@ define(
              * @method initialize
              * @param {Map} A map of parameters
              */
-            initialize:function(){
+            initialize: function(){
                 this.environment = this.options.environment;
                 this.bgplay = this.environment.bgplay;
                 this.fileRoot = this.environment.fileRoot;
@@ -149,7 +150,17 @@ define(
 
                 this.animation = false;
 
-                this.paper = new Raphael(this.nodeContainer[0], this.width,this.height);
+                this.nodeContainer.on("mouseleave", function(){
+                    $this.hideSearch.call($this, event);
+                });
+                this.nodeContainer.on("mouseenter", function(){
+                    $this.showSearch.call($this, event);
+                });
+                this.searchNodeInput.on("mousemove", function(event){
+                    event.stopPropagation()
+                });
+
+                this.paper = new Raphael(this.nodeContainer[0], this.width, this.height);
                 this.paper["node"] = this.nodeContainer;
 
                 this.paperPan = new paperAddOn(this.paper, true, true, true);
@@ -193,7 +204,9 @@ define(
              */
             getDomElements: function(){
                 this.nodeContainer = this.dom.find('.bgplayNodeContainer');
-                this.touchGraphEvents = this.dom.find('.touchGraphEvents')
+                this.touchGraphEvents = this.dom.find('.touchGraphEvents');
+                this.searchNodeInput = this.dom.find('.searchNode')
+                    .on("click mousedown mouseup", function(event){event.stopPropagation();});
             },
 
             /**
@@ -204,7 +217,6 @@ define(
                 this.$el.show();
                 parseTemplate(this.environment, 'graph.html', this, this.el);
                 this.getDomElements();
-                //this.nodeContainer.append('<img class="bgplaywtm" src="' + this.fileRoot + 'modules/html/img/bgplay_watermark.png"/>');
                 return this;
             },
 
@@ -732,6 +744,55 @@ define(
                 this.graph.edges.forEach(function(edge){
                     edge.subTreeId = $this.pathViews[edge.key].subTreeId;
                 });
+            },
+
+            search: function(event) {
+                var asId, selectedNode, $this;
+
+                event.preventDefault();
+
+                $this = this;
+                asId = $(event.target).val();
+                selectedNode = this.bgplay.get("nodes").get(asId);
+
+                if (selectedNode) {
+
+                    if (this.previousNodeSelection) {
+                        this.eventAggregator.trigger("nodeReleased", $this.previousNodeSelection);
+                    }
+
+                    this.nodeContainer.on("click", function(){
+                        $this.eventAggregator.trigger("nodeReleased", $this.previousNodeSelection);
+                        $this.searchNodeInput.find("input").val("");
+                        $this.previousNodeSelection = null;
+                    });
+
+                    this.eventAggregator.trigger("nodeSelected", selectedNode.view);
+                    this.previousNodeSelection = selectedNode.view;
+                } else {
+                    $this.searchNodeInput
+                        .find("input")
+                        .val("")
+                        .attr("placeholder", "No matches!");
+
+                    setTimeout(function(){
+                        $this.searchNodeInput
+                            .find("input")
+                            .attr("placeholder", "ASN");
+                    }, 2000);
+
+
+                }
+            },
+
+            showSearch: function(event){
+                event.stopPropagation();
+                this.searchNodeInput.show();
+            },
+
+            hideSearch: function(event){
+                event.stopPropagation();
+                this.searchNodeInput.hide();
             }
 
         });

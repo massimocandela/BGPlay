@@ -145,11 +145,11 @@
     margin:auto;
 }
 
-.bgplayjs .bgplayNodeContainer > div{
-    border:1px solid #000000;
-    height:40px;
-    width:500px;
-}
+/*.bgplayjs .bgplayNodeContainer > div{*/
+    /*border:1px solid #000000;*/
+    /*height:40px;*/
+    /*width:500px;*/
+/*}*/
 
 .bgplayjs .bgplayControlAnimationStartPause{
     width:32px;
@@ -554,6 +554,17 @@
     margin:3px;
     float:left;
     text-align:center;
+}
+
+.bgplayjs .searchNode{
+    z-index: 1000;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    padding: 10px;
+    border-radius: 4px 4px 4px 4px;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: none;
 }
 
 

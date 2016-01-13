@@ -149,9 +149,9 @@ function JsonWrap(environment){
 
             out.unix_timestamps="TRUE";
 
-            if (params.starttimestamp!=null) out.starttime=""+params.starttimestamp;
-            if (params.endtimestamp!=null) out.endtime=""+params.endtimestamp;
-            if (params.targets!=null) out.resource=""+params.targets;
+            if (params.starttimestamp != null) out.starttime = "" + params.starttimestamp;
+            if (params.endtimestamp != null) out.endtime = "" + params.endtimestamp;
+            if (params.targets != null) out.resource = "" + params.targets;
             if (params.showResourceController!=null) out.showResourceController = "" + params.showResourceController;
             if (params.selectedRrcs != null) out.rrcs = "" + params.selectedRrcs;
             if (params.ignoreReannouncements != null) out.ignoreReannouncements = "" + (params.ignoreReannouncements == true);

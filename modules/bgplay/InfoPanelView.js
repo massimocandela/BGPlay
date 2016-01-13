@@ -63,8 +63,8 @@ define(
 
                 this.eventAggregator.on('nodeReleased pathReleased',function(element){
                     if (!this.preventNextEvent){
-                        this.node=null;
-                        this.path=null;
+                        this.node = null;
+                        this.path = null;
                         this.render();
                     }
                 },this);

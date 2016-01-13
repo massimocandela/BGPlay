@@ -28,6 +28,7 @@ BGPLAY_INSTANCES = {};
 
 BGPLAY_LOADERS = {
     "BGPlayRT": "widget/bgplay-isolario/bgplay-loader",
+    //"BGPlayRT": "widget/bgplay-caida/bgplay-loader",
     "BGPlay": "widget/bgplay/bgplay-loader",
     "TPlay": "widget/tplay/tplay-loader",
     "BGPlay3D": "loaders/bgplay3D-loader"

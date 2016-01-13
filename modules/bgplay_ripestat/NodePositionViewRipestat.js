@@ -7,7 +7,7 @@
  */
 
 /**
- * NodePositionView provides three functionalities:
+ * NodePositionView provides three functions:
  * - allows the user to obtain the json of the graph;
  * - allows the user to edit and apply a json to the graph;
  * - applies, if present, a json from widget's parameters.
@@ -28,16 +28,16 @@ define(
              * @method initialize
              * @param {Map} A map of parameters
              */
-            initialize:function(){
-                this.environment=this.options.environment;
-                this.bgplay=this.environment.bgplay;
-                this.fileRoot=this.environment.fileRoot;
-                this.eventAggregator=this.environment.eventAggregator;
+            initialize: function(){
+                this.environment = this.options.environment;
+                this.bgplay = this.environment.bgplay;
+                this.fileRoot = this.environment.fileRoot;
+                this.eventAggregator = this.environment.eventAggregator;
 
 
 
                 this.environment.optionalParams.push('nodesPosition');
-                this.positions="";
+                this.positions = "";
                 this.eventAggregator.on("destroyAll", function(){
                     this.destroyMe();
                 },this);
@@ -51,7 +51,7 @@ define(
                     }
                 },this);
 
-                if (this.environment.params.nodesPosition!=null){
+                if (this.environment.params.nodesPosition != null){
                     this.environment.config.graph.computeNodesPosition = false;
                     this.environment.params.preventNewQueries = true;
                     this.textArea.val(this.environment.params.nodesPosition);
@@ -64,7 +64,7 @@ define(
              * This method draws this module (eg. inject the DOM and elements).
              * @method render
              */
-            render:function(){
+            render: function(){
                 this.footerDiv = this.environment.dom.closest('.stat-widget').find('.box-buttons');
                 this.button = $('<li><a class="button" href="javascript:void(0);">layout</a></li>');
                 this.popup = $('<div class="json_nodes popup"><h3>Json of the positions of the nodes</h3></div>');
@@ -88,8 +88,8 @@ define(
              * This method manages the events of the built DOM.
              * @method eventManager
              */
-            eventManager:function(){
-                var $this=this;
+            eventManager: function(){
+                var $this = this;
                 this.button.click(function(){
                     if ($this.popup.is(':visible')){
                         $this.popup.hide();
