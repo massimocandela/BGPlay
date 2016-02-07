@@ -10,7 +10,7 @@
 define(function(){
     return{
         internalDivClass: "bgplayjs",
-        safetyMaximumNodes: 100,
+        safetyMaximumNodes: 160,
         safetyMaximumEvents: 20000,
         possibleRrcs: [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 18, 20, 21],
         selectedRrcsPrefix: [0, 1, 2, 5, 6, 7, 10, 11, 13, 14, 15, 16, 18, 20],

@@ -63,7 +63,6 @@ define(
                 this.skipAfterHops = this.environment.config.graph.skipAfterHops;
                 this.pruneByWeight = this.environment.config.graph.pruneByWeight;
 
-
                 this.pathColorsDoublePrefixOne = this.environment.config.graph.pathColorsDoublePrefixOne;
                 this.pathColorsDoublePrefixTwo = this.environment.config.graph.pathColorsDoublePrefixTwo;
                 this.doublePath = [];
@@ -150,12 +149,13 @@ define(
 
                 this.animation = false;
 
-                this.nodeContainer.on("mouseleave", function(){
+                this.dom.on("mouseleave", function(event){
                     $this.hideSearch.call($this, event);
                 });
-                this.nodeContainer.on("mouseenter", function(){
+                this.dom.on("mouseenter", function(event){
                     $this.showSearch.call($this, event);
                 });
+
                 this.searchNodeInput.on("mousemove", function(event){
                     event.stopPropagation()
                 });

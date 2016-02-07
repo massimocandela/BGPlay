@@ -565,6 +565,11 @@
     border-radius: 4px 4px 4px 4px;
     background-color: rgba(0, 0, 0, 0.2);
     display: none;
+    width: 200px;
+}
+
+.bgplayjs .searchNode > input{
+    width: 80px;
 }
 
 

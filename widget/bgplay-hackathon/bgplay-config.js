@@ -1,5 +1,5 @@
 /*
- * Massimo Candela for isolario.it (CNR)
+ * Massimo Candela for bgpstream (CAIDA San Diego)
  */
 
 
