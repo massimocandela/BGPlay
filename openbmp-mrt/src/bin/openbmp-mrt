@@ -1,0 +1,243 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""OpenBMP MRT
+
+  Copyright (c) 2013-2016 Cisco Systems, Inc. and others.  All rights reserved.
+  This program and the accompanying materials are made available under the
+  terms of the Eclipse Public License v1.0 which accompanies this distribution,
+  and is available at http://www.eclipse.org/legal/epl-v10.html
+
+  .. moduleauthor:: Tim Evens <tievens@cisco.com>
+"""
+import getopt
+import sys
+import logging
+import yaml
+import time
+import signal
+
+from multiprocessing import Queue, Manager
+from openbmp.logger import LoggerThread
+from openbmp.bmp_consumer import BMPConsumer
+from openbmp.bmp_bgp4mp import MrtBgp4MpWriter
+from openbmp.mrt_table_dump import MrtTableDumper
+
+# Root logger
+LOG = None
+
+# Running flag for main process
+RUNNING = True
+
+# Default App name
+APP_NAME = "openbmp-mrt"
+
+
+def signal_handler(signum, frame):
+    """ Signal handler to shutdown the program
+
+        :param signum:          Signal number
+        :param frame:           Stack
+    """
+    global RUNNING, LOG
+
+    if LOG:
+        LOG.info("Caught signal %d, exiting", signum)
+    else:
+        print "Caught signal %d, exiting" % signum
+
+    RUNNING = False
+
+
+def load_config(cfg_filename):
+    """ Load and validate the configuration from YAML
+
+        Some defaults are applied if any settings are missing.
+
+        :param cfg_filename:    Configuration filename to load
+
+        :return: Configuration dictionary is returned
+    """
+    cfg = {}
+
+    try:
+        cfg = yaml.load(file(cfg_filename, 'r'))
+
+        # Validate the config and set defaults if undefined
+        if 'kafka' in cfg:
+            if 'servers' not in cfg['kafka']:
+                cfg['kafka']['servers'] = ['localhost:9092']
+            if 'client_id' not in cfg['kafka']:
+                cfg['kafka']['client_id'] = APP_NAME
+            if 'group_id' not in cfg['kafka']:
+                cfg['kafka']['group_id'] = APP_NAME
+            if 'offset_reset_largest' not in cfg['kafka']:
+                cfg['kafka']['offset_reset_largest'] = False
+
+        else:
+            cfg['kafka'] = {}
+            cfg['kafka']['servers'] = ['localhost:9092']
+            cfg['kafka']['client_id'] = APP_NAME
+            cfg['kafka']['group_id'] = APP_NAME
+            cfg['kafka']['offset_reset_largest'] = False
+
+        if 'logging' not in cfg:
+            print ("Configuration is missing 'logging' section.")
+            sys.exit(2)
+
+        if 'bgp4mp' not in cfg:
+            print ("Configuration is missing 'bgp4mp' section.")
+            sys.exit(2)
+
+        if 'table_dump' not in cfg:
+            print ("Configuration is missing 'table_dump' section.")
+            sys.exit(2)
+
+    except (IOError, yaml.YAMLError), e:
+        print "Failed to load mapping config file '%s': %r" % (cfg_filename, e)
+        if hasattr(e, 'problem_mark'):
+            mark = e.problem_mark
+            print ("error on line: %s, column: %s" % (mark.line+1, mark.column+1))
+
+        sys.exit(2)
+
+    return cfg
+
+
+def usage(prog):
+
+    """ Usage - Prints the usage for this program.
+
+        :param prog:  Program name
+    """
+    print ""
+    print "Usage: %s [OPTIONS]" % prog
+    print ""
+
+    print "OPTIONS:"
+    print "  -h, --help".ljust(30) + "Print this help menu"
+    print "  -c, --config".ljust(30) + "Config filename (default is %s/etc/openbmp-mrt.yml)" % sys.prefix
+    print ""
+
+
+def parse_cmd_args(argv):
+    """ Parse commandline arguments and load the configuration file
+
+        Usage is printed and program is terminated if there is an error.
+
+        :param argv:   ARGV as provided by sys.argv.  Arg 0 is the program name
+
+        :returns: Command line arg configuration dictionary
+    """
+    cfg = {
+            'cfg_filename': "%s/etc/%s.yml" % (sys.prefix, APP_NAME)
+           }
+
+    try:
+        (opts, args) = getopt.getopt(argv[1:], "hc:",
+                                       ["help", "config="])
+
+        for o, a in opts:
+            if o in ("-h", "--help"):
+                usage(argv[0])
+                sys.exit(0)
+
+            elif o in ("-c", "--config"):
+                cfg['cfg_filename'] = a
+
+            else:
+                usage(argv[0])
+                sys.exit(1)
+
+    except getopt.GetoptError as err:
+        print str(err)
+        usage(argv[0])
+        sys.exit(2)
+
+    return cfg
+
+
+def main():
+    """ Main entry point """
+    global LOG, RUNNING
+
+    cmd_cfg = parse_cmd_args(sys.argv)
+    cfg = load_config(cmd_cfg['cfg_filename'])
+
+    # Shared dictionary between processes
+    manager = Manager()
+    cfg_dict = manager.dict()
+    cfg_dict['max_queue_size'] = cfg['max_queue_size']
+    cfg_dict['logging'] = cfg['logging']
+    cfg_dict['bgp4mp'] = cfg['bgp4mp']
+    cfg_dict['table_dump'] = cfg['table_dump']
+    cfg_dict['kafka'] = cfg['kafka']
+
+    # Check to make sure something is enabled
+    if cfg['bgp4mp']['enabled'] == False and cfg['table_dump']['enabled'] == False:
+        print("Both bgp4mp and table_dump is globally disabled, thus nothing to do.\n   Enable at least one of them.")
+        sys.exit(2)
+
+    # Setup signal handers
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGQUIT, signal_handler)
+    signal.signal(signal.SIGABRT, signal_handler)
+
+    # Setup the multiprocessing logging queue
+    log_queue = Queue()
+    thread_logger = LoggerThread(log_queue, cfg_dict['logging'])
+    thread_logger.start()
+
+    LOG = logging.getLogger('openbmp_mrt')
+
+    if cfg['bgp4mp']['enabled'] == True:
+        # Use manager queue to ensure no duplicates
+        mrt_bgp4mp_queue = manager.Queue(cfg_dict['max_queue_size'])
+
+        # Start the BMP consumer process
+        proc_consumer = BMPConsumer(cfg_dict, mrt_bgp4mp_queue, log_queue)
+        proc_consumer.start()
+
+        # Start the MRT BMP to BGP4MP writer process
+        proc_bgp4mp_writer = MrtBgp4MpWriter(cfg_dict, mrt_bgp4mp_queue, log_queue)
+        proc_bgp4mp_writer.start()
+
+    if cfg['table_dump']['enabled'] == True:
+        # Start the table dump monitor
+        proc_table_dumper = MrtTableDumper(cfg_dict, log_queue)
+        proc_table_dumper.start()
+
+    LOG.info("Threads started")
+
+    # Monitor/do something else if needed
+    while RUNNING:
+
+        try:
+            time.sleep(3)
+
+        except KeyboardInterrupt:
+            print "\nStop requested by user"
+            RUNNING = False
+            break
+
+    # Stopped, stop sub processes
+    if cfg['bgp4mp']['enabled'] == True:
+        proc_consumer.stop()
+        time.sleep(1)
+
+        proc_bgp4mp_writer.stop()
+        time.sleep(1)
+
+    if cfg['table_dump']['enabled'] == True:
+        proc_table_dumper.stop()
+        time.sleep(1)
+
+    manager.shutdown()
+
+    thread_logger.stop()
+    thread_logger.join()
+
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()

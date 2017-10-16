@@ -225,16 +225,23 @@ var StreamingFacade = function(environment){
     };
 
     this.subscribe = function(query){
-        console.log(query);
 
         socket.emit("bgp_subscribe", { prefix: query.targets });
 
         socket.on("bgp_dumpLine", function(data){
-            console.log(data);
             $this._handleMessage(data);
         });
 
+        //setTimeout(function(){
+        //    $this._handleMessage({"origin_asn":134438,"timestamp": parseInt(new Date().getTime()/1000),"as_path":[7500,2497,38082,7470,134438],"prefix":"110.170.17.0/24","communities":"","router":"96.4.0.55","type":"A","id":90000});
+        //}, 15000);
+
+        //setTimeout(function(){
+        //    $this._handleMessage({"origin_asn":134438,"timestamp": parseInt(new Date().getTime()/1000),"as_path":[7500,2497,38566,7470,134438],"prefix":"110.170.17.0/24","communities":"","router":"96.4.0.55","type":"A","id":90000});
+        //}, 18000);
+
         socket.on("bgp_update", function(data){
+            console.log(data);
             $this._handleMessage(data);
         });
 

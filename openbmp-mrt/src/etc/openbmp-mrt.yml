@@ -1,0 +1,112 @@
+# -------------------------------------------------------------------------
+# OpenBMP MRT configuration
+# -------------------------------------------------------------------------
+
+# Max size of messages in queue to be forwarded/written
+max_queue_size: 1000
+
+#
+# Local Kafka settings - BMP raw messages are read from this instance
+#
+kafka:
+  servers             : ['kafka-int.openbmp.org:9092']
+  client_id           : 'openbmp-mrt'
+  group_id            : 'openbmp-mrt'
+  offset_reset_largest: False
+
+#
+# MRT TABLE_DUMP/snapshots settings
+#
+table_dump:
+  collector_bgp_id: 127.0.0.1   # Collector BGP-ID
+
+  # MySQL/MariaDB settings (github.com/openbmp/openbmp-mysql-consumer)
+  #   Table dumps are pulled from MySQL, which is state maintained
+  mysql:
+    host: localhost
+    username: openbmp
+    password: openbmp
+    database: openBMP
+
+  enabled: False           # Enable table_dump generation globally
+  peer_per_file: True     # True to log each peer in its own file, False to log all peers for a router in one file
+  dump_when_started: True # True to run a dump when first started if next interval is > 5 minutes
+
+  interval:
+    # Interval is in minutes.  Minimum value is 15
+    minutes: 30
+
+  log_dir: /tmp/openbmp-mrt/table
+
+#
+# MRT BGP4MP (updates/change) settings
+#
+bgp4mp:
+  enabled: True           # Enable bgp4mp update generation globally
+
+  log_dir: /tmp/openbmp-mrt/updates
+
+  # Rotate BGP4MP (updates/changes)
+  rotate:
+    when        : 'm'     # See python logging.handlers TimedRotatingFileHandler for more details
+    interval    : 5       # Interval based on 'when'
+    backupCount : 30      # Number of files to keep
+
+
+#
+# App Log settings
+#
+logging:
+  version: 1
+  disable_existing_loggers: True
+
+  formatters:
+    default:
+      format: '%(asctime)s | %(levelname)-8s | %(name)s | %(message)s'
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: DEBUG
+      formatter: default
+      stream: ext://sys.stdout
+
+    file:
+      class: logging.handlers.RotatingFileHandler
+      level: DEBUG
+      formatter: default
+      maxBytes: 20971520
+      backupCount: 10
+      encoding: utf8
+      filename: openbmp-mrt.log
+
+  loggers:
+    # BMP Consuemr log messages
+    mrt_table_dumper:
+      level: INFO
+      handlers: [file]
+      propagate: no
+
+    # BMP Consuemr log messages
+    bmp_consumer:
+      level: INFO
+      handlers: [file]
+      propagate: no
+
+    # MRT BGP4PM Writer log messages
+    mrt_bgp4mp_writer:
+      level: INFO
+      handlers: [file]
+      propagate: no
+
+    # main program messages
+    openbmp_mrt:
+      level: INFO
+      handlers: [file]
+
+    # General program messages
+    root:
+      level: INFO
+      handlers: [file]
+
+
