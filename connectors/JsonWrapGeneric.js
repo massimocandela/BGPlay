@@ -81,11 +81,22 @@ function JsonWrap(environment){
          * @return {Map} A Map of parameters valid inside the environment
          */
         getParams:function(data){
-            var out, params, internalParams, selectRRCset;
+            var out, params, internalParams, selectRRCset, urlParams, embeddingCodeParams;
 
             out = {};
 
-            params = this.externalParams || environment.thisWidget.get_params();
+            embeddingCodeParams = environment.thisWidget.get_params();
+            urlParams = {
+                resource: getUrlParam("resource"),
+                starttime: getUrlParam("starttime"),
+                endtime: getUrlParam("endtime"),
+                ignoreReannouncements: getUrlParam("ignoreReannouncements"),
+                rrcs: getUrlParam("rrcs"),
+                instant: getUrlParam("instant")
+            };
+
+            params = Object.assign({}, embeddingCodeParams, urlParams);
+
             internalParams = environment.params || {};
 
             selectRRCset = function(resources, currentValue){
