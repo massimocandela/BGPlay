@@ -35,6 +35,7 @@ define(function(){
             15: "Sao Paulo",
             16: "Miami",
             18: "Barcelona",
+            19: "Johannesburg",
             20: "Zurich",
             21: "Paris"
         },
