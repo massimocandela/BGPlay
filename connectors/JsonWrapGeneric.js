@@ -95,8 +95,10 @@ function JsonWrap(environment){
                 instant: getUrlParam("instant")
             };
 
+            Object.keys(urlParams).forEach(function(key) {(urlParams[key] == null) && delete urlParams[key]});
             params = Object.assign({}, embeddingCodeParams, urlParams);
 
+            console.log(params);
             internalParams = environment.params || {};
 
             selectRRCset = function(resources, currentValue){
