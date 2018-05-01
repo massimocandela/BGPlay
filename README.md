@@ -17,13 +17,13 @@ You can embed this tool in your service for free, or share instances/screenshots
 
 Shortcuts:
 ----------
-***Do you want to use your data in BGPlay?*** Go [here](http://bgplay.massimocandela.com#yourdata)
+***Do you want to use your data in BGPlay?*** Go [here](https://bgplay.massimocandela.com#yourdata)
 
-***Real-time version of BGPlay based on WebSocket?*** Go [here](http://bgplay.massimocandela.com#realtime)
+***Real-time version of BGPlay based on WebSocket?*** Go [here](https://bgplay.massimocandela.com#realtime)
 
-***Documentation?* Other info?** Go [here](http://bgplay.massimocandela.com)
+***Documentation?* Other info?** Go [here](https://bgplay.massimocandela.com)
 
-***Some of my network-related recent projects?*** Go [here](http://massimocandela.com/#somerecentprojects)
+***Some of my network-related recent projects?*** Go [here](https://massimocandela.com/#somerecentprojects)
 
 Examples:
 ---------
