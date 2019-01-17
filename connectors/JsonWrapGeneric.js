@@ -432,11 +432,11 @@ function JsonWrap(environment){
                 }
 
                 if (numNotValidWithdrawal>0){
-                    if (numNotValidWithdrawal == 1){
-                        environment.cssAlert.alert("A withdrawal applied to a not existent path","warning",3000);
-                    }else{
-                        environment.cssAlert.alert(numNotValidWithdrawal+"  withdrawals ignored: no referenced path","warning",3000);
-                    }
+                    // if (numNotValidWithdrawal == 1){
+                    //     environment.cssAlert.alert("A withdrawal applied to a not existent path","warning",3000);
+                    // }else{
+                    //     environment.cssAlert.alert(numNotValidWithdrawal+"  withdrawals ignored: no referenced path","warning",3000);
+                    // }
                 }
 
                 return [uniquePath, pathStartId];
