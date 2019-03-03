@@ -465,7 +465,7 @@ define([],  function(){
             noPeer = true;
 
             if (pruneByPeer != "all"){
-                if (pruneByPeer.indexOf(nodes[0].get("as").toString()) == -1 ){
+                if (pruneByPeer.indexOf(nodes[0].get("as")) == -1 ){
                     noPeer = false;
                 }
             }
@@ -561,7 +561,7 @@ define([],  function(){
             noPeer = true;
 
             if (pruneByPeer != "all"){
-                if (pruneByPeer.indexOf(nodes[0].get("as").toString()) == -1 ){
+                if (pruneByPeer.indexOf(nodes[0].get("as")) == -1 ){
                     noPeer = false;
                 } else {
                     forceToBeInFront = true;

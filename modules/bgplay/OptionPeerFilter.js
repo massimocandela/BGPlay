@@ -57,7 +57,7 @@ define(
                     console.log("hereee");
                     var value = $(this).val().split(",")
                         .map(function(item){
-                            return item.trim();
+                            return parseInt(item.trim());
                         });
                     $this.eventAggregator.trigger('filteredPeerChanged', (value.length && value[0] != "") ? value : "all");
                 });
