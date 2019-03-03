@@ -455,11 +455,21 @@ define([],  function(){
          * @return {String} An SVG path
          */
         computeDynamicPathString: function(nodes, prune){
-            var pathString, orderedNodes, node1, node2, reversed, skipAfterHops, sameEdge, myArc, pruneByWeight;
+            var pathString, orderedNodes, node1, node2, reversed, skipAfterHops, sameEdge, myArc, pruneByWeight,
+                pruneByPeer, noPeer;
 
             pathString = "";
             skipAfterHops = this.environment.GraphView.skipAfterHops;
             pruneByWeight = this.environment.GraphView.pruneByWeight;
+            pruneByPeer = this.environment.GraphView.pruneByPeer;
+            noPeer = true;
+
+            if (pruneByPeer != "all"){
+                if (pruneByPeer.indexOf(nodes[0].get("as").toString()) == -1 ){
+                    noPeer = false;
+                }
+            }
+
 
             for (var n=0,length=nodes.length-1; n<length; n++){
 
@@ -474,8 +484,9 @@ define([],  function(){
                 sameEdge = this.graphView.graph.edges.get({vertexStart: orderedNodes[0].view, vertexStop: orderedNodes[1].view});
 
                 myArc = this.getMyArc(sameEdge);
+                myArc.peerVisible = noPeer;
 
-                if (!prune || sameEdge.length > pruneByWeight) {
+                if (!prune || (sameEdge.length > pruneByWeight && noPeer)) {
                     myArc.beforeHopsLimit = (length - n <= skipAfterHops);
 
                     if (!prune || myArc.beforeHopsLimit) {
@@ -541,11 +552,21 @@ define([],  function(){
          */
         computeStaticPathString: function(nodes, forceToBeInFront, prune){
             var node1, node2, myArc, sameEdge, drawnEdge, orderedNodes, reversed, pathString, drawnEdge_old,
-                skipAfterHops, pruneByWeight;
+                skipAfterHops, pruneByWeight, pruneByPeer, noPeer;
 
             pathString = "";
             skipAfterHops = this.environment.GraphView.skipAfterHops;
             pruneByWeight = this.environment.GraphView.pruneByWeight;
+            pruneByPeer = this.environment.GraphView.pruneByPeer;
+            noPeer = true;
+
+            if (pruneByPeer != "all"){
+                if (pruneByPeer.indexOf(nodes[0].get("as").toString()) == -1 ){
+                    noPeer = false;
+                } else {
+                    forceToBeInFront = true;
+                }
+            }
 
             for (var n=0,length=nodes.length-1; n<length; n++){
 
@@ -570,8 +591,9 @@ define([],  function(){
                 }
 
                 drawnEdge.beforeHopsLimit = (length - n <= skipAfterHops);
+                drawnEdge.peerVisible = noPeer;
 
-                if (!prune || sameEdge.length > pruneByWeight){
+                if (!prune || (sameEdge.length > pruneByWeight && noPeer)){
                     if (!prune || !drawnEdge || drawnEdge.beforeHopsLimit) {
                         if (drawnEdge == false || drawnEdge.key == this.key) {
                             myArc = this.getMyArc(sameEdge);

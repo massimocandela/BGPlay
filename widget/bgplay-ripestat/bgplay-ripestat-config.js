@@ -98,6 +98,7 @@ define(function(){
             pathBold:6,
             skipAfterHops: Infinity, // Default no
             pruneByWeight: 0, // Default no
+            pruneByPeer: "all", // Default no pruning
             defaultDeepForASesEsploration: 2,
             animationPathWithdrawalDelays:[300,300,300,300,300,300], //Each number indicates the amount of milliseconds that a blink lasts expressed as an alternation of normal and the thick states. If you want to increase the number of blinks, add new delays in the array.
             animationMinorChangesDelays:[300,300], //as above

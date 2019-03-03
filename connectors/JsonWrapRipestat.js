@@ -75,6 +75,7 @@ function JsonWrap(environment){
                     instant: params.instant,
                     preventNewQueries: params.preventNewQueries,
                     nodesPosition: params.nodesPosition,
+                    collectorPeers: params.collectorPeers || environment.config.graph.pruneByPeer,
                     type: "bgp"
                 };
 
@@ -104,6 +105,8 @@ function JsonWrap(environment){
             out.instant = "" + params.instant;
             if (params.preventNewQueries != null) out.preventNewQueries = "" + params.preventNewQueries;
             if (params.nodesPosition != null) out.nodesPosition = "" + params.nodesPosition;
+            if (params.collectorPeers != null) out.collectorPeers = "" + params.collectorPeers;
+
             out.type = "bgp";
 
             environment.thisWidget.set_params(out);
@@ -290,8 +293,8 @@ function JsonWrap(environment){
                             subType = "announce";
                             tmpEvent.attributes.path = path; //The new path
                         }else{
-                            if (prevPath.toString()==path.toString()){
-                                if (prevPath.get('announcedPath')==path.get('announcedPath')){
+                            if (prevPath.toString() == path.toString()){
+                                if (prevPath.get('announcedPath') == path.get('announcedPath')){
                                     if (!ignoreReannouncements){
                                         shortdescription = "The route "+ prevPath.get('announcedPath')+" has been announced again";
                                         longdescription = "The route "+ prevPath.get('announcedPath')+" has been announced again..more";

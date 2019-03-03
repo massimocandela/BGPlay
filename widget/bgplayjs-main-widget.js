@@ -8,7 +8,7 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-BGPLAY_PROJECT_URL = "/";
+BGPLAY_PROJECT_URL = "";
 
 BGPLAY_WIDGET_URL = BGPLAY_PROJECT_URL + "widget/";
 BGPLAY_MODEL_URL = BGPLAY_PROJECT_URL + "model/";

@@ -62,7 +62,7 @@ define(
 
                 this.skipAfterHops = this.environment.config.graph.skipAfterHops;
                 this.pruneByWeight = this.environment.config.graph.pruneByWeight;
-
+                this.pruneByPeer = this.environment.params.collectorPeers; // || this.environment.config.graph.pruneByPeer;
 
                 this.pathColorsDoublePrefixOne = this.environment.config.graph.pathColorsDoublePrefixOne;
                 this.pathColorsDoublePrefixTwo = this.environment.config.graph.pathColorsDoublePrefixTwo;
@@ -121,6 +121,12 @@ define(
 
                 this.eventAggregator.on('graphLinkWeightChanged', function(weight){
                     this.pruneByWeight = weight;
+                    this.eventAggregator.trigger('redrawPaths');
+                    this.pruneGraph();
+                },this);
+
+                this.eventAggregator.on('filteredPeerChanged', function(value){
+                    this.pruneByPeer = value;
                     this.eventAggregator.trigger('redrawPaths');
                     this.pruneGraph();
                 },this);
@@ -289,7 +295,7 @@ define(
 
 
             pruneGraph: function(){
-                return;
+                // return;
                 var $this, pruneByWeight;
 
                 $this = this;
@@ -310,7 +316,7 @@ define(
                         for (var n=0,length=values.length; n<length; n++) {
                             value = values[n];
 
-                            if (value.beforeHopsLimit && value.drawn && length > pruneByWeight) {
+                            if (value.peerVisible && value.beforeHopsLimit && value.drawn && length > pruneByWeight) {
                                 start.pruned = false;
                                 stop.pruned = false;
                             }

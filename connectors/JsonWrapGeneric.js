@@ -92,13 +92,13 @@ function JsonWrap(environment){
                 endtime: getUrlParam("endtime"),
                 ignoreReannouncements: getUrlParam("ignoreReannouncements"),
                 rrcs: getUrlParam("rrcs"),
-                instant: getUrlParam("instant")
+                instant: getUrlParam("instant"),
+                collectorPeers: getUrlParam("cpeers")
             };
 
             Object.keys(urlParams).forEach(function(key) {(urlParams[key] == null) && delete urlParams[key]});
             params = Object.assign({}, embeddingCodeParams, urlParams);
 
-            console.log(params);
             internalParams = environment.params || {};
 
             selectRRCset = function(resources, currentValue){
@@ -141,6 +141,7 @@ function JsonWrap(environment){
                         instant: params.instant,
                         preventNewQueries: params.preventNewQueries,
                         nodesPosition: params.nodesPosition,
+                        collectorPeers: params.collectorPeers || environment.config.graph.pruneByPeer,
                         type: "bgp"
                     };
 
@@ -171,6 +172,7 @@ function JsonWrap(environment){
             out.instant = "" + params.instant;
             if (params.preventNewQueries != null) out.preventNewQueries = "" + params.preventNewQueries;
             if (params.nodesPosition != null) out.nodesPosition = "" + params.nodesPosition;
+            if (params.collectorPeers != null) out.collectorPeers = "" + params.collectorPeers;
             out.type="bgp";
 
             environment.thisWidget.set_params(out);
