@@ -43,7 +43,7 @@ addTemplateContent('controller.html', '<img class="bgplayControlPanelDivFlagIco"
 '        <label style="float:left; clear:both; width:100%;">Route Collectors: </label>'+
 '        {{#selectableRrcsObj}}'+
 '        <div class="bgplayRrcsSelect">'+
-'            <input name="bgplayRrcSelect" type="checkbox" value="{{id}}" {{#selected}}checked="checked"{{/selected}}/><label>{{label}}</label>'+
+'            <label><input name="bgplayRrcSelect" type="checkbox" value="{{id}}" {{#selected}}checked="checked"{{/selected}}/>{{label}}</label>'+
 '        </div>'+
 '        {{/selectableRrcsObj}}'+
 '    </div>'+
