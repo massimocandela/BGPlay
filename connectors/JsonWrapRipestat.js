@@ -37,6 +37,8 @@ function JsonWrap(environment){
             selectRRCset = function(resources, currentValue){
                 var value, thereIsAS;
 
+                console.log(currentValue);
+
                 if (currentValue && currentValue.length > 1){
                     value = currentValue;
                 } else {

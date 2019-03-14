@@ -7,20 +7,20 @@
 <div id="bgplay"></div>
 <script>
     BGPlayWidget(
-            'BGPlay', // Version type
-            'bgplay', // DOM element ID
-            {
-                width: 1100,
-                height: 800
-            }, {
-                "resource": "193.0.0.0/21", // Use comma-separated list for multiple resources
-                "collectorPeers": "all",
-                //"starttime": UNIX_TIMESTAMP,
-                //"endtime": UNIX_TIMESTAMP,
-
-                "unix_timestamps": "TRUE",
-                "showResourceController": true
-            }
+        'BGPlay', // Version type
+        'bgplay', // DOM element ID
+        {
+            width: 1100,
+            height: 800
+        }, {
+            "showResourceController": true,
+            "resource": "193.0.0.0/21", // Use comma-separated list for multiple resources
+            "collectorPeers": "all",
+            "rrcs": "0,1,2",
+            //"starttime": UNIX_TIMESTAMP,
+            //"endtime": UNIX_TIMESTAMP,
+                "unix_timestamps": "TRUE"
+    }
     );
 </script>
 </body>

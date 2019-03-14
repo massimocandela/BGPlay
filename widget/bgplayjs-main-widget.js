@@ -31,7 +31,8 @@ BGPLAY_LOADERS = {
     //"BGPlayRT": "widget/bgplay-caida/bgplay-loader",
     "BGPlay": "widget/bgplay/bgplay-loader",
     "TPlay": "widget/tplay/tplay-loader",
-    "BGPlay3D": "loaders/bgplay3D-loader"
+    "BGPlay3D": "loaders/bgplay3D-loader",
+    "BGPlayLC": "widget/bgplay-only-eventchart/bgplay-loader"
 };
 
 document.write('<script src="' + BGPLAY_PROJECT_URL + 'lib/require.js"></script>');

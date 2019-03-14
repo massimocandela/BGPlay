@@ -82,12 +82,12 @@ define(
                 this.centerDiv = this.bgplayDom.find('.bgplayCenterDiv');
                 this.timelineDiv = this.bgplayDom.find('.bgplayTimelineDiv');
 
-
-                this.centerDiv.height(
-                    Math.max(this.environment.domHeight - this.infoDiv.outerHeight(true) - this.timelineDiv.outerHeight(true) - marginTop,
-                        this.environment.config.graph.paperMinHeight)
-                );
-
+                if (this.environment.modules.filter(function(i){ return i.domClass == "bgplayGraphDiv" }).length > 0){
+                    this.centerDiv.height(
+                        Math.max(this.environment.domHeight - this.infoDiv.outerHeight(true) - this.timelineDiv.outerHeight(true) - marginTop,
+                            this.environment.config.graph.paperMinHeight)
+                    );
+                }
             },
 
             /**
