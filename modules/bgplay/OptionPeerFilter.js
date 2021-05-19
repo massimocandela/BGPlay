@@ -51,18 +51,22 @@ define(
 
                 parseTemplate(this.environment, 'optionPeerFilter.html', this.environment.params, this.dom, "prepend");
 
-                peers  =  this.dom.find('.cpFilter');
+                peers = this.dom.find('.cpFilter');
 
-                peers.on("click change keyup", function () {
-                    console.log("hereee");
-                    var value = $(this).val().split(",")
-                        .map(function(item){
-                            return parseInt(item.trim());
-                        });
-                    $this.eventAggregator.trigger('filteredPeerChanged', (value.length && value[0] != "") ? value : "all");
+                peers.on("keyup", function () {
+                    var value = $(this).val();
+
+                    if (value && value !== "") {
+                        var valArray = $(this).val().split(",")
+                            .map(function (item) {
+                                return parseInt(item.trim());
+                            });
+
+                        $this.eventAggregator.trigger('filteredPeerChanged', (valArray.length > 0 && valArray[0] !== "") ? valArray : "all");
+                    } else {
+                        $this.eventAggregator.trigger('filteredPeerChanged', "all");
+                    }
                 });
-
-
 
                 return this;
             }

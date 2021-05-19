@@ -205,6 +205,7 @@ define([
 
         main.retrieveData();
 
+        return thisWidget;
     };
 
     return BgplayStart;

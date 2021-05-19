@@ -333,12 +333,14 @@ define(
                 var internalParams, rrcSelected, $this, externalParams;
                 if (this.validateAll()==true){
                     $this = this;
-                    this.prefixes = [];
-                    this.dom.find(".bgplayControlPrefixValue input[type=text]").each(function(){
-                        $this.prefixes.push($(this).val());
-                    });
+                    if (this.showResourceController) {
+                        this.prefixes = [];
+                        this.dom.find(".bgplayControlPrefixValue input[type=text]").each(function () {
+                            $this.prefixes.push($(this).val());
+                        });
+                    }
 
-                    rrcSelected=[];
+                    rrcSelected = [];
                     this.dom.find('input[name=bgplayRrcSelect]:checked').each(function(){
                         rrcSelected.push($(this).val());
                     });
@@ -346,9 +348,9 @@ define(
                     this.ignoreReannouncements = this.suppressReannounce.is(':checked');
 
                     if (this.environment.thisWidget!=null){
-                        internalParams={};
+                        internalParams = {};
 
-                        if (this.showResourceController) internalParams.targets = arrayToString(this.prefixes);
+                        internalParams.targets = arrayToString(this.prefixes);
                         internalParams.starttimestamp =  Math.round(this.starttimestampPicker.datetimepicker("getDate").getTime()/1000) - ((new Date()).getTimezoneOffset()*60);
                         internalParams.endtimestamp = Math.round(this.endtimestampPicker.datetimepicker("getDate").getTime()/1000) - ((new Date()).getTimezoneOffset()*60);
                         internalParams.ignoreReannouncements = this.ignoreReannouncements;

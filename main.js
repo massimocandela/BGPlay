@@ -171,18 +171,6 @@ var BGPlay = function(domElement){
                 {},
                 function(json){
                     run.call($this, json.data);
-                    if (params.collectorPeers != "all"){
-
-                        json.data.events = json.data.events.filter(function (event) {
-                            return event.type == "W"  || params.collectorPeers.includes(event.attrs.path[0]);
-                        });
-
-                        json.data.initial_state = json.data.initial_state.filter(function (event) {
-                            return event.type == "W"  || params.collectorPeers.includes(event.path[0]);
-                        });
-
-
-                    }
                     if ($this.environment.updateWithStreaming && !$this.streamingAdapter){
                         $this.streamingAdapter = new StreamingAdapter(environment);
                     }

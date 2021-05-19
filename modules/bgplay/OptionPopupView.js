@@ -52,7 +52,10 @@ define(
                 this.button = $('<a class="button" href="javascript:void(0);">options</a>');
                 this.popup = $('<div class="popup">Options</div>');
                 parseTemplate(this.environment,'options.html', this,this.popup,"append");
-                this.popup.hide();
+
+                if (!(this.environment.defaultParams.panels || []).includes("options")) {
+                    this.popup.hide();
+                }
                 this.footerDiv.find('.left').append(this.button);
                 this.footerDiv.append(this.popup);
                 this.environment.optionPopupDom = this.popup.find('.bgplayOptionsPopup');

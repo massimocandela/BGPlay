@@ -8,7 +8,7 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-BGPLAY_PROJECT_URL = "";
+BGPLAY_PROJECT_URL = BGPLAY_PROJECT_URL || "";
 
 BGPLAY_WIDGET_URL = BGPLAY_PROJECT_URL + "widget/";
 BGPLAY_MODEL_URL = BGPLAY_PROJECT_URL + "model/";
@@ -28,13 +28,14 @@ BGPLAY_INSTANCES = {};
 
 BGPLAY_LOADERS = {
     "BGPlayRT": "widget/bgplay-isolario/bgplay-loader",
-    //"BGPlayRT": "widget/bgplay-caida/bgplay-loader",
     "BGPlay": "widget/bgplay/bgplay-loader",
     "TPlay": "widget/tplay/tplay-loader",
     "BGPlay3D": "loaders/bgplay3D-loader"
 };
 
-document.write('<script src="' + BGPLAY_PROJECT_URL + 'lib/require.js"></script>');
+if (!window.require) {
+    document.write('<script src="' + BGPLAY_PROJECT_URL + 'lib/require.js"></script>');
+}
 
 function getBGPlayInstance(instance){
     return BGPLAY_INSTANCES[instance].shift();
@@ -54,6 +55,8 @@ function BGPlayWidget(instance, domId, initialParams, queryParams){
     require([BGPLAY_PROJECT_URL + loader + ".js"], function(starter){
         newInstance["shell"] = starter();
     });
+
+    return newInstance;
 }
 
 /*

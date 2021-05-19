@@ -39,7 +39,10 @@ define(
                 this.button = $('<a class="button" href="javascript:void(0);">About BGPlay</a>');
                 this.popup = $('<div class="about-bgplay popup"><h3>About BGPlay</h3></div>');
                 parseTemplate(this.environment, 'aboutBgplay.html', this, this.popup, "append");
-                this.popup.hide();
+
+                if (!(this.environment.defaultParams.panels || []).includes("about")) {
+                    this.popup.hide();
+                }
 
                 this.footerDiv.find('.left').append(this.button);
                 this.footerDiv.append(this.popup);

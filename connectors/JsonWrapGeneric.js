@@ -129,15 +129,13 @@ function JsonWrap(environment){
                 out.selectedRrcs = selectRRCset(out.targets, params.rrcs);
             }else{
 
-                if (params.unix_timestamps == "TRUE" || params.unix_timestamps == "true"){  //toUpperCase fails when unix_timestamps is null
-
                     out = {
                         starttimestamp: params.starttime || data.query_starttime,
                         endtimestamp: params.endtime || data.query_endtime,
                         showResourceController: params.showResourceController,
                         targets: ((typeof data.resource === 'string') ? data.resource : arrayToString(data.resource)),
                         selectedRrcs: ((params.rrcs != null) ? params.rrcs : selectRRCset(data.resource, params.rrcs)),
-                        ignoreReannouncements: (params.hasOwnProperty("ignoreReannouncements")) ? (params.ignoreReannouncements == "true") : environment.config.ignoreReannouncementsByDefault,
+                        ignoreReannouncements: (params.ignoreReannouncements !== undefined) ? params.ignoreReannouncements : environment.config.ignoreReannouncementsByDefault,
                         instant: params.instant,
                         preventNewQueries: params.preventNewQueries,
                         nodesPosition: params.nodesPosition,
@@ -145,9 +143,6 @@ function JsonWrap(environment){
                         type: "bgp"
                     };
 
-                }else{
-                    alert('Unix timestamps needed!');
-                }
             }
 
             return out;
@@ -206,7 +201,7 @@ function JsonWrap(environment){
             if (wrap.nodes.length == 0){
                 console.log("no nodes");
                 if (environment.thisWidget){
-                    environment.message = {text: "No information available for these query parameters.", type:"info"};
+                    environment.message = {text: "No information available for these query parameters. Try a less specific prefix.", type:"info"};
                     return false;
                 }else{
                     alert('No information available');

@@ -142,11 +142,6 @@ define(
                         var y = (position.y - node.view.y);
 
                         if (x != 0 || y != 0){ //Something changed
-                            //node.view.view.translate(x, y);
-                            //node.oldX = node.view.x;
-                            //node.oldY = node.view.y;
-                            //node.view.x += x;
-                            //node.view.y += y;
 
                             node.oldX = node.view.x;
                             node.oldY = node.view.y;

@@ -57,8 +57,6 @@ function JsonWrap(environment){
                 return (typeof value == "string") ? value : arrayToString(value);
             };
 
-            if (params.unix_timestamps == "TRUE" || params.unix_timestamps == "true"){  //toUpperCase fails when unix_timestamps is null
-
                 if (data){
                     targets = (typeof data.resource === 'string') ? data.resource : arrayToString(data.resource);
                 } else {
@@ -78,10 +76,6 @@ function JsonWrap(environment){
                     collectorPeers: params.collectorPeers || environment.config.graph.pruneByPeer,
                     type: "bgp"
                 };
-
-            }else{
-                alert('Unix timestamps needed!');
-            }
 
             return out;
         },
@@ -130,7 +124,7 @@ function JsonWrap(environment){
         },
 
         /**
-         * This method populates Bgplay instantiating all the object of the model layer.
+         * This method populates BGPlay instantiating all the objects of the model layer.
          * @param {Object} A json data object
          */
         readJson:function(wrap){

@@ -551,10 +551,12 @@ define(
                 var internalParams, rrcSelected, $this, externalParams;
                 if (this.validateAll()==true){
                     $this = this;
-                    this.prefixes = [];
-                    this.dom.find(".bgplayControlPrefixValue input[type=text]").each(function(){
-                        $this.prefixes.push($(this).val());
-                    });
+                    if (this.showResourceController) {
+                        this.prefixes = [];
+                        this.dom.find(".bgplayControlPrefixValue input[type=text]").each(function () {
+                            $this.prefixes.push($(this).val());
+                        });
+                    }
 
                     rrcSelected=[];
                     this.dom.find('input[name=bgplayRrcSelect]:checked').each(function(){
@@ -564,9 +566,9 @@ define(
                     this.ignoreReannouncements = this.suppressReannounce.is(':checked');
 
                     if (this.environment.thisWidget!=null){
-                        internalParams={};
+                        internalParams = {};
 
-                        if (this.showResourceController) internalParams.targets = arrayToString(this.prefixes);
+                        internalParams.targets = arrayToString(this.prefixes);
                         internalParams.starttimestamp = Math.round(this.starttimestampPicker.datetimepicker("getDate").getTime()/1000) - ((new Date()).getTimezoneOffset()*60);//Math.round(dateToUTC(this.starttimestampPicker.datetimepicker("getDate").getTime()/1000).getTime()/1000);
                         internalParams.endtimestamp = Math.round(this.endtimestampPicker.datetimepicker("getDate").getTime()/1000) - ((new Date()).getTimezoneOffset()*60);
                         internalParams.ignoreReannouncements = this.ignoreReannouncements;
@@ -578,9 +580,6 @@ define(
                         if (!areMapsEquals(internalParams, this.environment.params, this.environment.dynamicParams)){
                             this.environment.oldParams = this.environment.params;
                             document.location="?resource=" + internalParams.targets +"&starttime=" + internalParams.starttimestamp +"&endtime=" + internalParams.endtimestamp +"&ignoreReannouncements="+ internalParams.ignoreReannouncements +"&rrcs=" + internalParams.selectedRrcs;
-                            //this.environment.thisWidget.(externalParams);
-                            //this.closeFlag(); //If the widget was not updated then the query parameters are the same, close the flag
-                            //this.eventAggregator.trigger("destroyAll");
                         }else{
                             this.discardConfig();
                         }
