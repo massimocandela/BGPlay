@@ -1,6 +1,8 @@
 BGPlay.js (+ real-time version!)
 ==========================
-***News: This repo contains the classic BGPlay + the real-time version. It has received many performance improvements affecting both the versions.***
+***This repo contains the classic BGPlay + the real-time version.***
+
+![BGPlay](https://massimocandela.com/img/bgplay_github_image.png)
 
 BGPlay.js provides a graphical and intuitive representation of the inter-domain routing and its evolution over time.
 
