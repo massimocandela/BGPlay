@@ -8,14 +8,14 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-BGPLAY_PROJECT_URL = BGPLAY_PROJECT_URL || "";
+window.BGPLAY_PROJECT_URL = window.BGPLAY_PROJECT_URL || "";
 
-BGPLAY_WIDGET_URL = BGPLAY_PROJECT_URL + "widget/";
-BGPLAY_MODEL_URL = BGPLAY_PROJECT_URL + "model/";
-BGPLAY_MODULES_URL = BGPLAY_PROJECT_URL + "modules/";
-BGPLAY_CONNECTORS_URL = BGPLAY_PROJECT_URL + "connectors/";
-BGPLAY_LIB_URL = BGPLAY_PROJECT_URL + "lib/";
-BGPLAY_UTILS_URL = BGPLAY_PROJECT_URL + "utils/";
+BGPLAY_WIDGET_URL = window.BGPLAY_PROJECT_URL + "widget/";
+BGPLAY_MODEL_URL = window.BGPLAY_PROJECT_URL + "model/";
+BGPLAY_MODULES_URL = window.BGPLAY_PROJECT_URL + "modules/";
+BGPLAY_CONNECTORS_URL = window.BGPLAY_PROJECT_URL + "connectors/";
+BGPLAY_LIB_URL = window.BGPLAY_PROJECT_URL + "lib/";
+BGPLAY_UTILS_URL = window.BGPLAY_PROJECT_URL + "utils/";
 
 BGPLAY_TEMPLATES_URL = BGPLAY_MODULES_URL + "html/";
 BGPLAY_TEMPLATES_NOCORS_URL = BGPLAY_MODULES_URL + "html/js_nocors/";
@@ -34,7 +34,7 @@ BGPLAY_LOADERS = {
 };
 
 if (!window.require) {
-    document.write('<script src="' + BGPLAY_PROJECT_URL + 'lib/require.js"></script>');
+    document.write('<script src="' + window.BGPLAY_PROJECT_URL + 'lib/require.js"></script>');
 }
 
 function getBGPlayInstance(instance){
@@ -52,7 +52,7 @@ function BGPlayWidget(instance, domId, initialParams, queryParams){
     newInstance = {domId: domId, initialParams: initialParams, queryParams: queryParams};
     BGPLAY_INSTANCES[instance].push(newInstance);
 
-    require([BGPLAY_PROJECT_URL + loader + ".js"], function(starter){
+    require([window.BGPLAY_PROJECT_URL + loader + ".js"], function(starter){
         newInstance["shell"] = starter();
     });
 
